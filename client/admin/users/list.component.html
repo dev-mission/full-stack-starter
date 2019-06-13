@@ -1,0 +1,22 @@
+<router-outlet></router-outlet>
+<div [class.d-none]="route.firstChild">
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Users</h1>
+  </div>
+  <app-shared-list type="users">
+    <thead>
+      <tr>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <ng-template let-record="record">
+      <tr>
+        <td><a [routerLink]="['/users', record.id]">{{record.lastName}}</a></td>
+        <td><a [routerLink]="['/users', record.id]">{{record.firstName}}</a></td>
+        <td><a [routerLink]="['/users', record.id]">{{record.email}}</a></td>
+      </tr>
+    </ng-template>
+  </app-shared-list>
+</div>

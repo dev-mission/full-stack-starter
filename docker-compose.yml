@@ -1,0 +1,26 @@
+version: '2'
+services:
+  db:
+    image: postgres:11
+  mailcatcher:
+    image: dockage/mailcatcher:0.7.1
+    ports:
+      - 1080:1080
+      - 1025:1025
+  server:
+    build: .
+    command: bash -l -c "nf start -j Procfile.dev"
+    volumes:
+      - .:/opt/node/app
+      - /opt/node/app/node_modules
+    environment:
+      - SMTP_HOST=mailcatcher
+      - SMTP_PORT=1025
+      - SMTP_USERNAME=none
+      - SMTP_PASSWORD=none
+      - PORT=3000
+      - DATABASE_URL=postgres://postgres@db/app
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 8080:8080

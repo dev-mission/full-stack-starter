@@ -1,0 +1,14 @@
+<ngb-alert *ngIf="error" type="danger" [dismissible]="false">
+  <div *ngIf="error.data">
+    <span *ngFor="let msg of error.data">{{msg}}</span>
+  </div>
+  <div *ngIf="error.status == 422">
+    Please review the errors below.
+  </div>
+  <div *ngIf="error.status == 403">
+    {{error.detail}}
+  </div>
+  <div *ngIf="!error.data && error.status != 422 && error.status != 403">
+    An unexpected error has occurred.
+  </div>
+</ngb-alert>

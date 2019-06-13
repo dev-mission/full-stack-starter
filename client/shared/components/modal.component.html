@@ -1,0 +1,14 @@
+<ng-template #content>
+  <div class="modal-header">
+    <ng-content select=".modal-title"></ng-content>
+    <button type="button" class="close" aria-label="Close" (click)="onDismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <ng-content select=".modal-body"></ng-content>
+  <div class="modal-footer">
+    <button *ngIf="dismissLabel" type="button" class="btn btn-outline-secondary" (click)="onDismiss()">{{dismissLabel}}</button>
+    <button *ngIf="dangerLabel" type="button" class="btn btn-outline-danger" (click)="onDanger()">{{dangerLabel}}</button>
+    <button *ngIf="confirmLabel" type="button" class="btn btn-outline-primary" (click)="onConfirm()">{{confirmLabel}}</button>
+  </div>
+</ng-template>

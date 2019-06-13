@@ -1,0 +1,21 @@
+<form #form="ngForm" (submit)="onSubmit()">
+  <fieldset [disabled]="loading">
+    <div *ngIf="updated" class="alert alert-success">
+      This record has been updated!
+    </div>
+    <app-shared-error *ngIf="error" [error]="error"></app-shared-error>
+    <template [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{record: record, error: error}"></template>
+    <div *ngIf="!hideButtons && !loading" class="form-group d-flex justify-content-between">
+      <button [disabled]="!form.valid" type="submit" class="btn btn-primary">
+        <span *ngIf="!record.id">{{createLabel}}</span>
+        <span *ngIf="record.id">{{updateLabel}}</span>
+      </button>&nbsp;
+      <button (click)="deleteConfirmation.show()" type="button" *ngIf="record.id" class="btn btn-outline-danger">Delete</button>
+    </div>
+  </fieldset>
+</form>
+<app-shared-modal #deleteConfirmation
+  dangerLabel="Yes" dismissLabel="No" (danger)="onDelete()">
+  <h4 class="modal-title">Are you sure?</h4>
+  <div class="modal-body">Are you sure you wish to delete this record?</div>
+</app-shared-modal>

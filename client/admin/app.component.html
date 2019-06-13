@@ -1,0 +1,19 @@
+<div class="row">
+  <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <div class="sidebar-sticky">
+      <ul *ngIf="currentUser.isAdmin" class="nav flex-column">
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Admin</span>
+        </h6>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/users']">
+            Users
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+    <router-outlet></router-outlet>
+  </main>
+</div>
