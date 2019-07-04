@@ -1,0 +1,9 @@
+<%- include('../layout/_header.html.ejs') %>
+<p>A password reset link was requested for this email address.</p>
+<%- include('../layout/_button.html.ejs', {
+  label: 'RESET PASSWORD',
+  url: url
+}) %>
+<p><a href="<%= url %>"><%= url %></a></p>
+<p>If you did not request this link, you may ignore this email and your password will not be changed.</p>
+<%- include('../layout/_footer.html.ejs') %>

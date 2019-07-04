@@ -1,6 +1,9 @@
 'use strict';
 
+const bcrypt = require('bcrypt');
 const sequelizePaginate = require('sequelize-paginate')
+const uuid = require('uuid/v4');
+const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
@@ -56,11 +59,42 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       field: 'deactivated_at',
     },
+    passwordResetToken: {
+      type: DataTypes.UUID,
+      field: 'password_reset_token',
+    },
+    passwordResetTokenExpiresAt: {
+      type: DataTypes.DATE,
+      field: 'password_reset_token_expires_at',
+    }
   }, {
     tableName: 'users',
     underscored: true
   });
   User.associate = function(models) {
+
+    User.prototype.hashPassword = function(password) {
+      return bcrypt.hash(password, 10).then(hashedPassword => {
+        return this.update({hashedPassword: hashedPassword});
+      });
+    }
+
+    User.prototype.sendPasswordResetEmail = function() {
+      return this.update({
+        passwordResetToken: uuid(),
+        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+      }).then(function(user) {
+        return mailer.send({
+          template: 'password-reset',
+          message: {
+            to: `${user.firstName} ${user.lastName} <${user.email}>`
+          },
+          locals: {
+            url: `${process.env.BASE_URL}/login/reset-password/${user.passwordResetToken}`
+          }
+        });
+      });
+    }
   };
   sequelizePaginate.paginate(User)
   return User;
