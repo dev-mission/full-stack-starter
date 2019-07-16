@@ -19,13 +19,12 @@
           <span class="navbar-text">Hello, <%= currentUser.firstName %>!</span>
         <% } %>
         <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link" href="/admin">Admin</a>
+          </li>
           <% if (currentUser) { %>
             <li class="nav-item text-nowrap">
               <a class="nav-link" href="/logout">Sign out</a>
-            </li>
-          <% } else { %>
-            <li class="nav-item text-nowrap">
-              <a class="nav-link" href="/admin">Admin</a>
             </li>
           <% } %>
         </ul>

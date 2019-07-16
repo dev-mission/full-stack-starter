@@ -1,10 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ListUsersComponent } from '.';
+import { EditUserComponent, ListUsersComponent } from '.';
 
 const appRoutes: Routes = [
-  { path: 'users', component: ListUsersComponent }
+  {
+    path: 'users',
+    component: ListUsersComponent,
+    children: [
+      {
+        path: ':id',
+        component: EditUserComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({

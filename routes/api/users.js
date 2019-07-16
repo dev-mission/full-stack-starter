@@ -14,8 +14,41 @@ router.get('/', interceptors.requireAdmin, function(req, res, next) {
   });
 });
 
-router.get('/me', function(req, res, next) {
+router.get('/me', interceptors.requireAdmin, function(req, res, next) {
   res.json(req.user.toJSON());
+});
+
+router.get('/:id', interceptors.requireAdmin, function(req, res, next) {
+  models.User.findByPk(req.params.id).then(function(user) {
+    if (user) {
+      res.json(user.toJSON());
+    } else {
+      res.sendStatus(404);
+    }
+  }).catch(function(error) {
+    res.sendStatus(500);
+  });
+});
+
+router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
+  models.User.findByPk(req.params.id).then(function(user) {
+    return user.update({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+    });
+  }).then(function(user){
+    res.json(user.toJSON());
+  }).catch(function(error) {
+    if (error.name == 'SequelizeValidationError') {
+      res.status(422).json({
+        status: 422,
+        messages: error.errors
+      });
+    } else {
+      res.sendStatus(500);
+    }
+  });
 });
 
 module.exports = router;
