@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    iconUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     hashedPassword: {
       type: DataTypes.STRING,
       field: 'hashed_password',

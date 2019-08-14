@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const models = require('../../models');
 const interceptors = require('../interceptors');
+const helpers = require('../helpers');
 
 router.get('/', interceptors.requireAdmin, function(req, res, next) {
   models.User.paginate({
@@ -32,14 +33,18 @@ router.get('/:id', interceptors.requireAdmin, function(req, res, next) {
 
 router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
   models.User.findByPk(req.params.id).then(function(user) {
+    return helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
+  }).then(function(user) {
     return user.update({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      iconUrl: user.iconUrl
     });
   }).then(function(user){
     res.json(user.toJSON());
   }).catch(function(error) {
+    console.log(error);
     if (error.name == 'SequelizeValidationError') {
       res.status(422).json({
         status: 422,

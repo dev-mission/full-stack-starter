@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { ErrorPipe, PhonePipe } from '.';
+import { AssetPipe, ErrorPipe, PhonePipe } from '.';
 
 @NgModule({
   declarations: [
+    AssetPipe,
     ErrorPipe,
     PhonePipe,
   ],
   exports: [
+    AssetPipe,
     ErrorPipe,
     PhonePipe,
   ],

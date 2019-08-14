@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -9,6 +10,7 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var fileUpload = require('express-fileupload');
 var i18n = require('i18n');
+var bodyParser = require('body-parser');
 
 var interceptors = require('./routes/interceptors');
 var indexRouter = require('./routes/index');
@@ -26,6 +28,7 @@ app.use(logger('dev'));
 app.use(fileUpload({
   useTempFiles: !process.env.AWS_S3_BUCKET
 }));
+app.use(bodyParser.raw({type: ['image/*'], limit: '10mb'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set('trust proxy', 1);

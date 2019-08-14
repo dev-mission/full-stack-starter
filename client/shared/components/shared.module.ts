@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortablejsModule } from 'angular-sortablejs';
 
-import { ArrayComponent, ErrorComponent, FormComponent, ListComponent, ModalComponent } from '.';
+import { ArrayComponent, ErrorComponent, FormComponent, ListComponent,
+  ModalComponent, UploaderComponent } from '.';
 
 @NgModule({
   declarations: [
@@ -12,14 +13,16 @@ import { ArrayComponent, ErrorComponent, FormComponent, ListComponent, ModalComp
     ErrorComponent,
     FormComponent,
     ListComponent,
-    ModalComponent
+    ModalComponent,
+    UploaderComponent,
   ],
   exports: [
     ArrayComponent,
     ErrorComponent,
     FormComponent,
     ListComponent,
-    ModalComponent
+    ModalComponent,
+    UploaderComponent,
   ],
   imports: [
     CommonModule,
