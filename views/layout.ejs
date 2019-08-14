@@ -16,6 +16,7 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/"><%= process.env.APP_NAME %></a>
       <div class="collapse navbar-collapse justify-content-end">
         <% if (currentUser) { %>
+          <% if (currentUser.iconUrl) { %><img class="navbar-icon rounded" src="<%= assetUrl(currentUser.iconUrl) %>">&nbsp;<% } %>
           <span class="navbar-text">Hello, <%= currentUser.firstName %>!</span>
         <% } %>
         <ul class="navbar-nav px-3">

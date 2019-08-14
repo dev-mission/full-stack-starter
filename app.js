@@ -12,6 +12,7 @@ var fileUpload = require('express-fileupload');
 var i18n = require('i18n');
 var bodyParser = require('body-parser');
 
+var helpers = require('./routes/helpers');
 var interceptors = require('./routes/interceptors');
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
@@ -52,6 +53,7 @@ i18n.configure({
   directory: path.join(__dirname, 'locales')
 });
 
+app.use(helpers.assetHelpers);
 app.use(i18n.init);
 app.use(function(req, res, next) {
   res.locals.flash = req.flash();

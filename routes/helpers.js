@@ -28,6 +28,13 @@ module.exports.register = function(res, errors) {
   }
 }
 
+module.exports.assetHelpers = function(req, res, next) {
+  res.locals.assetUrl = function(urlPath) {
+    return `${process.env.ASSET_HOST}${urlPath}`;
+  };
+  next();
+}
+
 module.exports.handleUpload = function(record, paramName, newValue, destDir) {
   return new Promise(function(resolve, reject) {
     if (record[paramName] == newValue) {
