@@ -13,14 +13,14 @@ module.exports = webpackMerge(commonConfig, {
   devServer: {
     host: '0.0.0.0',
     port: 8080,
-    publicPath: 'http://localhost:8080/dist/',
+    publicPath: `http://${process.env.BASE_HOST}:8080/dist/`,
     historyApiFallback: true,
     stats: 'normal'
   },
 
   output: {
     path: helpers.root('../dist/'),
-    publicPath: 'http://localhost:8080/dist/',
+    publicPath: `http://${process.env.BASE_HOST}:8080/dist/`,
     filename: '[name].[hash].bundle.js',
     chunkFilename: '[id].[hash].chunk.js'
   },
