@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title><%= title %> - <%= process.env.APP_NAME %></title>
+    <link rel="stylesheet" href="/libraries/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="/libraries/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="/stylesheets/dashboard.css">
+    <base href="/admin/">
+    <script type="text/javascript">
+    window.env = {};
+    window.env.ASSET_HOST = '<%= process.env.ASSET_HOST %>';
+    </script>
+    <% if (locals.head) { %><%- head %><% } %>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/"><%= process.env.APP_NAME %></a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <% if (currentUser) { %>
+          <% if (currentUser.iconUrl) { %><img class="navbar-icon rounded" src="<%= assetUrl(currentUser.iconUrl) %>">&nbsp;<% } %>
+          <span class="navbar-text">Hello, <%= currentUser.firstName %>!</span>
+        <% } %>
+        <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+            <a class="nav-link" href="/admin">Admin</a>
+          </li>
+          <% if (currentUser) { %>
+            <li class="nav-item text-nowrap">
+              <a class="nav-link" href="/logout">Sign out</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <% if (flash.info || flash.error) { %>
+        <div style="position: absolute; top: 0; right: 0;">
+          <% if (flash.info) { %>
+          <div class="toast" role="main">
+            <div class="toast-body">
+              <%= flash.info.join(' '); %>
+            </div>
+          </div>
+          <% } %>
+          <% if (flash.error) { %>
+          <div class="toast" role="main">
+            <div class="toast-body">
+              <%= flash.error.join(' '); %>
+            </div>
+          </div>
+          <% } %>
+        </div>
+        <script type="application/javascript">$('.toast').toast({delay: 2000}).toast('show');</script>
+      <% } %>
+      <%- body %>
+    </div>
+  </body>
+</html>

@@ -6,9 +6,7 @@ var interceptors = require('./interceptors');
 
 /* GET the forgot password form */
 router.get('/forgot-password', function(req, res, next) {
-  res.render('login/forgot-password', {
-    title: 'Forgot your password?'
-  });
+  res.render('login/forgot-password');
 });
 
 /* POST email to forgot password for reset */
@@ -31,7 +29,6 @@ router.get('/reset-password/:token', function(req, res, next) {
   models.User.findOne({where: {passwordResetToken: req.params.token}}).then(function(user) {
     if (user) {
       res.render('login/reset-password', {
-        title: 'Reset your password',
         token: req.params.token,
         isExpired: user.passwordResetTokenExpiresAt.getTime() < Date.now()
       });
@@ -60,7 +57,6 @@ router.post('/reset-password/:token', function(req, res, next) {
 /* GET the login form */
 router.get('/', function(req, res, next) {
   res.render('login/new', {
-    title: 'Log in',
     redirectURI: req.query.redirectURI
   });
 });

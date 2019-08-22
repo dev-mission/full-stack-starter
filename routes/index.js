@@ -6,9 +6,7 @@ const models = require('../models');
 
 
 router.get('/', function(req, res, next) {
-  res.render('index', {
-    title: 'Home',
-  });
+  res.render('index');
 });
 
 router.get('/logout', function(req,res,next){
