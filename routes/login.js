@@ -1,7 +1,9 @@
-var express = require('express');
-var router = express.Router();
-var models = require('../models');
-var interceptors = require('./interceptors');
+'use strict'
+
+const express = require('express');
+const router = express.Router();
+const models = require('../models');
+const interceptors = require('./interceptors');
 
 
 /* GET the forgot password form */
@@ -62,15 +64,27 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST to submit login and password */
-router.post('/', interceptors.passport.authenticate('local', {
-  failureRedirect: '/login',
-  failureFlash: true
-}), function(req, res) {
-  if (req.body.redirectURI != '') {
-    res.redirect(req.body.redirectURI);
-  } else {
-    res.redirect('/');
-  }
+router.post('/', function(req, res, next) {
+  interceptors.passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      let redirectURI = '/login';
+      if (req.body.redirectURI != '') {
+        redirectURI = `${redirectURI}?redirectURI=${encodeURIComponent(req.body.redirectURI)}`;
+      }
+      req.flash('error', 'The email and/or password was incorrect.');
+      return res.redirect(redirectURI);
+    }
+    req.logIn(user, function(err) {
+      if (req.body.redirectURI != '') {
+        res.redirect(req.body.redirectURI);
+      } else {
+        res.redirect('/');
+      }
+    });
+  })(req, res, next);
 });
 
 module.exports = router;
