@@ -9,7 +9,7 @@
     "build:dev": "webpack-dev-server",
     "build:prod": "npm run build:clean && ngc && npm run webpack-prod && npm run build:clean",
     "build:clean": "del-cli 'client/**/*.js' 'client/**/*.js.map' 'client/**/*.ngsummary.json' 'client/**/*.metadata.json' 'client/**/**/*.ngfactory.ts' 'client/**/*.ngstyle.ts' 'client/**/*.shim.ts'",
-    "start": "nodemon -V --ignore ./client ./bin/www"
+    "start": "nodemon -L -V --ignore ./client ./bin/www"
   },
   "dependencies": {
     "@angular/animations": "~7.0",
