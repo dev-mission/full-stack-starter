@@ -32,14 +32,25 @@ router.get('/:id', interceptors.requireAdmin, function(req, res, next) {
 });
 
 router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
-  models.User.findByPk(req.params.id).then(function(user) {
-    return helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
-  }).then(function(user) {
-    return user.update({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      iconUrl: user.iconUrl
+  models.sequelize.transaction(function(transaction) {
+    return models.User.findByPk(req.params.id, {transaction}).then(function(user) {
+      return helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
+    }).then(function(user) {
+      return user.update({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        iconUrl: user.iconUrl
+      }, {transaction});
+    }).then(function(user) {
+      if (req.body.password && req.body.password != '') {
+        //// TODO: validate password requirements
+        return user.hashPassword(req.body.password, {transaction}).then(function() {
+          return user;
+        });
+      } else {
+        return user;
+      }
     });
   }).then(function(user){
     res.json(user.toJSON());

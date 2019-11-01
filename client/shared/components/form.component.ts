@@ -58,6 +58,7 @@ export class FormComponent {
         .subscribe((response: HttpResponse<any>) => {
           this.loading = false;
           this.updated = true;
+          this.record = response.body;
           this.update.emit(response.body);
         });
     } else {

@@ -77,9 +77,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   User.associate = function(models) {
 
-    User.prototype.hashPassword = function(password) {
+    User.prototype.hashPassword = function(password, object) {
       return bcrypt.hash(password, 10).then(hashedPassword => {
-        return this.update({hashedPassword: hashedPassword});
+        return this.update({hashedPassword: hashedPassword}, object);
       });
     }
 

@@ -19,6 +19,11 @@
       <div *ngIf="error.messages|error:'email'" class="invalid-feedback">{{(error.messages|error:'email').message}}</div>
     </div>
     <div class="form-group">
+      <label for="email">Password</label>
+      <input [(ngModel)]="record.password" [class.is-invalid]="error.messages|error:'password'" type="password" class="form-control" id="password" name="password">
+      <div *ngIf="error.messages|error:'password'" class="invalid-feedback">{{(error.messages|error:'password').message}}</div>
+    </div>
+    <div class="form-group">
       <label for="Icon">Icon</label>
       <div *ngIf="icon && icon.dataURL" style="width: 200px;">
         <img [src]="icon.dataURL" class="img-fluid img-thumbnail mb-2" />
