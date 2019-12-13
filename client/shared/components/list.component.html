@@ -7,3 +7,5 @@
     <ng-content select="tfoot"></ng-content>
   </table>
 </div>
+<a *ngIf="paginationLink" [app-shared-autoload]="paginationLink" (onLoadMore)="onLoadMore($event)">Show more...</a>
+<app-shared-loader *ngIf="isLoading"></app-shared-loader>

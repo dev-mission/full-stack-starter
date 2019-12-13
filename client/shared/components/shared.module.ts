@@ -4,23 +4,27 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SortablejsModule } from 'angular-sortablejs';
 
-import { ArrayComponent, ErrorComponent, FormComponent, ListComponent,
-  ModalComponent, UploaderComponent } from '.';
+import { ArrayComponent, AutoloadDirective, ErrorComponent, FormComponent,
+  ListComponent, LoaderComponent, ModalComponent, UploaderComponent } from '.';
 
 @NgModule({
   declarations: [
     ArrayComponent,
+    AutoloadDirective,
     ErrorComponent,
     FormComponent,
     ListComponent,
+    LoaderComponent,
     ModalComponent,
     UploaderComponent,
   ],
   exports: [
     ArrayComponent,
+    AutoloadDirective,
     ErrorComponent,
     FormComponent,
     ListComponent,
+    LoaderComponent,
     ModalComponent,
     UploaderComponent,
   ],

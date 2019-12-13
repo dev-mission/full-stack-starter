@@ -39,7 +39,10 @@ module.exports = {
           { loader: 'css-loader', options: { sourceMap: isDev } },
           { loader: 'sass-loader', options: { sourceMap: isDev } }
         ],
-        include: helpers.root('client', 'admin')
+        include: [
+          helpers.root('client', 'admin'),
+          helpers.root('client', 'shared')
+        ]
       }
     ]
   },
