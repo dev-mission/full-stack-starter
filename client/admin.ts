@@ -11,6 +11,6 @@ if (process.env.ENV === 'production') {
 }
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './admin/app.module';
+import { AdminAppModule } from './admin/app.module';
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(AdminAppModule);

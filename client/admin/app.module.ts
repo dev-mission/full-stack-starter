@@ -33,4 +33,4 @@ import { ApiService, NavigationService, UserService } from '../shared/services';
     AppComponent
   ]
 })
-export class AppModule {}
+export class AdminAppModule {}

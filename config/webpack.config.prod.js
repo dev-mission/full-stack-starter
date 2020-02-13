@@ -1,7 +1,7 @@
 'use strict';
 
 const webpackMerge            = require('webpack-merge');
-const ngw                     = require('@ngtools/webpack');
+const ngw                     = require('@rush/webpack');
 const UglifyJsPlugin          = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const cssnano                 = require('cssnano');
@@ -43,7 +43,7 @@ module.exports = webpackMerge(commonConfig, {
     rules: [
       {
         test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-        loader: '@ngtools/webpack'
+        loader: '@rush/webpack'
       }
     ]
   },
@@ -51,7 +51,9 @@ module.exports = webpackMerge(commonConfig, {
   plugins: [
     new ngw.AngularCompilerPlugin({
       tsConfigPath: helpers.root('tsconfig.json'),
-      entryModule: helpers.root('client', 'admin', 'app.module#AppModule')
+      entryModules: [
+        helpers.root('client', 'admin', 'app.module#AdminAppModule'),
+      ]
     })
   ]
 });
