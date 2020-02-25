@@ -16,6 +16,8 @@ var helpers = require('./routes/helpers');
 var interceptors = require('./routes/interceptors');
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
+var passwordsRouter = require('./routes/passwords');
+var registrationsRouter = require('./routes/registrations');
 var adminRouter = require('./routes/admin');
 var apiRouter = require('./routes/api');
 
@@ -63,7 +65,9 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
-app.use('/admin', interceptors.requireLogin);
+app.use('/passwords', passwordsRouter);
+app.use('/register', registrationsRouter);
+app.use('/admin', interceptors.requireAdmin);
 app.use('/admin', adminRouter);
 app.use('/api', interceptors.requireLogin);
 app.use('/api', apiRouter);

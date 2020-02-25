@@ -1,0 +1,36 @@
+<%- contentFor('title') %>Log in
+<%- contentFor('body') %>
+<div class="row justify-content-center" role="main">
+  <div class="col col-sm-6 col-lg-4 col-xl-3">
+    <h1 class="h2">Register</h1>
+    <form method="post" action="/register">
+      <input type="hidden" name="redirectURI" value="<%= redirectURI %>" />
+      <div class="form-group">
+        <label>First name</label>
+        <input type="text" class="form-control <%= hasError('firstName') ? 'is-invalid' : '' %>" name="firstName" value="<%= user.firstName %>" />
+        <%- renderErrorMessages('firstName') %>
+      </div>
+      <div class="form-group">
+        <label>Last name</label>
+        <input type="text" class="form-control <%= hasError('lastName') ? 'is-invalid' : '' %>" name="lastName" value="<%= user.lastName %>" />
+        <%- renderErrorMessages('lastName') %>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" class="form-control <%= hasError('email') ? 'is-invalid' : '' %>" name="email" value="<%= user.email %>" />
+        <%- renderErrorMessages('email') %>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control <%= hasError('password') ? 'is-invalid' : '' %>" name="password" value="<%= user.password %>" />
+        <%- renderErrorMessages('password') %>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block" type="submit">Submit</button>
+      </div>
+      <div class="form-group text-center">
+        <a href="/login?redirectURI=<%= encodeURIComponent(redirectURI || '/') %>">Already have an account?</a>
+      </div>
+    </form>
+  </div>
+</div>

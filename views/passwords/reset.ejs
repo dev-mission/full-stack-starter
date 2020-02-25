@@ -4,10 +4,10 @@
   <div class="col col-sm-6 col-lg-4 col-xl-3">
     <h1 class="h2">Reset your password</h1>
     <% if (isExpired) { %>
-      <p>Sorry, this password reset link has expired. <a href="/login/forgot-password">Request another?</a></p>
+      <p>Sorry, this password reset link has expired. <a href="/passwords/forgot">Request another?</a></p>
     <% } else { %>
       <p>Enter a new password for your account.</p>
-      <form method="post" action="/login/reset-password/<%= token %>">
+      <form method="post" action="/passwords/reset/<%= token %>">
         <div class="form-group">
           <label>New password</label>
           <input type="password" class="form-control" name="password" />

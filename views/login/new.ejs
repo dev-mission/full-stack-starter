@@ -17,7 +17,8 @@
         <button class="btn btn-primary btn-block" type="submit">Submit</button>
       </div>
       <div class="form-group text-center">
-        <a href="/login/forgot-password">Forgot your password?</a>
+        <a href="/passwords/forgot">Forgot your password?</a><br />
+        <a href="/register?redirectURI=<%= encodeURIComponent(redirectURI || '/') %>">Need an account?</a><br />
       </div>
     </form>
   </div>
