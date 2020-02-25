@@ -11,7 +11,7 @@ This repository contains a "starter" project for web application development in 
    $ git clone https://github.com/dev-mission/full-stack-starter.git
    $ cd full-stack-starter
    ```
-   
+
    <!-- AFTER SETTING UP, DELETE FROM HERE... -->
 
 1. After cloning, your "local" repo (in this directory on your computer) will be linked to the "remote"
@@ -32,20 +32,12 @@ This repository contains a "starter" project for web application development in 
 
    <!-- ... TO HERE!!! -->
 
-2. There are some settings that must be configured to run the web application.
-   They are set as "environment variables" which are loaded from a file called ```.env```.
-   Copy the ```example.env``` file as a starting point:
-
-   ```
-   $ cp example.env .env
-   ```
-
-3. Install Docker Desktop: https://www.docker.com/products/docker-desktop
+1. Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
    1. If you have Windows Home Edition, you will need to install Docker Toolbox instead.
    See the troubleshooting notes below.
 
-4. Open a command-line shell, change into your repo directory, and execute this command:
+2. Open a command-line shell, change into your repo directory, and execute this command:
 
    ```
    $ docker-compose up
@@ -63,29 +55,12 @@ This repository contains a "starter" project for web application development in 
    server_1       | 2:14:26 AM web.1     |  [nodemon] or send SIGHUP to 57 to restart
    ```
 
-5. Open ANOTHER command-line shell, change into your repo directory, then execute
-   this command to log in to the running server container:
-
-   ```
-   $ docker-compose exec server bash -l
-   ```
-
-   Whenever the server container is running, you can execute this command to log in
-   to the server- you will then be in a Linux "bash" command-line shell. Execute
-   the following two commands inside the server container to complete the setup:
-
-   ```
-   # sequelize db:create
-   # sequelize db:migrate
-   # sequelize db:seed:all
-   ```
-
-6. Now you should be able to open the web app in your browser at: http://localhost:3000/
+3. Now you should be able to open the web app in your browser at: http://localhost:3000/
 
    1. If you had to install Docker Toolbox, then replace "localhost" with the IP
    address of the Docker Virtual Machine.
 
-7. To stop the server, press CONTROL-C in the window with the running server.
+4. To stop the server, press CONTROL-C in the window with the running server.
    If it is successful, you will see something like this:
 
    ```
@@ -110,13 +85,13 @@ This repository contains a "starter" project for web application development in 
    Stopping full-stack-starter_mailcatcher_1 ... done
    ```
 
-8. That's it! After all this setup is complete, the only command you need to run to get
+5. That's it! After all this setup is complete, the only command you need to run to get
 started again is the ```docker-compose up``` command.
 
 ## Shell Command Quick Reference
 
  * Every directory and file on your computer has a *path* that describes its location in storage. Special path symbols include:
- 
+
    * The current *working directory* you are in: `.`
    * The *parent* of the current working directory: `..`
    * Your *home* directory: `~`
@@ -133,31 +108,31 @@ started again is the ```docker-compose up``` command.
        * For example, on Mac the same path as the previous example is: `~/Documents`
 
  * To *print the working directory* (i.e. to see the full path of the directory you are currently in):
- 
+
    ```
    $ pwd
    ```
 
  * To *list* the files in the working directory:
- 
+
    ```
    $ ls -l
    ```
 
  * To *change* the working directory:
- 
+
    ```
    $ cd path
    ```
 
  * To *make* a new directory inside the working directory:
- 
+
    ```
    $ mkdir newpath
    ```
 
  * To create a new *empty file* inside the working directory:
- 
+
    ```
    $ touch filename.ext
    ```
@@ -165,37 +140,37 @@ started again is the ```docker-compose up``` command.
 ## git Command Quick Reference
 
  * To check the *status* of the files in your local repo (i.e. what's been added or changed):
- 
+
    ```
    $ git status
    ```
-   
+
  * To *add all* the changed files to the next commit:
- 
+
    ```
    $ git add .
    ```
-   
+
    To *add specific file(s)* to the next commit:
-   
+
    ```
    $ git add path/to/file1.ext path/to/file2.ext path/with/wildcard/*
    ```
-   
+
  * To *commit* the added files with a message:
- 
+
    ```
    $ git commit -m "My description of what's changed"
    ```
-   
+
  * To *push* the commit to the remote repo:
- 
+
    ```
    $ git push
    ```
-   
+
  * To *pull* any new commits from the remote repo:
- 
+
    ```
    $ git pull
    ```
@@ -203,31 +178,31 @@ started again is the ```docker-compose up``` command.
 ## Docker Command Quick Reference
 
  * To start all the containers:
- 
+
    ```
    $ docker-compose up
    ```
-   
+
  * To log in to the running server container:
- 
+
    ```
    $ docker-compose exec server bash -l
    ```
-   
+
  * To stop all the containers, in case things didn't shutdown properly with CTRL-C:
- 
+
    ```
    $ docker-compose stop
    ```
 
  * To run the server container without starting everything using the up command:
- 
+
    ```
    $ docker-compose run --rm server bash -l
    ```
-   
+
  * To re-build the server container:
- 
+
    ```
    $ docker-compose build server
    ```
