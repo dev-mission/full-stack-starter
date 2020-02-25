@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../shared/services';
 
 @Component({
-  templateUrl: './edit.component.html'
+  templateUrl: './edit-user.component.html'
 })
 export class EditUserComponent {
   id: string = null;
