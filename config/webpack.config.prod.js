@@ -1,7 +1,7 @@
 'use strict';
 
 const webpackMerge            = require('webpack-merge');
-const ngw                     = require('@rush/webpack');
+const ngw                     = require('@ngtools/webpack');
 const UglifyJsPlugin          = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const cssnano                 = require('cssnano');
@@ -43,7 +43,7 @@ module.exports = webpackMerge(commonConfig, {
     rules: [
       {
         test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-        loader: '@rush/webpack'
+        loader: '@ngtools/webpack'
       }
     ]
   },

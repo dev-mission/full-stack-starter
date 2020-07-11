@@ -12,5 +12,8 @@
     "typeRoots": ["node_modules/@types"],
     "esModuleInterop": true
   },
+  "angularCompilerOptions": {
+    "enableIvy": false
+  },
   "exclude": ["node_modules"]
 }

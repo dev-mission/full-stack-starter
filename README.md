@@ -228,7 +228,7 @@ started again is the ```docker-compose up``` command.
 ## License
 
 Full-Stack Starter
-Copyright (C) 2019 <dev/Mission>
+Copyright (C) 2020 <dev/Mission>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
