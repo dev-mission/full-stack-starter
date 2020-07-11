@@ -1,7 +1,7 @@
 'use strict';
 
 const CleanWebpackPlugin   = require('clean-webpack-plugin');
-const HtmlWebpackPlugin    = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleTracker        = require('webpack-bundle-tracker')
 const webpack              = require('webpack');
 
@@ -10,7 +10,8 @@ const isDev                = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    admin: './client/admin.ts'
+    admin: './client/admin.ts',
+    site: './client/site.ts'
   },
 
   resolve: {
@@ -26,11 +27,11 @@ module.exports = {
       {
         test: /\.(scss|sass)$/,
         use: [
-          { loader: 'style-loader', options: { sourceMap: isDev } },
+          MiniCssExtractPlugin.loader,
           { loader: 'css-loader', options: { sourceMap: isDev } },
           { loader: 'sass-loader', options: { sourceMap: isDev } }
         ],
-        include: helpers.root('client', 'assets')
+        include: helpers.root('client', 'site')
       },
       {
         test: /\.(scss|sass)$/,
@@ -56,7 +57,11 @@ module.exports = {
       helpers.root('src')
     ),
     new CleanWebpackPlugin(
-      helpers.root('dist'), { root: helpers.root(), verbose: true }),
+      helpers.root('dist'), { root: helpers.root(), verbose: true }
+    ),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css',
+    }),
     new BundleTracker({filename: './client/webpack-stats.json'})
   ]
 };
