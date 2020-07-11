@@ -1,92 +1,87 @@
 require('dotenv').config();
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieSession = require('cookie-session');
-var logger = require('morgan');
-var expressLayouts = require('express-ejs-layouts');
-var flash = require('connect-flash');
-var passport = require('passport');
-var fileUpload = require('express-fileupload');
-var i18n = require('i18n');
-var bodyParser = require('body-parser');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieSession = require('cookie-session');
+const logger = require('morgan');
+const expressLayouts = require('express-ejs-layouts');
+const flash = require('connect-flash');
+const passport = require('passport');
+const fileUpload = require('express-fileupload');
+const i18n = require('i18n');
+const bodyParser = require('body-parser');
 
-var helpers = require('./routes/helpers');
-var interceptors = require('./routes/interceptors');
-var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
-var passwordsRouter = require('./routes/passwords');
-var registrationsRouter = require('./routes/registrations');
-var adminRouter = require('./routes/admin');
-var apiRouter = require('./routes/api');
+const helpers = require('./routes/helpers');
+const routes = require('./routes');
 
-var app = express();
+const app = express();
 
-// view engine setup
+/// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
+/// router logging output
 app.use(logger('dev'));
+/// multipart file upload support (when not uploading direct to S3)
 app.use(fileUpload({
   useTempFiles: !process.env.AWS_S3_BUCKET
 }));
-app.use(bodyParser.raw({type: ['image/*'], limit: '10mb'}));
+/// configure allowed file upload types and max file size
+app.use(bodyParser.raw({type: [
+  'image/*'
+], limit: '10mb'}));
+/// support json content body
 app.use(express.json());
+/// support standard form urlencoded body
 app.use(express.urlencoded({ extended: false }));
+/// support forwarded headers from intermediate proxies
 app.set('trust proxy', 1);
+/// set up session handling in cookies
 app.use(cookieSession({
   secret: process.env.SESSION_SECRET,
   secure: process.env.NODE_ENV == 'production'
 }));
+/// support session flash messages displayed on next request
 app.use(flash());
+/// use passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/client', express.static(path.join(__dirname, 'dist')));
-app.use('/libraries/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
-app.use('/libraries/cleave', express.static(path.join(__dirname, 'node_modules/cleave.js/dist')));
-app.use('/libraries/fontawesome', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free')));
-app.use('/libraries/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
-
+/// support internationalization of strings
 i18n.configure({
   locales: ['en'],
   directory: path.join(__dirname, 'locales')
 });
-
-app.use(helpers.assetHelpers);
 app.use(i18n.init);
+/// add in our custom static file upload helpers
+app.use(helpers.assetHelpers);
+/// set up local variables commonly used in all requests
 app.use(function(req, res, next) {
+  /// set any flash messages in the session from a previous request
   res.locals.flash = req.flash();
+  /// set the current logged in user, if any
   res.locals.currentUser = req.user;
   next();
 });
 
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/passwords', passwordsRouter);
-app.use('/register', registrationsRouter);
-app.use('/admin', interceptors.requireAdmin);
-app.use('/admin', adminRouter);
-app.use('/api', interceptors.requireLogin);
-app.use('/api', apiRouter);
+/// load in all the configured routes in /routes/index.js
+app.use(routes);
 
-// catch 404 and forward to error handler
+/// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+/// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+  /// set locals, only providing error in development
   res.locals.currentUser = null;
   res.locals.flash = {};
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   res.locals.title = "Error!";
 
-  // render the error page
+  /// render the error page
   res.status(err.status || 500);
   res.render('error');
 });
