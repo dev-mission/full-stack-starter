@@ -1,9 +1,0 @@
-<ul *ngIf="uploaders.length > 0" class="list-group">
-  <li *ngFor="let uploader of uploaders" class="list-group-item">
-    {{uploader.file.name}}
-    <div class="progress">
-      <div class="progress-bar" [style.width]="progress"></div>
-    </div>
-  </li>
-</ul>
-<input *ngIf="uploaders.length == 0" #fileInput type="file" (change)="onChange($event)" class="form-control" />

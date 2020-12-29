@@ -1,8 +1,0 @@
-<%- contentFor('title') %>Admin
-<%- contentFor('body') %>
-<app-admin>Loading...</app-admin>
-<% for (let entry of ['admin']) { %>
-  <% for (let chunk of webpackStats.chunks[entry]) { %>
-    <script type="application/javascript" src="<%= chunk.publicPath %>"></script>
-  <% } %>
-<% } %>
