@@ -1,5 +1,5 @@
 # Start with the latest Node.js LTS release
-FROM node:12
+FROM node:14
 
 # Set an env variable for the location of the app files
 ENV APP_HOME=/opt/node/app
