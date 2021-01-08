@@ -1,20 +1,38 @@
 <%- contentFor('title') %>Forgot your password?
 <%- contentFor('body') %>
-<div class="row justify-content-center" role="main">
-  <div class="col col-sm-6 col-lg-4 col-xl-3">
-    <h1 class="h2">Forgot your password?</h1>
-    <p>Enter the email address you registered to receive a reset password link.</p>
-    <form method="post" action="/passwords/forgot">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="text" class="form-control" name="email" />
+<main class="container">
+  <div class="row justify-content-center">
+    <div class="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
+      <% if (flash.info || flash.error) { %>
+        <% if (flash.info) { %>
+        <div class="alert alert-primary">
+          <%= flash.info.join(' '); %>
+        </div>
+        <% } %>
+        <% if (flash.error) { %>
+        <div class="alert alert-danger">
+          <%= flash.error.join(' '); %>
+        </div>
+        <% } %>
+      <% } %>
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Forgot your password?</h2>
+          <p>Enter the email address you registered to receive a reset password link.</p>
+          <form method="post" action="/passwords/forgot">
+            <div class="mb-3">
+              <label class="form-label" for="email">Email</label>
+              <input type="text" class="form-control" id="email" name="email" />
+            </div>
+            <div class="mb-3 d-grid">
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+            <div class="mb-3 text-center">
+              <a href="/login">Back to login...</a>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-block" type="submit">Submit</button>
-      </div>
-      <div class="form-group text-center">
-        <a href="/login">Back to login...</a>
-      </div>
-    </form>
+    </div>
   </div>
-</div>
+</main>

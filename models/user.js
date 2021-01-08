@@ -1,16 +1,63 @@
 'use strict';
-
 const bcrypt = require('bcrypt');
+const {
+  Model
+} = require('sequelize');
 const sequelizePaginate = require('sequelize-paginate')
 const uuid = require('uuid/v4');
 const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+
+    static isValidPassword(password) {
+      return password.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) != null;
+    };
+
+    hashPassword(password, options) {
+      return bcrypt.hash(password, 10).then(hashedPassword => {
+        return this.update({hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date()}, options);
+      });
+    };
+
+    sendPasswordResetEmail() {
+      return this.update({
+        passwordResetToken: uuid(),
+        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+      }).then((user) => {
+        return mailer.send({
+          template: 'password-reset',
+          message: {
+            to: this.fullNameAndEmail
+          },
+          locals: {
+            url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`
+          }
+        });
+      });
+    };
+
+    sendWelcomeEmail() {
+      return mailer.send({
+        template: 'welcome',
+        message: {
+          to: this.fullNameAndEmail
+        }
+      });
+    }
+  };
+  User.init({
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: 'first_name',
       validate: {
         notNull: {
           msg: 'First name cannot be blank'
@@ -23,7 +70,6 @@ module.exports = (sequelize, DataTypes) => {
     lastName: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: 'last_name',
       validate: {
         notNull: {
           msg: 'Last name cannot be blank'
@@ -32,9 +78,9 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Last name cannot be blank'
         }
       }
-    },
+    },    
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.CITEXT,
       allowNull: false,
       validate: {
         notNull: {
@@ -45,77 +91,33 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    iconUrl: {
-      type: DataTypes.STRING,
-      allowNull: true
+    fullNameAndEmail: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName} <${this.email}>`;
+      }
     },
     hashedPassword: {
-      type: DataTypes.STRING,
-      field: 'hashed_password',
+      type: DataTypes.STRING
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
-      field: 'is_admin',
+      defaultValue: false
     },
     deactivatedAt: {
-      type: DataTypes.DATE,
-      field: 'deactivated_at',
+      type: DataTypes.DATE
     },
     passwordResetToken: {
-      type: DataTypes.UUID,
-      field: 'password_reset_token',
+      type: DataTypes.UUID
     },
     passwordResetTokenExpiresAt: {
-      type: DataTypes.DATE,
-      field: 'password_reset_token_expires_at',
+      type: DataTypes.DATE
     }
   }, {
-    tableName: 'users',
-    underscored: true
+    sequelize,
+    modelName: 'User',
   });
-  User.associate = function(models) {
-    User.isValidPassword = function(password) {
-      return password.match(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) != null;
-    };
-
-    User.prototype.hashPassword = function(password, object) {
-      return bcrypt.hash(password, 10).then(hashedPassword => {
-        return this.update({hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date()}, object);
-      });
-    };
-
-    User.prototype.fullNameAndEmail = function() {
-      return `${this.firstName} ${this.lastName} <${this.email}>`
-    };
-
-    User.prototype.sendPasswordResetEmail = function() {
-      return this.update({
-        passwordResetToken: uuid(),
-        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
-      }).then(function(user) {
-        return mailer.send({
-          template: 'password-reset',
-          message: {
-            to: `${this.fullNameAndEmail()}`
-          },
-          locals: {
-            url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`
-          }
-        });
-      });
-    };
-
-    User.prototype.sendWelcomeEmail = function() {
-      return mailer.send({
-        template: 'welcome',
-        message: {
-          to: `${this.fullNameAndEmail()}`
-        }
-      });
-    }
-  };
   sequelizePaginate.paginate(User)
   return User;
 };

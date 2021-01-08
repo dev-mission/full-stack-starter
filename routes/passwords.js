@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const models = require('../models');
-const interceptors = require('./interceptors');
+const helpers = require('./helpers');
 
 /* GET the forgot password form */
 router.get('/forgot', function(req, res, next) {
@@ -22,7 +22,7 @@ router.post('/forgot', function(req, res, next) {
       req.flash('error', 'The email you entered is not registered.');
       res.redirect('/passwords/forgot');
     }
-  });
+  }).catch(console.log);
 });
 
 /* GET the reset password form */
@@ -44,10 +44,19 @@ router.get('/reset/:token', function(req, res, next) {
 router.post('/reset/:token', function(req, res, next) {
   models.User.findOne({where: {passwordResetToken: req.params.token}}).then(function(user) {
     if (user) {
-      user.hashPassword(req.body.password).then(function() {
-        req.flash('info', 'Your new password has been saved!');
-        res.redirect('/login');
-      });
+      console.log(req.body.password, models.User.isValidPassword(req.body.password));
+      if (models.User.isValidPassword(req.body.password)) {
+        user.hashPassword(req.body.password).then(function() {
+          req.flash('info', 'Your new password has been saved!');
+          res.redirect('/login');
+        });
+      } else {
+        helpers.register(res, [{path: 'password', message: 'Minimum eight characters, at least one letter and one number.'}]);
+        res.render('passwords/reset', {
+          token: req.params.token,
+          isExpired: user.passwordResetTokenExpiresAt.getTime() < Date.now()
+        });
+      }
     } else {
       req.flash('error', 'The password reset link you entered is invalid.');
       res.redirect('/login');

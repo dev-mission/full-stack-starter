@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models');
 const helpers = require('./helpers');
-const interceptors = require('./interceptors');
 
 /* GET the register form */
 router.get('/', function(req, res, next) {
