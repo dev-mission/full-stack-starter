@@ -13,7 +13,7 @@ const uuid = require('uuid/v4');
 const models = require('../../models');
 const interceptors = require('../interceptors');
 
-router.post('/', interceptors.requireAdmin, function(req, res, next) {
+router.post('/', interceptors.requireLogin, function(req, res, next) {
   const id = uuid();
   let response = req.body.blob;
   response.id = id;
@@ -51,7 +51,7 @@ router.post('/', interceptors.requireAdmin, function(req, res, next) {
   res.json(response);
 });
 
-router.put('/:id', interceptors.requireAdmin, function(req, res, next) {
+router.put('/:id', interceptors.requireLogin, function(req, res, next) {
   const tmpDir = path.resolve(__dirname, '../../tmp/uploads');
   mkdirp.sync(tmpDir);
   fs.writeFile(path.resolve(tmpDir, `${req.params.id}.${mime.extension(req.get('Content-Type'))}`), req.body, function(err) {

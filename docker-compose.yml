@@ -15,6 +15,7 @@ services:
     volumes:
       - .:/opt/node/app
       - /opt/node/app/node_modules
+      - /opt/node/app/client/node_modules
     environment:
       - SMTP_HOST=mailcatcher
       - SMTP_PORT=1025
@@ -24,7 +25,6 @@ services:
       - DATABASE_URL=postgres://postgres@db/app
     ports:
       - 3000:3000
-      - 3001:3001
-      - 8080:8080
+      - 3100:3100
     depends_on:
       - db

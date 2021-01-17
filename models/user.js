@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const {
   Model
 } = require('sequelize');
+const _ = require('lodash');
 const sequelizePaginate = require('sequelize-paginate')
 const uuid = require('uuid/v4');
 const mailer = require('../emails/mailer');
@@ -20,13 +21,22 @@ module.exports = (sequelize, DataTypes) => {
 
     static isValidPassword(password) {
       return password.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) != null;
-    };
+    }
+
+    toJSON() {
+      return _.pick(this.get(), [
+        'id',
+        'firstName',
+        'lastName',
+        'email'
+      ]);
+    }
 
     hashPassword(password, options) {
       return bcrypt.hash(password, 10).then(hashedPassword => {
         return this.update({hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date()}, options);
       });
-    };
+    }
 
     sendPasswordResetEmail() {
       return this.update({
@@ -43,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
           }
         });
       });
-    };
+    }
 
     sendWelcomeEmail() {
       return mailer.send({

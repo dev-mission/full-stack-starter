@@ -1,10 +1,13 @@
 'use strict';
 
 const express = require('express');
-const router = express.Router();
+const HttpStatus = require('http-status-codes');
+
 const models = require('../../models');
 const interceptors = require('../interceptors');
 const helpers = require('../helpers');
+
+const router = express.Router();
 
 router.get('/', interceptors.requireAdmin, function(req, res, next) {
   models.User.paginate({
@@ -15,8 +18,12 @@ router.get('/', interceptors.requireAdmin, function(req, res, next) {
   });
 });
 
-router.get('/me', interceptors.requireAdmin, function(req, res, next) {
-  res.json(req.user.toJSON());
+router.get('/me', function(req, res, next) {
+  if (req.user) {
+    res.json(req.user.toJSON());
+  } else {
+    res.status(HttpStatus.NO_CONTENT).end();
+  }
 });
 
 router.get('/:id', interceptors.requireAdmin, function(req, res, next) {

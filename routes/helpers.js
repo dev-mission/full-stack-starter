@@ -2,12 +2,9 @@
 
 const AWS = require('aws-sdk');
 const fs = require('fs-extra');
-const inflection = require('inflection');
 const _ = require('lodash');
-const mime = require('mime-types');
 const path = require('path');
 const querystring = require('querystring');
-
 
 module.exports.setPaginationHeaders = function(req, res, page, pages, total) {
   const baseURL = `${process.env.BASE_URL}${req.baseUrl}${req.path}?`;
@@ -44,27 +41,6 @@ module.exports.setPaginationHeaders = function(req, res, page, pages, total) {
     'Link': link
   };
   res.set(headers);
-}
-
-module.exports.register = function(res, errors) {
-  res.locals.inflection = inflection;
-
-  const hasError = function(name) {
-    return _.find(errors, e => e.path == name) !== undefined;
-  };
-  res.locals.hasError = hasError;
-
-  const errorMessages = function(name) {
-    return _.uniq(_.map(_.filter(errors, e => e.path == name), e => e.message));
-  };
-  res.locals.errorMessages = errorMessages;
-
-  res.locals.renderErrorMessages = function(name) {
-    if (hasError(name)) {
-      return `<div class="invalid-feedback d-block">${inflection.capitalize(errorMessages(name).join(', '))}.</div>`
-    }
-    return '';
-  }
 }
 
 module.exports.assetHelpers = function(req, res, next) {

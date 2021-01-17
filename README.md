@@ -2,45 +2,30 @@
 
 This repository contains a "starter" project for web application development in JavaScript.
 
-## Getting Started
+## One-time Setup
 
-1. Clone this git repo to a "local" directory (on your computer), then change
+1. On Github, "Fork" this git repo to your own account so that you have your own copy.
+
+   Read more about "forking" here:  
+   https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo
+
+2. Clone YOUR copy of the git repo to a "local" directory (on your computer), then change
    into the directory.
 
    ```
-   $ git clone https://github.com/dev-mission/full-stack-starter.git
-   $ cd full-stack-starter
+   git clone https://github.com/YOUR_ACCOUNT_ID/full-stack-starter.git
+   cd full-stack-starter
    ```
 
-   <!-- AFTER SETTING UP, DELETE FROM HERE... -->
-
-1. After cloning, your "local" repo (in this directory on your computer) will be linked to the "remote"
-   repo (as the "origin"). To track and save your own work on top of this code, rename the remote
-   to something else (in this example, to the name "upstream"):
-
-   ```
-   $ git remote rename origin upstream
-   ```
-
-1. Create your own new git repo for your work, then push up and link your local repo
-   to it as the new "origin" :
-
-   ```
-   $ git remote add origin <your new remote repository URL>
-   $ git push -u origin master
-   ```
-
-   <!-- ... TO HERE!!! -->
-
-1. Install Docker Desktop: https://www.docker.com/products/docker-desktop
+3. Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
    1. If you have Windows Home Edition, you will need to install Docker Toolbox instead.
    See the troubleshooting notes below.
 
-2. Open a command-line shell, change into your repo directory, and execute this command:
+4. Open a command-line shell, change into your repo directory, and execute this command:
 
    ```
-   $ docker-compose up
+   docker-compose up
    ```
 
    It will take a while the first time you run this command to build the "images" to
@@ -48,19 +33,31 @@ This repository contains a "starter" project for web application development in 
    like this, the server is running:
 
    ```
-   server_1       | 2:14:26 AM web.1     |  > app@0.0.0 start /opt/node/app
-   server_1       | 2:14:26 AM web.1     |  > nodemon -V --ignore ./client ./bin/www
-   server_1       | 2:14:26 AM web.1     |  [nodemon] 1.19.0
-   server_1       | 2:14:26 AM web.1     |  [nodemon] to restart at any time, enter `rs`
-   server_1       | 2:14:26 AM web.1     |  [nodemon] or send SIGHUP to 57 to restart
+   server_1       | 4:13:08 AM webpack.1 |  You can now view full-stack-starter in the browser.
+   server_1       | 4:13:08 AM webpack.1 |    Local:            http://localhost:3000
    ```
 
-3. Now you should be able to open the web app in your browser at: http://localhost:3000/
+5. Now you should be able to open the web app in your browser at: http://localhost:3000/
 
    1. If you had to install Docker Toolbox, then replace "localhost" with the IP
    address of the Docker Virtual Machine.
 
-4. To stop the server, press CONTROL-C in the window with the running server.
+6. Open a new tab or window of your shell, change into your repo directory as needed, and execute this command:
+
+   ```
+   docker-compose exec server bash -l
+   ```
+   
+   This will log you in to the running server container, as if you were connecting to a different machine over the Internet.
+   Once you're logged in, you will be in a new shell for the container where you can run the following command:
+   
+   ```
+   bin/create-admin Firstname Lastname email password
+   ```
+   
+   Put in your name and email address and a password. This will create a first user in the database.
+
+7. To stop the server, press CONTROL-C in the window with the running server.
    If it is successful, you will see something like this:
 
    ```
@@ -79,14 +76,58 @@ This repository contains a "starter" project for web application development in 
    run the following command and wait for the output to report DONE:
 
    ```
-   $ docker-compose stop
+   docker-compose stop
    Stopping full-stack-starter_db_1          ... done
    Stopping full-stack-starter_server_1      ... done
    Stopping full-stack-starter_mailcatcher_1 ... done
    ```
 
-5. That's it! After all this setup is complete, the only command you need to run to get
-started again is the ```docker-compose up``` command.
+8. That's it! After all this setup is complete, the only command you need to run to get
+   started again is the ```docker-compose up``` command.
+
+## Heroku Deployment Setup
+
+1. Create a free Heroku account at: https://signup.heroku.com/
+
+2. Click on the Deploy button below:
+   
+   [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+   In the App Name field, enter a URL-friendly name that will become part of your final url. (i.e. https://your-app-name.herokuapp.com)
+
+3. Install the Heroku CLI (Command Line Interface) tool: https://devcenter.heroku.com/articles/heroku-cli
+
+   On macOS you must first install Homebrew, if you don't already have it: https://brew.sh/
+
+   When successfully installed, you can execute the command:
+
+   ```
+   heroku
+   ```
+   
+   And you will see output like this:
+
+   ```
+   CLI to interact with Heroku
+
+   VERSION
+   heroku/7.47.6 darwin-x64 node-v12.16.2
+
+   USAGE
+   $ heroku [COMMAND]
+   ```
+  
+4. Link your repo directory to the Heroku deployed app:
+
+   ```
+   heroku git:remote -a [YOUR APP NAME FROM STEP 2HERE]
+   ```
+
+5. Once linked, you can execute Heroku CLI commands. For example, to run the user creation script on the server:
+
+   ```
+   heroku run bin/create-admin Firstname Lastname email password
+   ```
 
 ## Shell Command Quick Reference
 
@@ -110,31 +151,31 @@ started again is the ```docker-compose up``` command.
  * To *print the working directory* (i.e. to see the full path of the directory you are currently in):
 
    ```
-   $ pwd
+   pwd
    ```
 
  * To *list* the files in the working directory:
 
    ```
-   $ ls -l
+   ls -l
    ```
 
  * To *change* the working directory:
 
    ```
-   $ cd path
+   cd path
    ```
 
  * To *make* a new directory inside the working directory:
 
    ```
-   $ mkdir newpath
+   mkdir newpath
    ```
 
  * To create a new *empty file* inside the working directory:
 
    ```
-   $ touch filename.ext
+   touch filename.ext
    ```
 
 ## git Command Quick Reference
@@ -142,37 +183,37 @@ started again is the ```docker-compose up``` command.
  * To check the *status* of the files in your local repo (i.e. what's been added or changed):
 
    ```
-   $ git status
+   git status
    ```
 
  * To *add all* the changed files to the next commit:
 
    ```
-   $ git add .
+   git add .
    ```
 
    To *add specific file(s)* to the next commit:
 
    ```
-   $ git add path/to/file1.ext path/to/file2.ext path/with/wildcard/*
+   git add path/to/file1.ext path/to/file2.ext path/with/wildcard/*
    ```
 
  * To *commit* the added files with a message:
 
    ```
-   $ git commit -m "My description of what's changed"
+   git commit -m "My description of what's changed"
    ```
 
  * To *push* the commit to the remote repo:
 
    ```
-   $ git push
+   git push
    ```
 
  * To *pull* any new commits from the remote repo:
 
    ```
-   $ git pull
+   git pull
    ```
 
 ## Docker Command Quick Reference
@@ -180,31 +221,31 @@ started again is the ```docker-compose up``` command.
  * To start all the containers:
 
    ```
-   $ docker-compose up
+   docker-compose up
    ```
 
  * To log in to the running server container:
 
    ```
-   $ docker-compose exec server bash -l
+   docker-compose exec server bash -l
    ```
 
  * To stop all the containers, in case things didn't shutdown properly with CTRL-C:
 
    ```
-   $ docker-compose stop
+   docker-compose stop
    ```
 
  * To run the server container without starting everything using the up command:
 
    ```
-   $ docker-compose run --rm server bash -l
+   docker-compose run --rm server bash -l
    ```
 
  * To re-build the server container:
 
    ```
-   $ docker-compose build server
+   docker-compose build server
    ```
 
 ## Docker Troubleshooting
@@ -219,16 +260,16 @@ started again is the ```docker-compose up``` command.
 
   Use the *Docker QuickStart shell* installed with Docker Toolbox to open a command-line shell that launches Docker for you when it starts. On Windows, right-click on the shotcut and Run as Administrator. Note: this can take a long time to start, depending upon your computer, as it needs to start a virtual machine running Linux.
 
-  The virtual machine will have its own, separate IP address on your computer. In the ```.env``` file (see step 4 in Getting Started), replace *localhost* with *192.168.99.100* in the BASE_HOST and BASE_URL variables. To confirm that this is the correct IP address, run this command in the command-line shell:
+  The virtual machine will have its own, separate IP address on your computer. To view this IP address, run this command in the command-line shell:
 
   ```
-  $ docker-machine ip
+  docker-machine ip
   ```
 
 ## License
 
-Full-Stack Starter
-Copyright (C) 2020 <dev/Mission>
+Full-Stack Starter  
+Copyright (C) 2021 <dev/Mission>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

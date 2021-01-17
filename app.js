@@ -5,22 +5,17 @@ const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
 const logger = require('morgan');
-const expressLayouts = require('express-ejs-layouts');
-const flash = require('connect-flash');
 const passport = require('passport');
 const fileUpload = require('express-fileupload');
 const i18n = require('i18n');
 const bodyParser = require('body-parser');
+const HttpStatus = require('http-status-codes');
 
 const helpers = require('./routes/helpers');
 const routes = require('./routes');
 
 const app = express();
 
-/// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.use(expressLayouts);
 /// router logging output
 app.use(logger('dev'));
 /// multipart file upload support (when not uploading direct to S3)
@@ -42,8 +37,6 @@ app.use(cookieSession({
   secret: process.env.SESSION_SECRET,
   secure: process.env.NODE_ENV == 'production'
 }));
-/// support session flash messages displayed on next request
-app.use(flash());
 /// use passport for authentication
 app.use(passport.initialize());
 app.use(passport.session());
@@ -53,12 +46,10 @@ i18n.configure({
   directory: path.join(__dirname, 'locales')
 });
 app.use(i18n.init);
-/// add in our custom static file upload helpers
+/// add in our custom helpers
 app.use(helpers.assetHelpers);
 /// set up local variables commonly used in all requests
 app.use(function(req, res, next) {
-  /// set any flash messages in the session from a previous request
-  res.locals.flash = req.flash();
   /// set the current logged in user, if any
   res.locals.currentUser = req.user;
   next();
@@ -73,17 +64,9 @@ app.use(function(req, res, next) {
 });
 
 /// error handler
-app.use(function(err, req, res, next) {
-  /// set locals, only providing error in development
-  res.locals.currentUser = null;
-  res.locals.flash = {};
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.locals.title = "Error!";
-
-  /// render the error page
-  res.status(err.status || 500);
-  res.render('error');
+app.use(function(err, req, res) {
+  /// render the error
+  res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
 });
 
 module.exports = app;

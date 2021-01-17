@@ -3,6 +3,8 @@
 const bcrypt = require('bcrypt')
 const passport = require('passport');
 const passportLocal = require('passport-local');
+const HttpStatus = require('http-status-codes');
+
 const models = require('../models');
 
 passport.use(
@@ -38,21 +40,11 @@ passport.deserializeUser(function(id, done) {
 module.exports.passport = passport;
 
 function sendErrorUnauthorized(req, res) {
-  if (req.accepts('html')) {
-    req.flash("error", "You must log in to view the page you visited.");
-    res.redirect(`/login?redirectURI=${encodeURIComponent(req.originalUrl)}`);
-  } else {
-    res.sendStatus(401);
-  }
+  res.sendStatus(HttpStatus.UNAUTHORIZED);
 }
 
 function sendErrorForbidden(req, res) {
-  if (req.accepts('html')) {
-    req.flash("error", "You are not allowed to view the page you visited.");
-    res.redirect(`/`);
-  } else {
-    res.sendStatus(403);
-  }
+  res.sendStatus(HttpStatus.FORBIDDEN);
 }
 
 function requireLogin(req, res, next, requireAdmin) {

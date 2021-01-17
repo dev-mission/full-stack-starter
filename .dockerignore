@@ -1,4 +1,4 @@
-/.env
-/.git
-/node_modules
-/*.dump
+.env
+.git
+node_modules
+*.dump
