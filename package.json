@@ -41,7 +41,7 @@
     "cross-env": "~5.2",
     "del-cli": "~1.1",
     "foreman": "^3.0.1",
-    "node-sass": "^4.13.1"
+    "node-sass": "^4.14.1"
   },
   "engines": {
     "node": "14.x",
