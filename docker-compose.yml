@@ -11,6 +11,7 @@ services:
       - 1025:1025
   server:
     build: .
+    image: devmission/full-stack-starter:latest
     command: bash -l -c "bin/init; nf start -j Procfile.dev"
     volumes:
       - .:/opt/node/app

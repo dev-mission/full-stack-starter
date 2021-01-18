@@ -22,14 +22,15 @@ This repository contains a "starter" project for web application development in 
    1. If you have Windows Home Edition, you will need to install Docker Toolbox instead.
    See the troubleshooting notes below.
 
-4. Open a command-line shell, change into your repo directory, and execute this command:
+4. Open a command-line shell, change into your repo directory, and execute these commands:
 
    ```
+   docker-compose pull
    docker-compose up
    ```
 
-   It will take a while the first time you run this command to build the "images" to
-   run the web application code in a Docker "container". When you see messages that look
+   It will take a while the first time you run these commands to download the "images" to
+   run the web application code in Docker "containers". When you see messages that look
    like this, the server is running:
 
    ```
