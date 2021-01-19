@@ -36,7 +36,7 @@ function Home() {
             return (
               <section id={s.slug} key={s.slug}>
                 <h2>{s.name}</h2>
-                {user && (<Link className="btn btn-sm btn-outline-primary" to={`/sectionItems/new?section=${s.slug}`}>New</Link>)}
+                {user && (<Link className="btn btn-sm btn-outline-primary mb-2" to={`/sectionItems/new?section=${s.slug}`}>New</Link>)}
                 <ul>
                   {sectionItems.filter(si => si.Section.slug === s.slug).map(si => (
                     <li key={si.id}>

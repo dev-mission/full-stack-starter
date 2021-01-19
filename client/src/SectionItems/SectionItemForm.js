@@ -7,7 +7,7 @@ import Api from '../Api';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 
-function EditSectionItem() {
+function SectionItemForm() {
   const {id} = useParams();
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -125,4 +125,4 @@ function EditSectionItem() {
   );
 }
 
-export default EditSectionItem;
+export default SectionItemForm;
