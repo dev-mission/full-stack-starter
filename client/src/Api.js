@@ -42,6 +42,18 @@ const Api = {
   sections: {
     index() {
       return instance.get('/api/sections');
+    },
+    create(data) {
+      return instance.post('/api/sections', data);
+    },
+    get(id) {
+      return instance.get(`/api/sections/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/sections/${id}`, data);
+    },
+    delete(id) {
+      return instance.delete(`/api/sections/${id}`);
     }
   },
   sectionItems: {

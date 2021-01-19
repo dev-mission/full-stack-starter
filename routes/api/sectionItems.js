@@ -26,7 +26,7 @@ router.post('/', interceptors.requireLogin, async function(req, res) {
   const sectionItem = models.SectionItem.build(req.body);
   try {
     await sectionItem.save();
-    res.status(HttpStatus.CREATED).end();
+    res.status(HttpStatus.CREATED).json(sectionItem);
   } catch (error) {
     res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(error);
   }

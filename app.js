@@ -17,7 +17,9 @@ const routes = require('./routes');
 const app = express();
 
 /// router logging output
-app.use(logger('dev'));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(logger('dev'));
+}
 /// multipart file upload support (when not uploading direct to S3)
 app.use(fileUpload({
   useTempFiles: !process.env.AWS_S3_BUCKET

@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "heroku-postbuild": "cd client && yarn && yarn build",
     "start": "nodemon -L -V --ignore ./client --ignore ./migrations --ignore ./public ./bin/www",
-    "heroku-postbuild": "cd client && yarn && yarn build"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "aws-sdk": "^2.817.0",
@@ -41,7 +42,11 @@
     "cross-env": "~5.2",
     "del-cli": "~1.1",
     "foreman": "^3.0.1",
-    "node-sass": "^4.14.1"
+    "mocha": "^8.2.1",
+    "node-sass": "^4.14.1",
+    "sequelize-fixtures": "^1.2.0",
+    "supertest": "^6.1.1",
+    "supertest-session": "^4.1.0"
   },
   "engines": {
     "node": "14.x",
