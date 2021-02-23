@@ -18,7 +18,7 @@ module.exports = {
         title: 'Dev/Mission',
         subtitle: "Pre-apprenticeship Bootcamp",
         place: 'San Francisco, CA',
-        about: `Here's something about this`,
+        about: `Here's something about this.`,
         startedAt: '2020-09',
         endedAt: '2020-12',
         createdAt: now,
