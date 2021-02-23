@@ -15,12 +15,12 @@ module.exports = {
     await queryInterface.bulkInsert('SectionItems', [
       {
         SectionId: 1,
-        title: 'Dev/Mission',
-        subtitle: 'Pre-apprenticeship Bootcamp',
+        title: 'Minerva Schools at KGI',
+        subtitle: "Bachelor's Degree, Computational Sciences",
         place: 'San Francisco, CA',
-        about: `Here's something about this.`,
-        startedAt: '2020-09-01',
-        endedAt: '2020-12-01',
+        about: `Relevant coursework: Python Programming, Data Visualizations, Design Thinking, System Dynamics`,
+        startedAt: 'Sept 2018',
+        endedAt: 'May 2022',
         createdAt: now,
         updatedAt: now
       },
