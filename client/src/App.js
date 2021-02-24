@@ -13,6 +13,7 @@ import Login from './Login';
 import Passwords from './Passwords';
 import Register from './Register';
 import SectionItems from './SectionItems';
+import Sections from './Sections/Sections';
 
 function App() {
   return (
@@ -29,10 +30,15 @@ function App() {
           <Route path="/passwords">
             <Passwords />
           </Route>
+          <Route path="/sections">
+            <Sections />
+          </Route>
           {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
             <Route path="/register">
               <Register />
             </Route>
+
+
           )}
           <AuthProtectedRoute path="/sectionItems">
             <SectionItems />
