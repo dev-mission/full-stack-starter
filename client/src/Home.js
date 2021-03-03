@@ -1,18 +1,22 @@
+import './Home.scss';
 import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import AboutMe from './AboutMe';
 import Api from './Api';
+
 import {useAuthContext} from './AuthContext';
 
 function Home() {
   const {user} = useAuthContext();
   const [sections, setSections] = useState([]);
   const [sectionItems, setSectionItems] = useState([]);
+  const [skills, setSkills] = useState([]);
 
   useEffect(function() {
     Api.sections.index().then(response => setSections(response.data));
     Api.sectionItems.index().then(response => setSectionItems(response.data));
+    Api.skills.index().then(response => setSkills(response.data));
   }, []);
 
   const onDelete = function(sectionItem) {
@@ -31,6 +35,11 @@ function Home() {
       <div className="row">
         <div className="col-md-4">
           <AboutMe />
+          
+          <ul>
+            {skills.map(s => <li>{s.name}</li>)}
+          </ul>
+
         </div>
         <div className="col-md-7 offset-md-1">
           {sections.map(s => {

@@ -73,6 +73,11 @@ const Api = {
       return instance.delete(`/api/sectionItems/${id}`);
     }
   },
+  skills: {
+    index() {
+      return instance.get('/api/skills');
+    }
+  },
   users: {
     me() {
       return instance.get('/api/users/me');

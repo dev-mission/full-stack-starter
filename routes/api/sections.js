@@ -57,5 +57,4 @@ router.delete('/:id', interceptors.requireLogin, async function(req, res) {
     res.status(HttpStatus.NOT_FOUND).end();
   }
 });
-
 module.exports = router;
