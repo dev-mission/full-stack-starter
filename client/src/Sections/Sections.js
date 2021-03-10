@@ -11,9 +11,7 @@ function Sections() {
       <Route exact path={path}>
         <SectionsList />
       </Route>
-
       <Route path={`${path}/new`}>
-        
         <SectionForm />
       </Route>
       <Route path={`${path}/:id/edit`}>
