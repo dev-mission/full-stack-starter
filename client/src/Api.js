@@ -76,6 +76,18 @@ const Api = {
   skills: {
     index() {
       return instance.get('/api/skills');
+    },
+    create(data) {
+      return instance.post('/api/skills', data);
+    },
+    get(id) {
+      return instance.get(`/api/skills/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/skills/${id}`, data);
+    },
+    delete(id) {
+      return instance.delete(`/api/skills/${id}`);
     }
   },
   users: {
