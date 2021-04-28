@@ -39,7 +39,7 @@ function Header() {
               <Link className="nav-link" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item active">
-              <Link className="nav-link" href="/projects" to="/projects">Projects</Link>
+              <Link className="nav-link" href="/skills_list" to="/skills_list">Skills List</Link>
             </li>
             <div className="flex-grow-1 d-flex justify-content-end">
               {user && (

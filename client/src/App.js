@@ -26,8 +26,8 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/projects">
-            <Projects />
+          <Route path="/skills_list">
+            <Skills />
           </Route>
           <Route path="/login">
             <Login />
@@ -38,9 +38,6 @@ function App() {
           <Route path="/sections">
             <Sections />
           </Route> 
-          <Route path="/skills">
-            <Skills />
-          </Route>
           {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
             <Route path="/register">
               <Register />
