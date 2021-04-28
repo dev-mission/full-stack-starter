@@ -38,19 +38,10 @@ function Header() {
             <li className="nav-item active">
               <Link className="nav-link" aria-current="page" to="/">Home</Link>
             </li>
-            <li className="nav-item active">
-              <Link className="nav-link" href="/skills_list" to="/skills_list">Skills List</Link>
-            </li>
+            {user && (<li className="nav-item active"><Link className="nav-link" href="/skills_list" to="/skills_list">Skills List</Link></li>)}
             <div className="flex-grow-1 d-flex justify-content-end">
-              {user && (
-                <li className="nav-item">
-                  <a className="nav-link" href="/logout" onClick={onLogout}>Log out</a>
-                </li>)}
-              {!user && (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">Log in</Link>
-                </li>
-              )}
+            {user && (<li className="nav-item"><a className="nav-link" href="/logout" onClick={onLogout}>Log out</a></li>)}
+            {!user && (<li className="nav-item"><Link className="nav-link" to="/login">Log in</Link></li>)}
             </div>
           </ul>
         </div>
