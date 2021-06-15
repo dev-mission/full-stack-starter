@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/', interceptors.requireAdmin, function(req, res, next) {
   models.User.paginate({
     page: req.query.page || 1,
-    order: [['last_name', 'ASC'], ['first_name', 'ASC'], ['email', 'ASC']]
+    order: [['lastName', 'ASC'], ['firstName', 'ASC'], ['email', 'ASC']]
   }).then(function({docs, pages, total}) {
     res.json(docs.map(d => d.toJSON()));
   });
