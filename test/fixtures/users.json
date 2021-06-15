@@ -8,5 +8,15 @@
       "hashedPassword": "$2b$10$s2eQxhoZ2Khb4KrbOaAl/ekpWKiGmyX1HFICIVl3ZX3NnL191fPuS",
       "isAdmin": true
     }
+  },
+  {
+    "model": "User",
+    "data": {
+      "firstName": "Regular",
+      "lastName": "User",
+      "email": "regular.user@test.com",
+      "hashedPassword": "$2b$10$s2eQxhoZ2Khb4KrbOaAl/ekpWKiGmyX1HFICIVl3ZX3NnL191fPuS",
+      "isAdmin": false
+    }
   }
 ]
