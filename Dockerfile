@@ -21,7 +21,7 @@ ADD . $APP_HOME
 
 # Switch to the client directory and install its dependencies
 WORKDIR $APP_HOME/client
-RUN yarn
+RUN npm install
 
 # Switch to the server directory and install its dependencies
 WORKDIR $APP_HOME

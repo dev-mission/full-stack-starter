@@ -1,2 +1,2 @@
 web: PORT=3100 npm start
-webpack: cd client && PORT=3000 yarn start
+webpack: cd client && PORT=3000 npm start
