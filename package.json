@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "heroku-postbuild": "cd client && yarn && yarn build",
+    "heroku-postbuild": "cd client && npm install && npm run build",
     "start": "nodemon -L -V --ignore ./client --ignore ./migrations --ignore ./public ./bin/www",
     "test": "mocha --recursive"
   },
@@ -48,7 +48,6 @@
     "supertest-session": "^4.1.0"
   },
   "engines": {
-    "node": "14.x",
-    "yarn": "1.x"
+    "node": "14.x"
   }
 }
