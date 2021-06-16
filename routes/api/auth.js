@@ -34,7 +34,7 @@ router.get('/logout', function(req, res){
 
 /// register a new user if enabled
 if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
-  router.post('/register', async function(req, res) {
+  router.post('/register', async function(req, res, next) {
     const user = models.User.build({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -57,7 +57,10 @@ if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
       await user.save();
       await user.hashPassword(user.password);
       await user.sendWelcomeEmail();
-      res.status(HttpStatus.CREATED).json(user);
+      req.login(user, function(err) {
+        if (err) { return next(err); }
+        res.status(HttpStatus.CREATED).json(user);
+      });
     } catch(error) {
       error.errors = errors.concat(error.errors);
       res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(error);

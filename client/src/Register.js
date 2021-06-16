@@ -4,10 +4,12 @@ import classNames from 'classnames';
 import {StatusCodes} from 'http-status-codes'
 
 import Api from './Api';
+import {useAuthContext} from './AuthContext';
 import UnexpectedError from './UnexpectedError';
 import ValidationError from './ValidationError';
 
 function Register() {
+  const authContext = useAuthContext();
   const history = useHistory();
 
   const [user, setUser] = useState({
@@ -28,8 +30,9 @@ function Register() {
     event.preventDefault();
     setError(null);
     try {
-      await Api.auth.register(user);
-      history.push('/login', {flash: 'Your account has been created!'});
+      const response = await Api.auth.register(user);
+      authContext.setUser(response.data);
+      history.push('/', {flash: 'Your account has been created!'});
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));
