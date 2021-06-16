@@ -25,8 +25,8 @@ This repository contains a "starter" project for web application development in 
 4. Open a command-line shell, change into your repo directory, and execute these commands:
 
    ```
-   docker-compose pull
-   docker-compose up
+   docker compose pull
+   docker compose up
    ```
 
    It will take a while the first time you run these commands to download the "images" to
@@ -46,7 +46,7 @@ This repository contains a "starter" project for web application development in 
 6. Open a new tab or window of your shell, change into your repo directory as needed, and execute this command:
 
    ```
-   docker-compose exec server bash -l
+   docker compose exec server bash -l
    ```
    
    This will log you in to the running server container, as if you were connecting to a different machine over the Internet.
@@ -77,14 +77,14 @@ This repository contains a "starter" project for web application development in 
    run the following command and wait for the output to report DONE:
 
    ```
-   docker-compose stop
+   docker compose stop
    Stopping full-stack-starter_db_1          ... done
    Stopping full-stack-starter_server_1      ... done
    Stopping full-stack-starter_mailcatcher_1 ... done
    ```
 
 8. That's it! After all this setup is complete, the only command you need to run to get
-   started again is the ```docker-compose up``` command.
+   started again is the ```docker compose up``` command.
 
 ## Heroku Deployment Setup
 
@@ -222,31 +222,31 @@ This repository contains a "starter" project for web application development in 
  * To start all the containers:
 
    ```
-   docker-compose up
+   docker compose up
    ```
 
  * To log in to the running server container:
 
    ```
-   docker-compose exec server bash -l
+   docker compose exec server bash -l
    ```
 
  * To stop all the containers, in case things didn't shutdown properly with CTRL-C:
 
    ```
-   docker-compose stop
+   docker compose stop
    ```
 
  * To run the server container without starting everything using the up command:
 
    ```
-   docker-compose run --rm server bash -l
+   docker compose run --rm server bash -l
    ```
 
  * To re-build the server container:
 
    ```
-   docker-compose build server
+   docker compose build server
    ```
 
 ## Docker Troubleshooting
