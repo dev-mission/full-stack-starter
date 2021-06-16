@@ -36,9 +36,6 @@ function Login() {
           <div className="card">
             <div className="card-body">
               <h2 className="card-title">Log in</h2>
-              {history.location.state?.flash && (
-                <div className="alert alert-info">{history.location.state.flash}</div>
-              )}
               {showInvalidError && (
                 <div className="alert alert-danger">Invalid email and/or password.</div>
               )}

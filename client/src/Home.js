@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 import AboutMe from './AboutMe';
 import Api from './Api';
 import {useAuthContext} from './AuthContext';
 
 function Home() {
+  const history = useHistory();
   const {user} = useAuthContext();
   const [sections, setSections] = useState([]);
   const [sectionItems, setSectionItems] = useState([]);
@@ -27,6 +28,9 @@ function Home() {
 
   return (
     <main className="container">
+      {history.location.state?.flash && (
+        <div className="alert alert-info">{history.location.state.flash}</div>
+      )}
       <div className="row">
         <div className="col-md-4">
           <AboutMe />
