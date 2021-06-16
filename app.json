@@ -8,6 +8,10 @@
     "postdeploy": "sequelize db:migrate; sequelize db:seed:all"
   },
   "env": {
+    "REACT_APP_FEATURE_REGISTRATION": {
+      "description": "To enable user registration, enter the value: true",
+      "value": "false"
+    },
     "REACT_APP_SITE_TITLE": {
       "description": "The title of the website that will appear in the browser tab",
       "value": "My Name"
@@ -15,6 +19,10 @@
     "SESSION_SECRET": {
       "description": "A secret key for verifying the integrity of signed cookies.",
       "generator": "secret"
+    },
+    "SMTP_ENABLED": {
+      "description": "To enable sending email (fully configured mail add-on required), enter the value: true",
+      "value": "false"
     }
   },
   "formation": {
