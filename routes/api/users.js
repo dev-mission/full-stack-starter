@@ -31,14 +31,18 @@ router.get('/:id', interceptors.requireAdmin, function(req, res, next) {
     if (user) {
       res.json(user.toJSON());
     } else {
-      res.sendStatus(404);
+      res.status(HttpStatus.NOT_FOUND).end();
     }
   }).catch(function(error) {
-    res.sendStatus(500);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
   });
 });
 
-router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
+router.patch('/:id', interceptors.requireLogin, function(req, res, next) {
+  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id)) {
+    res.status(HttpStatus.UNAUTHORIZED).end();
+    return;
+  }
   models.sequelize.transaction(function(transaction) {
     return models.User.findByPk(req.params.id, {transaction}).then(function(user) {
       return helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
@@ -64,12 +68,12 @@ router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
   }).catch(function(error) {
     console.log(error);
     if (error.name == 'SequelizeValidationError') {
-      res.status(422).json({
-        status: 422,
+      res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
         messages: error.errors
       });
     } else {
-      res.sendStatus(500);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
     }
   });
 });

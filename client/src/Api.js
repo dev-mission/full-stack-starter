@@ -76,6 +76,9 @@ const Api = {
   users: {
     me() {
       return instance.get('/api/users/me');
+    },
+    update(id, data) {
+      return instance.patch(`/api/users/${id}`, data);
     }
   }
 };
