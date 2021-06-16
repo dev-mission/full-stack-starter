@@ -41,7 +41,7 @@ function Header() {
             <div className="flex-grow-1 d-flex justify-content-end">
               {user && (
                 <>
-                  <li class="navbar-text me-3">
+                  <li className="navbar-text me-3">
                     Hello, <Link to="/account">{user.firstName}!</Link>
                   </li>
                   <li className="nav-item">

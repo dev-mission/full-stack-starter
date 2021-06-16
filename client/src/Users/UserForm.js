@@ -10,7 +10,7 @@ import ValidationError from '../ValidationError';
 function UserForm() {
   const authContext = useAuthContext();
 
-  const [user, setUser] = useState(authContext.user);
+  const [user, setUser] = useState({...authContext.user, password: ''});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 

@@ -14,7 +14,7 @@ describe('/api/users', () => {
     testSession = session(app);
   });
 
-  context('authenticated', () => {
+  context('admin authenticated', () => {
     beforeEach(async () => {
       await testSession
         .post('/api/auth/login')
@@ -33,9 +33,47 @@ describe('/api/users', () => {
         assert(response.body?.length, 2);
   
         const users = response.body;
-        assert.strictEqual(users[0].firstName, 'Admin');
-        assert.strictEqual(users[1].firstName, 'Regular');
+        assert.deepStrictEqual(users[0].firstName, 'Admin');
+        assert.deepStrictEqual(users[1].firstName, 'Regular');
       });
+    });
+
+    describe('GET /:id', () => {
+      it('returns a User by its id', async () => {
+        /// request user list
+        const response = await testSession
+          .get('/api/users/2')
+          .set('Accept', 'application/json')
+          .expect(HttpStatus.OK);
+
+        assert.deepStrictEqual(response.body, {
+          id: 2,
+          firstName: 'Regular',
+          lastName: 'User',
+          email: 'regular.user@test.com'
+        });
+      });
+    });
+
+    describe('PATCH /:id', () => {
+      it('updates a User by its id', async () => {
+        const response = await testSession
+          .patch('/api/users/2')
+          .set('Accept', 'application/json')
+          .send({
+            firstName: 'Normal',
+            lastName: 'Person',
+            email: 'normal.person@test.com'
+          })
+          .expect(HttpStatus.OK);
+
+          assert.deepStrictEqual(response.body, {
+            id: 2,
+            firstName: 'Normal',
+            lastName: 'Person',
+            email: 'normal.person@test.com'
+          });
+        })
     });
   });
 });
