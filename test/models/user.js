@@ -1,5 +1,8 @@
 const assert = require('assert');
 const _ = require('lodash');
+const fs = require('fs-extra');
+const path = require('path');
+const uuid = require('uuid/v4');
 
 const helper = require('../helper');
 const models = require('../../models');
@@ -101,6 +104,45 @@ describe('models.User', () => {
         })
       );
       return true;
+    });
+  });
+
+  context('picture attachment', () => {
+    let picture;
+
+    beforeEach(() => {
+      picture = `${uuid()}.png`;
+      fs.ensureDirSync(path.resolve(__dirname, '../../tmp/uploads'));
+      fs.copySync(
+        path.resolve(__dirname, '../fixtures/files/512x512.png'),
+        path.resolve(__dirname, `../../tmp/uploads/${picture}`)
+      );
+    });
+
+    afterEach(() => {
+      fs.removeSync(path.resolve(__dirname, `../../tmp/uploads/${picture}`));
+      fs.removeSync(path.resolve(__dirname, `../../public/assets/users/picture/${picture}`));
+    });
+
+    it('handles a picture asset upload', async () => {
+      const user = models.User.build({
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'test.user@test.com',
+        password: 'abcd1234',
+        picture
+      });
+      await user.save();
+      assert(fs.pathExistsSync(path.resolve(__dirname, '../../public/assets/users/picture', picture)));
+    });
+
+    describe('.pictureUrl', () => {
+      it('returns an asset url for the picture', () => {
+        const user = models.User.build({
+          picture
+        });
+        assert.deepStrictEqual(user.pictureUrl, `/api/assets/users/picture/${picture}`);
+      });  
     });
   });
 });

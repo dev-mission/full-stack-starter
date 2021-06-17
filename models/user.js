@@ -145,6 +145,15 @@ module.exports = (sequelize, DataTypes) => {
     hashedPassword: {
       type: DataTypes.STRING
     },
+    picture: {
+      type: DataTypes.STRING
+    },
+    pictureUrl: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.assetUrl('picture', 'users/picture');
+      }
+    },
     isAdmin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -171,6 +180,10 @@ module.exports = (sequelize, DataTypes) => {
       user.passwordResetToken = null;
       user.passwordResetTokenExpiresAt = null;
     }
+  });
+
+  User.afterSave(async (user, options) => {
+    user.handleAssetFile('picture', 'users/picture', options);
   });
 
   sequelizePaginate.paginate(User);
