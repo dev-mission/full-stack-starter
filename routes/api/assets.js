@@ -1,13 +1,11 @@
 const AWS = require('aws-sdk');
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs-extra');
 const HttpStatus = require('http-status-codes');
 const mime = require('mime-types');
-const mkdirp = require('mkdirp');
 const path = require('path');
-const uuid = require('uuid/v4');
+const {v4: uuid} = require('uuid');
 
-const helpers = require('../helpers');
 const interceptors = require('../interceptors');
 
 const router = express.Router();
@@ -26,8 +24,8 @@ const s3 = new AWS.S3(s3options);
 
 router.post(
   '/',
-  interceptors.requireLogin(),
-  helpers.async(async (req, res) => {
+  interceptors.requireLogin,
+  async (req, res) => {
     const id = uuid();
     const response = req.body.blob;
     response.id = id;
@@ -63,13 +61,13 @@ router.post(
       };
     }
     res.json(response);
-  })
+  }
 );
 
-router.put('/:path([^?]+)', interceptors.requireLogin(), (req, res) => {
+router.put('/:path([^?]+)', interceptors.requireLogin, (req, res) => {
   const tmpDir = path.resolve(__dirname, '../../tmp/uploads');
   const tmpFile = path.resolve(tmpDir, `${req.params.path}`);
-  mkdirp.sync(path.dirname(tmpFile));
+  fs.ensureDirSync(path.dirname(tmpFile));
   fs.writeFile(tmpFile, req.body, (err) => {
     if (err) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
@@ -81,8 +79,8 @@ router.put('/:path([^?]+)', interceptors.requireLogin(), (req, res) => {
 
 router.get(
   '/:path([^?]+)',
-  interceptors.requireLogin(),
-  helpers.async(async (req, res) => {
+  interceptors.requireLogin,
+  async (req, res) => {
     if (process.env.AWS_S3_BUCKET) {
       const url = await s3.getSignedUrlPromise('getObject', {
         Bucket: process.env.AWS_S3_BUCKET,
@@ -93,7 +91,7 @@ router.get(
     } else {
       res.redirect(`/assets/${req.params.path}`);
     }
-  })
+  }
 );
 
 module.exports = router;

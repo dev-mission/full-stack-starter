@@ -64,7 +64,6 @@ Sequelize.Model.prototype.handleAssetFile = async function(attribute, pathPrefix
   }
   const prevFile = this.previous(attribute);
   const newFile = this.get(attribute);
-  console.log('!!!', attribute, pathPrefix, prevFile, newFile);
   const handle = async () => {
     if (process.env.AWS_S3_BUCKET) {
       if (prevFile) {

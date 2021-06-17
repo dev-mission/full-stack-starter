@@ -6,7 +6,7 @@ const {
 } = require('sequelize');
 const _ = require('lodash');
 const sequelizePaginate = require('sequelize-paginate')
-const uuid = require('uuid/v4');
+const {v4: uuid} = require('uuid');
 const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {

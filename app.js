@@ -8,10 +8,8 @@ const logger = require('morgan');
 const passport = require('passport');
 const fileUpload = require('express-fileupload');
 const i18n = require('i18n');
-const bodyParser = require('body-parser');
 const HttpStatus = require('http-status-codes');
 
-const helpers = require('./routes/helpers');
 const routes = require('./routes');
 
 const app = express();
@@ -25,7 +23,7 @@ app.use(fileUpload({
   useTempFiles: !process.env.AWS_S3_BUCKET
 }));
 /// configure allowed file upload types and max file size
-app.use(bodyParser.raw({type: [
+app.use(express.raw({type: [
   'image/*'
 ], limit: '10mb'}));
 /// support json content body
@@ -48,8 +46,6 @@ i18n.configure({
   directory: path.join(__dirname, 'locales')
 });
 app.use(i18n.init);
-/// add in our custom helpers
-app.use(helpers.assetHelpers);
 /// set up local variables commonly used in all requests
 app.use(function(req, res, next) {
   /// set the current logged in user, if any
