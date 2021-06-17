@@ -132,6 +132,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       validate: {
         isStrong(value) {
+          if (this.hashedPassword && this.password === '') {
+            // not changing, skip validation
+            return;
+          }
           if (value.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) == null) {
             throw new Error('Minimum eight characters, at least one letter and one number');
           }
@@ -161,7 +165,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.beforeSave(async (user) => {
-    if (user.changed('password')) {
+    if (user.changed('password') && user.password !== '') {
       user.hashedPassword = await bcrypt.hash(user.password, 12);
       user.password = null;
       user.passwordResetToken = null;

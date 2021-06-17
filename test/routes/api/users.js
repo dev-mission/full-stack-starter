@@ -85,7 +85,7 @@ describe('/api/users', () => {
             firstName: '',
             lastName: '',
             email: '',
-            password: ''
+            password: 'foo'
           })
           .expect(HttpStatus.UNPROCESSABLE_ENTITY);
 
