@@ -1,9 +1,9 @@
-import {useRouteMatch, Redirect, Route, Switch} from 'react-router-dom';
+import { useRouteMatch, Redirect, Route, Switch } from 'react-router-dom';
 
 import SectionItemForm from './SectionItemForm';
 
 function SectionItems() {
-  const {path} = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Switch>

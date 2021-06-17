@@ -2,7 +2,7 @@ const assert = require('assert');
 const _ = require('lodash');
 const fs = require('fs-extra');
 const path = require('path');
-const {v4: uuid} = require('uuid');
+const { v4: uuid } = require('uuid');
 
 const helper = require('../helper');
 const models = require('../../models');
@@ -17,10 +17,10 @@ describe('models.User', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@test.com',
-      password: 'abcd1234'
+      password: 'abcd1234',
     });
     assert.deepStrictEqual(user.id, null);
-    await user.save()
+    await user.save();
     assert(user.id);
 
     user = await models.User.findByPk(user.id);
@@ -36,7 +36,7 @@ describe('models.User', () => {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
     });
     await assert.rejects(user.save(), (error) => {
       assert(error instanceof models.Sequelize.ValidationError);
@@ -74,7 +74,7 @@ describe('models.User', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'regular.user@test.com',
-      password: 'abcd1234'
+      password: 'abcd1234',
     });
     await assert.rejects(user.save(), (error) => {
       assert(error instanceof models.Sequelize.ValidationError);
@@ -113,10 +113,7 @@ describe('models.User', () => {
     beforeEach(() => {
       picture = `${uuid()}.png`;
       fs.ensureDirSync(path.resolve(__dirname, '../../tmp/uploads'));
-      fs.copySync(
-        path.resolve(__dirname, '../fixtures/files/512x512.png'),
-        path.resolve(__dirname, `../../tmp/uploads/${picture}`)
-      );
+      fs.copySync(path.resolve(__dirname, '../fixtures/files/512x512.png'), path.resolve(__dirname, `../../tmp/uploads/${picture}`));
     });
 
     afterEach(() => {
@@ -130,7 +127,7 @@ describe('models.User', () => {
         lastName: 'User',
         email: 'test.user@test.com',
         password: 'abcd1234',
-        picture
+        picture,
       });
       await user.save();
       assert(fs.pathExistsSync(path.resolve(__dirname, '../../public/assets/users/picture', picture)));
@@ -139,10 +136,10 @@ describe('models.User', () => {
     describe('.pictureUrl', () => {
       it('returns an asset url for the picture', () => {
         const user = models.User.build({
-          picture
+          picture,
         });
         assert.deepStrictEqual(user.pictureUrl, `/api/assets/users/picture/${picture}`);
-      });  
+      });
     });
   });
 });

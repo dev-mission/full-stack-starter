@@ -1,9 +1,9 @@
-import {useRouteMatch, Route, Switch} from 'react-router-dom';
+import { useRouteMatch, Route, Switch } from 'react-router-dom';
 
 import UserForm from './UserForm';
 
 function Users() {
-  const {path} = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Switch>

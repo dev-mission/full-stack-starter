@@ -26,11 +26,12 @@ table {
   border-collapse: separate;
   mso-table-lspace: 0pt;
   mso-table-rspace: 0pt;
-  width: 100%; }
-  table td {
-    font-family: sans-serif;
-    font-size: 14px;
-    vertical-align: top;
+  width: 100%;
+}
+table td {
+  font-family: sans-serif;
+  font-size: 14px;
+  vertical-align: top;
 }
 
 /* -------------------------------------
@@ -86,13 +87,13 @@ table {
   text-align: center;
   width: 100%;
 }
-  .footer td,
-  .footer p,
-  .footer span,
-  .footer a {
-    color: #999999;
-    font-size: 12px;
-    text-align: center;
+.footer td,
+.footer p,
+.footer span,
+.footer a {
+  color: #999999;
+  font-size: 12px;
+  text-align: center;
 }
 
 /* -------------------------------------
@@ -126,11 +127,11 @@ ol {
   margin: 0;
   margin-bottom: 15px;
 }
-  p li,
-  ul li,
-  ol li {
-    list-style-position: inside;
-    margin-left: 5px;
+p li,
+ul li,
+ol li {
+  list-style-position: inside;
+  margin-left: 5px;
 }
 
 a {
@@ -143,31 +144,33 @@ a {
 ------------------------------------- */
 .btn {
   box-sizing: border-box;
-  width: 100%; }
-  .btn > tbody > tr > td {
-    padding-bottom: 15px; }
-  .btn table {
-    width: auto;
+  width: 100%;
 }
-  .btn table td {
-    background-color: #ffffff;
-    border-radius: 5px;
-    text-align: center;
+.btn > tbody > tr > td {
+  padding-bottom: 15px;
 }
-  .btn a {
-    background-color: #ffffff;
-    border: solid 1px #3498db;
-    border-radius: 5px;
-    box-sizing: border-box;
-    color: #3498db;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 14px;
-    font-weight: bold;
-    margin: 0;
-    padding: 12px 25px;
-    text-decoration: none;
-    text-transform: capitalize;
+.btn table {
+  width: auto;
+}
+.btn table td {
+  background-color: #ffffff;
+  border-radius: 5px;
+  text-align: center;
+}
+.btn a {
+  background-color: #ffffff;
+  border: solid 1px #3498db;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #3498db;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  padding: 12px 25px;
+  text-decoration: none;
+  text-transform: capitalize;
 }
 
 .btn-primary table td {
@@ -242,41 +245,41 @@ hr {
     RESPONSIVE AND MOBILE FRIENDLY STYLES
 ------------------------------------- */
 @media only screen and (max-width: 620px) {
-  table[class=body] h1 {
+  table[class='body'] h1 {
     font-size: 28px !important;
     margin-bottom: 10px !important;
   }
-  table[class=body] p,
-  table[class=body] ul,
-  table[class=body] ol,
-  table[class=body] td,
-  table[class=body] span,
-  table[class=body] a {
+  table[class='body'] p,
+  table[class='body'] ul,
+  table[class='body'] ol,
+  table[class='body'] td,
+  table[class='body'] span,
+  table[class='body'] a {
     font-size: 16px !important;
   }
-  table[class=body] .wrapper,
-  table[class=body] .article {
+  table[class='body'] .wrapper,
+  table[class='body'] .article {
     padding: 10px !important;
   }
-  table[class=body] .content {
+  table[class='body'] .content {
     padding: 0 !important;
   }
-  table[class=body] .container {
+  table[class='body'] .container {
     padding: 0 !important;
     width: 100% !important;
   }
-  table[class=body] .main {
+  table[class='body'] .main {
     border-left-width: 0 !important;
     border-radius: 0 !important;
     border-right-width: 0 !important;
   }
-  table[class=body] .btn table {
+  table[class='body'] .btn table {
     width: 100% !important;
   }
-  table[class=body] .btn a {
+  table[class='body'] .btn a {
     width: 100% !important;
   }
-  table[class=body] .img-responsive {
+  table[class='body'] .img-responsive {
     height: auto !important;
     max-width: 100% !important;
     width: auto !important;

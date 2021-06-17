@@ -1,5 +1,5 @@
-import {createContext, useContext, useState} from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import { createContext, useContext, useState } from 'react';
+import { Route, Redirect } from 'react-router-dom';
 
 const authContext = createContext();
 
@@ -11,17 +11,13 @@ function AuthContextValue() {
   const [user, setUser] = useState(null);
   return {
     user,
-    setUser
+    setUser,
   };
 }
 
-function AuthContextProvider({children}) {
+function AuthContextProvider({ children }) {
   const value = AuthContextValue();
-  return (
-    <authContext.Provider value={value}>
-      {children}
-    </authContext.Provider>
-  );
+  return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 
 function AuthProtectedRoute({ children, ...rest }) {
@@ -35,8 +31,8 @@ function AuthProtectedRoute({ children, ...rest }) {
         ) : (
           <Redirect
             to={{
-              pathname: "/login",
-              state: { from: location }
+              pathname: '/login',
+              state: { from: location },
             }}
           />
         )
@@ -45,8 +41,4 @@ function AuthProtectedRoute({ children, ...rest }) {
   );
 }
 
-export {
-  useAuthContext,
-  AuthContextProvider,
-  AuthProtectedRoute
-};
+export { useAuthContext, AuthContextProvider, AuthProtectedRoute };

@@ -19,7 +19,7 @@ describe('/api/auth', () => {
   });
 
   describe('POST /register', () => {
-    it('registers a new User', async () => {      
+    it('registers a new User', async () => {
       const response = await testSession
         .post('/api/auth/register')
         .set('Accept', 'application/json')
@@ -27,7 +27,7 @@ describe('/api/auth', () => {
           firstName: 'Normal',
           lastName: 'Person',
           email: 'normal.person@test.com',
-          password: 'abcd1234'
+          password: 'abcd1234',
         })
         .expect(HttpStatus.CREATED);
 
@@ -38,7 +38,7 @@ describe('/api/auth', () => {
         firstName: 'Normal',
         lastName: 'Person',
         email: 'normal.person@test.com',
-        isAdmin: false
+        isAdmin: false,
       });
     });
 
@@ -50,11 +50,11 @@ describe('/api/auth', () => {
           firstName: '',
           lastName: '',
           email: '',
-          password: ''
+          password: '',
         })
         .expect(HttpStatus.UNPROCESSABLE_ENTITY);
 
-      const error = response.body
+      const error = response.body;
       assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
       assert.deepStrictEqual(error.errors.length, 4);
       assert(
@@ -91,11 +91,11 @@ describe('/api/auth', () => {
           firstName: 'Normal',
           lastName: 'Person',
           email: 'regular.user@test.com',
-          password: 'abcd1234'
+          password: 'abcd1234',
         })
         .expect(HttpStatus.UNPROCESSABLE_ENTITY);
 
-      const error = response.body
+      const error = response.body;
       assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
       assert.deepStrictEqual(error.errors.length, 1);
       assert(

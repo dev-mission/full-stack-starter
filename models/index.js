@@ -17,17 +17,16 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+fs.readdirSync(__dirname)
+  .filter((file) => {
+    return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
   })
-  .forEach(file => {
+  .forEach((file) => {
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
@@ -50,15 +49,15 @@ if (process.env.AWS_S3_BUCKET_REGION) {
 }
 const s3 = new AWS.S3(s3options);
 
-Sequelize.Model.prototype.assetUrl = function(attribute, pathPrefix) {
+Sequelize.Model.prototype.assetUrl = function (attribute, pathPrefix) {
   const file = this.get(attribute);
   if (file) {
     return path.resolve('/api/assets/', pathPrefix, file);
   }
   return null;
-}
+};
 
-Sequelize.Model.prototype.handleAssetFile = async function(attribute, pathPrefix, options) {
+Sequelize.Model.prototype.handleAssetFile = async function (attribute, pathPrefix, options) {
   if (!this.changed(attribute)) {
     return;
   }
@@ -97,11 +96,9 @@ Sequelize.Model.prototype.handleAssetFile = async function(attribute, pathPrefix
       }
       if (newFile) {
         fs.ensureDirSync(path.resolve(__dirname, '../public/assets'));
-        fs.moveSync(
-          path.resolve(__dirname, '../tmp/uploads', newFile),
-          path.resolve(__dirname, '../public/assets', pathPrefix, newFile),
-          { overwrite: true }
-        );
+        fs.moveSync(path.resolve(__dirname, '../tmp/uploads', newFile), path.resolve(__dirname, '../public/assets', pathPrefix, newFile), {
+          overwrite: true,
+        });
       }
     }
   };
@@ -110,6 +107,6 @@ Sequelize.Model.prototype.handleAssetFile = async function(attribute, pathPrefix
   } else {
     await handle();
   }
-}
+};
 
 module.exports = db;

@@ -1,10 +1,10 @@
-import {useState} from 'react';
-import {useHistory, Link} from 'react-router-dom';
+import { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import classNames from 'classnames';
-import {StatusCodes} from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes';
 
 import Api from './Api';
-import {useAuthContext} from './AuthContext';
+import { useAuthContext } from './AuthContext';
 import UnexpectedError from './UnexpectedError';
 import ValidationError from './ValidationError';
 
@@ -16,31 +16,31 @@ function Register() {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
   });
   const [error, setError] = useState(null);
 
-  const onChange = function(event) {
-    const newUser = {...user};
+  const onChange = function (event) {
+    const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
     setUser(newUser);
   };
 
-  const onSubmit = async function(event) {
+  const onSubmit = async function (event) {
     event.preventDefault();
     setError(null);
     try {
       const response = await Api.auth.register(user);
       authContext.setUser(response.data);
-      history.push('/', {flash: 'Your account has been created!'});
+      history.push('/', { flash: 'Your account has been created!' });
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));
       } else {
         setError(new UnexpectedError());
       }
-    };
-  }
+    }
+  };
 
   return (
     <main className="container">
@@ -50,31 +50,67 @@ function Register() {
             <div className="card-body">
               <h2 className="card-title">Register</h2>
               <form onSubmit={onSubmit}>
-                {error && error.message && (
-                  <div className="alert alert-danger">{error.message}</div>
-                )}
+                {error && error.message && <div className="alert alert-danger">{error.message}</div>}
                 <div className="mb-3">
-                  <label className="form-label" htmlFor="firstName">First name</label>
-                  <input type="text" className={classNames('form-control', {'is-invalid': error?.errorsFor?.('firstName')})} id="firstName" name="firstName" onChange={onChange} value={user.firstName} />
+                  <label className="form-label" htmlFor="firstName">
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    className={classNames('form-control', { 'is-invalid': error?.errorsFor?.('firstName') })}
+                    id="firstName"
+                    name="firstName"
+                    onChange={onChange}
+                    value={user.firstName}
+                  />
                   {error?.errorMessagesHTMLFor?.('firstName')}
                 </div>
                 <div className="mb-3">
-                  <label className="form-label" htmlFor="lastName">Last name</label>
-                  <input type="text" className={classNames('form-control', {'is-invalid': error?.errorsFor?.('lastName')})} id="lastName" name="lastName" onChange={onChange} value={user.lastName} />
+                  <label className="form-label" htmlFor="lastName">
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    className={classNames('form-control', { 'is-invalid': error?.errorsFor?.('lastName') })}
+                    id="lastName"
+                    name="lastName"
+                    onChange={onChange}
+                    value={user.lastName}
+                  />
                   {error?.errorMessagesHTMLFor?.('lastName')}
                 </div>
                 <div className="mb-3">
-                  <label className="form-label" htmlFor="email">Email</label>
-                  <input type="text" className={classNames('form-control', {'is-invalid': error?.errorsFor?.('email')})} id="email" name="email" onChange={onChange} value={user.email} />
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    className={classNames('form-control', { 'is-invalid': error?.errorsFor?.('email') })}
+                    id="email"
+                    name="email"
+                    onChange={onChange}
+                    value={user.email}
+                  />
                   {error?.errorMessagesHTMLFor?.('email')}
                 </div>
                 <div className="mb-3">
-                  <label className="form-label" htmlFor="password">Password</label>
-                  <input type="password" className={classNames('form-control', {'is-invalid': error?.errorsFor?.('password')})} id="password" name="password" onChange={onChange} value={user.password} />
+                  <label className="form-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    className={classNames('form-control', { 'is-invalid': error?.errorsFor?.('password') })}
+                    id="password"
+                    name="password"
+                    onChange={onChange}
+                    value={user.password}
+                  />
                   {error?.errorMessagesHTMLFor?.('password')}
                 </div>
                 <div className="mb-3 d-grid">
-                  <button className="btn btn-primary" type="submit">Submit</button>
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
                 </div>
                 <div className="mb-3 text-center">
                   <Link to="/login">Already have an account?</Link>
@@ -83,7 +119,7 @@ function Register() {
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </main>
   );
 }

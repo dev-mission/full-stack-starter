@@ -22,30 +22,30 @@ const Api = {
       return instance.post('/api/assets', data);
     },
     upload(url, headers, file) {
-      return instance.put(url, file, {headers});
-    }
+      return instance.put(url, file, { headers });
+    },
   },
   auth: {
     login(email, password) {
-      return instance.post('/api/auth/login', {email, password});
+      return instance.post('/api/auth/login', { email, password });
     },
     logout() {
       return instance.get('/api/auth/logout');
     },
     register(data) {
       return instance.post('/api/auth/register', data);
-    }
+    },
   },
   passwords: {
     reset(email) {
-      return instance.post('/api/passwords', {email});
+      return instance.post('/api/passwords', { email });
     },
     get(token) {
       return instance.get(`/api/passwords/${token}`);
     },
     update(token, password) {
-      return instance.patch(`/api/passwords/${token}`, {password});
-    }
+      return instance.patch(`/api/passwords/${token}`, { password });
+    },
   },
   sections: {
     index() {
@@ -62,7 +62,7 @@ const Api = {
     },
     delete(id) {
       return instance.delete(`/api/sections/${id}`);
-    }
+    },
   },
   sectionItems: {
     index() {
@@ -79,7 +79,7 @@ const Api = {
     },
     delete(id) {
       return instance.delete(`/api/sectionItems/${id}`);
-    }
+    },
   },
   users: {
     me() {
@@ -87,8 +87,8 @@ const Api = {
     },
     update(id, data) {
       return instance.patch(`/api/users/${id}`, data);
-    }
-  }
+    },
+  },
 };
 
 export default Api;

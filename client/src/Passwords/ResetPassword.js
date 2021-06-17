@@ -1,39 +1,44 @@
-import {useEffect, useState} from 'react';
-import {useHistory, useParams, Link} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Api from '../Api';
 
 function ResetPassword() {
   const history = useHistory();
-  const {token} = useParams();
+  const { token } = useParams();
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const [showExpired, setShowExpired] = useState(false);
   const [showInvalid, setShowInvalid] = useState(false);
 
-  const onSubmit = function(event) {
+  const onSubmit = function (event) {
     event.preventDefault();
     setShowError(false);
     setShowInvalid(false);
-    Api.passwords.update(token, password)
-      .then(response => history.push('/login', {flash: 'Your new password has been saved.'}))
-      .catch(error => setShowError(true));
+    Api.passwords
+      .update(token, password)
+      .then((response) => history.push('/login', { flash: 'Your new password has been saved.' }))
+      .catch((error) => setShowError(true));
   };
 
-  useEffect(function() {
-    if (token) {
-      Api.passwords.get(token)
-        .then(response => {})
-        .catch(error => {
-          if (error && error.response && error.response.status === 404) {
-            setShowInvalid(true);
-          } else if (error && error.response && error.response.status === 410) {
-            setShowExpired(true);
-          }
-        });
-    }
-  }, [token]);
+  useEffect(
+    function () {
+      if (token) {
+        Api.passwords
+          .get(token)
+          .then((response) => {})
+          .catch((error) => {
+            if (error && error.response && error.response.status === 404) {
+              setShowInvalid(true);
+            } else if (error && error.response && error.response.status === 410) {
+              setShowExpired(true);
+            }
+          });
+      }
+    },
+    [token]
+  );
 
   return (
     <main className="container">
@@ -45,30 +50,47 @@ function ResetPassword() {
               {showInvalid && (
                 <div className="alert alert-danger">
                   <p>Sorry, this password reset link is invalid.</p>
-                  <p><Link to="/passwords/forgot">Request another?</Link></p>
+                  <p>
+                    <Link to="/passwords/forgot">Request another?</Link>
+                  </p>
                 </div>
               )}
               {showExpired && (
                 <div className="alert alert-danger">
                   <p>Sorry, this password reset link has expired.</p>
-                  <p><Link to="/passwords/forgot">Request another?</Link></p>
+                  <p>
+                    <Link to="/passwords/forgot">Request another?</Link>
+                  </p>
                 </div>
               )}
-              {!showExpired && !showInvalid && (<>
-                <p>Enter a new password for your account.</p>
-                <form onSubmit={onSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="password">New password</label>
-                    <input type="password" className={classNames('form-control', {'is-invalid': showError})} id="password" name="password" onChange={e => setPassword(e.target.value)} value={password} />
-                    {showError && (
-                      <div className="invalid-feedback d-block">Minimum eight characters, at least one letter and one number.</div>
-                    )}
-                  </div>
-                  <div className="mb-3 d-grid">
-                    <button className="btn btn-primary" type="submit">Submit</button>
-                  </div>
-                </form>
-              </>)}
+              {!showExpired && !showInvalid && (
+                <>
+                  <p>Enter a new password for your account.</p>
+                  <form onSubmit={onSubmit}>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="password">
+                        New password
+                      </label>
+                      <input
+                        type="password"
+                        className={classNames('form-control', { 'is-invalid': showError })}
+                        id="password"
+                        name="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                      />
+                      {showError && (
+                        <div className="invalid-feedback d-block">Minimum eight characters, at least one letter and one number.</div>
+                      )}
+                    </div>
+                    <div className="mb-3 d-grid">
+                      <button className="btn btn-primary" type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </div>
           </div>
         </div>

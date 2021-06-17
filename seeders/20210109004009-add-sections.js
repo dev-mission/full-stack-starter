@@ -10,7 +10,7 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
+     */
     const now = new Date();
     await queryInterface.bulkInsert('Sections', [
       {
@@ -19,7 +19,7 @@ module.exports = {
         slug: 'education',
         position: 1,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
         id: 2,
@@ -27,8 +27,8 @@ module.exports = {
         slug: 'work',
         position: 2,
         createdAt: now,
-        updatedAt: now
-      }
+        updatedAt: now,
+      },
     ]);
     await queryInterface.sequelize.query(`SELECT setval('"Sections_id_seq"', (SELECT MAX(id) FROM "Sections"))`);
   },
@@ -41,5 +41,5 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete('Sections');
-  }
+  },
 };

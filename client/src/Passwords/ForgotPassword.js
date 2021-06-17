@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {useHistory, Link} from 'react-router-dom';
+import { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Api from '../Api';
@@ -9,16 +9,17 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [showError, setShowError] = useState(false);
 
-  const onSubmit = function(event) {
+  const onSubmit = function (event) {
     event.preventDefault();
     setShowError(false);
-    Api.passwords.reset(email)
+    Api.passwords
+      .reset(email)
       .then(() => {
-        history.push('/login', {flash: 'Please check your email in a few minutes for a reset password link.'});
+        history.push('/login', { flash: 'Please check your email in a few minutes for a reset password link.' });
       })
       .catch(() => setShowError(true));
-  }
-  
+  };
+
   return (
     <main className="container">
       <div className="row justify-content-center">
@@ -29,14 +30,23 @@ function ForgotPassword() {
               <p>Enter the email address you registered to receive a reset password link.</p>
               <form onSubmit={onSubmit}>
                 <div className="mb-3">
-                  <label className="form-label" htmlFor="email">Email</label>
-                  <input type="text" className={classNames('form-control', {'is-invalid': showError})} id="email" name="email" onChange={e => setEmail(e.target.value)} value={email} />
-                  {showError && (
-                    <div className="invalid-feedback d-block">Email not found.</div>
-                  )}
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    className={classNames('form-control', { 'is-invalid': showError })}
+                    id="email"
+                    name="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                  />
+                  {showError && <div className="invalid-feedback d-block">Email not found.</div>}
                 </div>
                 <div className="mb-3 d-grid">
-                  <button className="btn btn-primary" type="submit">Submit</button>
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
                 </div>
                 <div className="mb-3 text-center">
                   <Link to="/login">Back to login...</Link>
@@ -47,7 +57,7 @@ function ForgotPassword() {
         </div>
       </div>
     </main>
-  );  
+  );
 }
 
 export default ForgotPassword;
