@@ -2,6 +2,7 @@
 
 const express = require('express');
 const HttpStatus = require('http-status-codes');
+const _ = require('lodash');
 
 const models = require('../../models');
 const interceptors = require('../interceptors');
@@ -52,23 +53,18 @@ router.patch('/:id', interceptors.requireLogin, function(req, res) {
         res.status(HttpStatus.NOT_FOUND).end();
         return;
       }
-      if (req.body.password && req.body.password != '') {
-        //// TODO: validate password requirements
-        await user.hashPassword(req.body.password, {transaction});
-      }
-      helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
-      await user.update({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        iconUrl: user.iconUrl
-      }, {transaction});
+      await user.update(_.pick(req.body, [
+        'firstName',
+        'lastName',
+        'email',
+        'password'        
+      ]), {transaction});
       res.json(user.toJSON());
     } catch (error) {
       if (error.name == 'SequelizeValidationError') {
         res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
-          messages: error.errors
+          errors: error.errors
         });
       } else {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
