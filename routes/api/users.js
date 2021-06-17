@@ -2,6 +2,7 @@
 
 const express = require('express');
 const HttpStatus = require('http-status-codes');
+const _ = require('lodash');
 
 const models = require('../../models');
 const interceptors = require('../interceptors');
@@ -9,13 +10,14 @@ const helpers = require('../helpers');
 
 const router = express.Router();
 
-router.get('/', interceptors.requireAdmin, function(req, res, next) {
-  models.User.paginate({
-    page: req.query.page || 1,
+router.get('/', interceptors.requireAdmin, async function(req, res) {
+  const page = req.query.page || 1;
+  const {docs, pages, total} = await models.User.paginate({
+    page,
     order: [['lastName', 'ASC'], ['firstName', 'ASC'], ['email', 'ASC']]
-  }).then(function({docs, pages, total}) {
-    res.json(docs.map(d => d.toJSON()));
   });
+  helpers.setPaginationHeaders(req, res, page, pages, total);
+  res.json(docs.map(d => d.toJSON()));
 });
 
 router.get('/me', function(req, res, next) {
@@ -26,50 +28,48 @@ router.get('/me', function(req, res, next) {
   }
 });
 
-router.get('/:id', interceptors.requireAdmin, function(req, res, next) {
-  models.User.findByPk(req.params.id).then(function(user) {
+router.get('/:id', interceptors.requireAdmin, async function(req, res) {
+  try {
+    const user = await models.User.findByPk(req.params.id);
     if (user) {
       res.json(user.toJSON());
     } else {
-      res.sendStatus(404);
-    }
-  }).catch(function(error) {
-    res.sendStatus(500);
-  });
+      res.status(HttpStatus.NOT_FOUND).end();
+    }  
+  } catch (error) {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+  }
 });
 
-router.patch('/:id', interceptors.requireAdmin, function(req, res, next) {
-  models.sequelize.transaction(function(transaction) {
-    return models.User.findByPk(req.params.id, {transaction}).then(function(user) {
-      return helpers.handleUpload(user, "iconUrl", req.body.iconUrl, 'users/icon');
-    }).then(function(user) {
-      return user.update({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        iconUrl: user.iconUrl
-      }, {transaction});
-    }).then(function(user) {
-      if (req.body.password && req.body.password != '') {
-        //// TODO: validate password requirements
-        return user.hashPassword(req.body.password, {transaction}).then(function() {
-          return user;
+router.patch('/:id', interceptors.requireLogin, function(req, res) {
+  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id)) {
+    res.status(HttpStatus.UNAUTHORIZED).end();
+    return;
+  }
+  models.sequelize.transaction(async function(transaction) {
+    try {
+      const user = await models.User.findByPk(req.params.id, {transaction})
+      if (!user) {
+        res.status(HttpStatus.NOT_FOUND).end();
+        return;
+      }
+      await user.update(_.pick(req.body, [
+        'firstName',
+        'lastName',
+        'email',
+        'password',
+        'picture'        
+      ]), {transaction});
+      res.json(user.toJSON());
+    } catch (error) {
+      if (error.name == 'SequelizeValidationError') {
+        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: error.errors
         });
       } else {
-        return user;
-      }
-    });
-  }).then(function(user){
-    res.json(user.toJSON());
-  }).catch(function(error) {
-    console.log(error);
-    if (error.name == 'SequelizeValidationError') {
-      res.status(422).json({
-        status: 422,
-        messages: error.errors
-      });
-    } else {
-      res.sendStatus(500);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+      }  
     }
   });
 });

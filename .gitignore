@@ -1,5 +1,6 @@
 .DS_Store
 .env
+public/assets
 tmp
 dist
 node_modules

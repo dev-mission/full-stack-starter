@@ -1,11 +1,12 @@
 'use strict';
 const bcrypt = require('bcrypt');
 const {
-  Model
+  Model,
+  Op
 } = require('sequelize');
 const _ = require('lodash');
 const sequelizePaginate = require('sequelize-paginate')
-const uuid = require('uuid/v4');
+const {v4: uuid} = require('uuid');
 const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {
@@ -23,12 +24,19 @@ module.exports = (sequelize, DataTypes) => {
       return password.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) != null;
     }
 
+    authenticate(password) {
+      return bcrypt.compare(password, this.hashedPassword);
+    }
+
     toJSON() {
       return _.pick(this.get(), [
         'id',
         'firstName',
         'lastName',
-        'email'
+        'email',
+        'picture',
+        'pictureUrl',
+        'isAdmin'
       ]);
     }
 
@@ -98,6 +106,21 @@ module.exports = (sequelize, DataTypes) => {
         },
         notEmpty: {
           msg: 'Email cannot be blank'
+        },
+        async isUnique(value) {
+          if (this.changed('email')) {
+            const user = await User.findOne({
+              where: {
+                id: {
+                  [Op.ne]: this.id
+                },
+                email: value,                
+              }
+            });
+            if (user) {
+              throw new Error('Email already registered');
+            }
+          }
         }
       }
     },
@@ -107,8 +130,31 @@ module.exports = (sequelize, DataTypes) => {
         return `${this.firstName} ${this.lastName} <${this.email}>`;
       }
     },
+    password: {
+      type: DataTypes.VIRTUAL,
+      validate: {
+        isStrong(value) {
+          if (this.hashedPassword && this.password === '') {
+            // not changing, skip validation
+            return;
+          }
+          if (value.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) == null) {
+            throw new Error('Minimum eight characters, at least one letter and one number');
+          }
+        },
+      },
+    },
     hashedPassword: {
       type: DataTypes.STRING
+    },
+    picture: {
+      type: DataTypes.STRING
+    },
+    pictureUrl: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.assetUrl('picture', 'users/picture');
+      }
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
@@ -128,6 +174,21 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
-  sequelizePaginate.paginate(User)
+
+  User.beforeSave(async (user) => {
+    if (user.changed('password') && user.password !== '') {
+      user.hashedPassword = await bcrypt.hash(user.password, 12);
+      user.password = null;
+      user.passwordResetToken = null;
+      user.passwordResetTokenExpiresAt = null;
+    }
+  });
+
+  User.afterSave(async (user, options) => {
+    user.handleAssetFile('picture', 'users/picture', options);
+  });
+
+  sequelizePaginate.paginate(User);
+
   return User;
 };

@@ -13,6 +13,7 @@ import Login from './Login';
 import Passwords from './Passwords';
 import Register from './Register';
 import SectionItems from './SectionItems';
+import Users from './Users';
 
 function App() {
   return (
@@ -34,6 +35,9 @@ function App() {
               <Register />
             </Route>
           )}
+          <AuthProtectedRoute path="/account">
+            <Users />
+          </AuthProtectedRoute>
           <AuthProtectedRoute path="/sectionItems">
             <SectionItems />
           </AuthProtectedRoute>

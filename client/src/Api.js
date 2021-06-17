@@ -17,6 +17,14 @@ instance.interceptors.response.use(
 );
 
 const Api = {
+  assets: {
+    create(data) {
+      return instance.post('/api/assets', data);
+    },
+    upload(url, headers, file) {
+      return instance.put(url, file, {headers});
+    }
+  },
   auth: {
     login(email, password) {
       return instance.post('/api/auth/login', {email, password});
@@ -76,6 +84,9 @@ const Api = {
   users: {
     me() {
       return instance.get('/api/users/me');
+    },
+    update(id, data) {
+      return instance.patch(`/api/users/${id}`, data);
     }
   }
 };

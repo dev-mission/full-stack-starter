@@ -2,6 +2,7 @@
 
 const express = require('express');
 const HttpStatus = require('http-status-codes');
+const _ = require('lodash');
 
 const interceptors = require('../interceptors');
 const models = require('../../models');
@@ -35,37 +36,30 @@ router.get('/logout', function(req, res){
 /// register a new user if enabled
 if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
   router.post('/register', async function(req, res, next) {
-    const user = models.User.build({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-    });
-    user.password = req.body.password;
-    const errors = [];
-    if (!models.User.isValidPassword(user.password)) {
-      errors.push({path: 'password', message: 'Minimum eight characters, at least one letter and one number.'});
-    }
-    const existingUser = await models.User.findOne({where: {email: req.body.email}});
-    if (existingUser) {
-      errors.push({path: 'email', message: 'This email has already been used.'});
-    }
+    const user = models.User.build(_.pick(req.body, [
+      'firstName',
+      'lastName',
+      'email',
+      'password'
+    ]));
     try {
-      await user.validate();
-      if (errors.length > 0) {
-        throw {errors: []};
-      }
       await user.save();
-      await user.hashPassword(user.password);
       await user.sendWelcomeEmail();
       req.login(user, function(err) {
         if (err) { return next(err); }
         res.status(HttpStatus.CREATED).json(user);
       });
     } catch(error) {
-      error.errors = errors.concat(error.errors);
-      res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(error);
+      if (error.name == 'SequelizeValidationError') {
+        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+          status: HttpStatus.UNPROCESSABLE_ENTITY,
+          errors: error.errors || []
+        });
+      } else {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+      }
     };
-  });  
+  });
 }
 
 module.exports = router;
