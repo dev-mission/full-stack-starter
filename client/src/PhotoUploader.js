@@ -6,7 +6,7 @@ import Api from './Api';
 
 import './PhotoUploader.scss';
 
-function PhotoUploader({className, children, id, name, onChange, onUploading, value}) {
+function PhotoUploader({className, children, id, name, onChange, onUploading, value, valueUrl}) {
   const [files, setFiles] = useState([]);
   const [isUploading, setUploading] = useState(false);
   const fileRef = useRef(null);
@@ -29,12 +29,12 @@ function PhotoUploader({className, children, id, name, onChange, onUploading, va
         byte_size: file.size
       };
       let signedId;
-      Api.uploads.create({ blob })
+      Api.assets.create({ blob })
         .then((response) => {
           if (fileRef.current === file) {
             const {url, headers} = response.data.direct_upload;
             signedId = response.data.signed_id;
-            return Api.uploads.upload(url, headers, file);
+            return Api.assets.upload(url, headers, file);
           }
         })
         .then((response) => {
@@ -61,7 +61,7 @@ function PhotoUploader({className, children, id, name, onChange, onUploading, va
     fileRef.current = null;
     setFiles([]);
     if (onChange) {
-      onChange({target: {name, value: ''}});
+      onChange({target: {name, value: '', valueUrl: ''}});
     }
   }
 
@@ -71,7 +71,7 @@ function PhotoUploader({className, children, id, name, onChange, onUploading, va
   }, [files]);
 
   return (
-    <Dropzone multiple={false} onDrop={onDrop} disabled={(value && value !== '') || files.length > 0}>
+    <Dropzone id={id} multiple={false} onDrop={onDrop} disabled={(value && value !== '') || files.length > 0}>
       {({getRootProps, getInputProps}) => (
         <div className={classNames('photouploader', className)}>
           <div {...getRootProps()}>
@@ -84,7 +84,7 @@ function PhotoUploader({className, children, id, name, onChange, onUploading, va
               </div>
             </div>)}
             {files.length === 0 && value && (<div className={classNames('photouploader__preview')}>
-              <img src={value} className="img-thumbnail" alt="" />
+              <img src={valueUrl} className="img-thumbnail" alt="" />
               <button onClick={onRemove} className="btn btn-danger photouploader__remove" type="button">&times;</button>
             </div>)}
             {files.length === 0 && !value && children}

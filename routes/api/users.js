@@ -57,7 +57,8 @@ router.patch('/:id', interceptors.requireLogin, function(req, res) {
         'firstName',
         'lastName',
         'email',
-        'password'        
+        'password',
+        'picture'        
       ]), {transaction});
       res.json(user.toJSON());
     } catch (error) {

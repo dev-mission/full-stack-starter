@@ -4,6 +4,7 @@ import {StatusCodes} from 'http-status-codes'
 
 import Api from '../Api';
 import {useAuthContext} from '../AuthContext';
+import PhotoUploader from '../PhotoUploader';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 
@@ -11,6 +12,7 @@ function UserForm() {
   const authContext = useAuthContext();
 
   const [user, setUser] = useState({...authContext.user, password: ''});
+  const [isUploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
@@ -52,6 +54,17 @@ function UserForm() {
                   <div className="alert alert-info">Your account has been updated!</div>
                 )}
                 <div className="mb-3">
+                  <label className="form-label" htmlFor="picture">Picture</label>
+                  <PhotoUploader className="card" id="picture" name="picture" value={user.picture} valueUrl={user.pictureUrl} onChange={onChange} onUploading={setUploading}>
+                      <div className="card-body">
+                          <div className="card-text">
+                              Drag-and-drop a photo file here, or click here to browse and select a file.
+                          </div>
+                      </div>
+                  </PhotoUploader>
+                  {error?.errorMessagesHTMLFor?.('picture')}
+                </div>
+                <div className="mb-3">
                   <label className="form-label" htmlFor="firstName">First name</label>
                   <input type="text" className={classNames('form-control', {'is-invalid': error?.errorsFor?.('firstName')})} id="firstName" name="firstName" onChange={onChange} value={user.firstName} />
                   {error?.errorMessagesHTMLFor?.('firstName')}
@@ -72,7 +85,7 @@ function UserForm() {
                   {error?.errorMessagesHTMLFor?.('password')}
                 </div>
                 <div className="mb-3 d-grid">
-                  <button className="btn btn-primary" type="submit">Submit</button>
+                  <button disabled={isUploading} className="btn btn-primary" type="submit">Submit</button>
                 </div>
               </form>
             </div>
