@@ -31,7 +31,7 @@ describe('/api/auth', () => {
         })
         .expect(HttpStatus.CREATED);
 
-      const id = response.body.id;
+      const { id } = response.body;
       assert(id);
       assert.deepStrictEqual(response.body, {
         id,
@@ -39,6 +39,8 @@ describe('/api/auth', () => {
         lastName: 'Person',
         email: 'normal.person@test.com',
         isAdmin: false,
+        picture: null,
+        pictureUrl: null,
       });
     });
 

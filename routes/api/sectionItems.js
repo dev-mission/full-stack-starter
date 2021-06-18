@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const HttpStatus = require('http-status-codes');
 
@@ -8,7 +6,7 @@ const models = require('../../models');
 
 const router = express.Router();
 
-router.get('/', async function (req, res) {
+router.get('/', async (req, res) => {
   const where = {};
   if (req.query.section) {
     where['$Section.slug$'] = req.query.section;
@@ -21,7 +19,7 @@ router.get('/', async function (req, res) {
   res.json(items);
 });
 
-router.post('/', interceptors.requireLogin, async function (req, res) {
+router.post('/', interceptors.requireLogin, async (req, res) => {
   req.body.endedAt = req.body.endedAt || null;
   const sectionItem = models.SectionItem.build(req.body);
   try {
@@ -32,7 +30,7 @@ router.post('/', interceptors.requireLogin, async function (req, res) {
   }
 });
 
-router.get('/:id', interceptors.requireLogin, async function (req, res) {
+router.get('/:id', interceptors.requireLogin, async (req, res) => {
   const sectionItem = await models.SectionItem.findByPk(req.params.id);
   if (sectionItem) {
     res.json(sectionItem);
@@ -41,7 +39,7 @@ router.get('/:id', interceptors.requireLogin, async function (req, res) {
   }
 });
 
-router.patch('/:id', interceptors.requireLogin, async function (req, res) {
+router.patch('/:id', interceptors.requireLogin, async (req, res) => {
   req.body.endedAt = req.body.endedAt || null;
   const sectionItem = await models.SectionItem.findByPk(req.params.id);
   if (sectionItem) {
@@ -56,7 +54,7 @@ router.patch('/:id', interceptors.requireLogin, async function (req, res) {
   }
 });
 
-router.delete('/:id', interceptors.requireLogin, async function (req, res) {
+router.delete('/:id', interceptors.requireLogin, async (req, res) => {
   const sectionItem = await models.SectionItem.findByPk(req.params.id);
   if (sectionItem) {
     await sectionItem.destroy();

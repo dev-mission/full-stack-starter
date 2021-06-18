@@ -1,5 +1,3 @@
-'use strict';
-
 const Email = require('email-templates');
 
 let transport;

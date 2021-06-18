@@ -1,11 +1,7 @@
-'use strict';
-
 const express = require('express');
-const HttpStatus = require('http-status-codes');
 const path = require('path');
-const router = express.Router();
 
-const models = require('../models');
+const router = express.Router();
 
 /// configure serving up a built client app
 router.use(express.static(path.join(__dirname, '../client/build')));
@@ -20,7 +16,7 @@ router.use('/libraries/bootstrap', express.static(path.join(__dirname, '../clien
 router.use('/api', require('./api'));
 
 /// serve up the client app for all other routes, per SPA client-side routing
-router.get('/*', function (req, res, next) {
+router.get('/*', (req, res, next) => {
   if (req.accepts('html')) {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   } else {

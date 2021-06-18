@@ -1,13 +1,9 @@
 const assert = require('assert');
 
-const helper = require('../helper');
+require('../helper');
 const models = require('../../models');
 
 describe('models.Section', () => {
-  beforeEach(async () => {
-    await helper.loadFixtures([]);
-  });
-
   it('creates a new Section record', async () => {
     let section = models.Section.build({
       name: 'Test Section',

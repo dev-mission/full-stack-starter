@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "heroku-postbuild": "cd client && npm install && npm run build",
+    "lint": "eslint .",
+    "lint-watch": "onchange \"**/*\" -- eslint {{changed}}",
     "pp": "prettier --write --ignore-unknown .",
     "pp-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
     "start": "nodemon -L -V --ignore ./client --ignore ./migrations --ignore ./public ./bin/www",
@@ -41,6 +43,11 @@
   "devDependencies": {
     "cross-env": "~7.0.3",
     "del-cli": "^4.0.0",
+    "eslint": "^7.28.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-mocha": "^9.0.0",
     "foreman": "^3.0.1",
     "mocha": "^9.0.0",
     "onchange": "^7.1.0",
@@ -51,6 +58,48 @@
   },
   "engines": {
     "node": "14.x"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "plugin:mocha/recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "plugins": [
+      "import",
+      "mocha"
+    ],
+    "rules": {
+      "mocha/no-mocha-arrows": [
+        "off"
+      ],
+      "no-underscore-dangle": [
+        "error",
+        {
+          "allowAfterThis": true
+        }
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "Sequelize|queryInterface"
+        }
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": false
+        }
+      ]
+    },
+    "ignorePatterns": [
+      "build",
+      "client",
+      "node_modules"
+    ]
   },
   "prettier": {
     "jsxBracketSameLine": true,

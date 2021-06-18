@@ -1,13 +1,12 @@
-'use strict';
-
-const _ = require('lodash');
 const AWS = require('aws-sdk');
 const fs = require('fs-extra');
 const path = require('path');
 const Sequelize = require('sequelize');
+
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.js')[env];
+// eslint-disable-next-line import/no-dynamic-require
+const config = require(`${__dirname}/../config/config.js`)[env];
 const db = {};
 
 let sequelize;
@@ -18,10 +17,9 @@ if (config.use_env_variable) {
 }
 
 fs.readdirSync(__dirname)
-  .filter((file) => {
-    return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
-  })
+  .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
   .forEach((file) => {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
@@ -49,7 +47,7 @@ if (process.env.AWS_S3_BUCKET_REGION) {
 }
 const s3 = new AWS.S3(s3options);
 
-Sequelize.Model.prototype.assetUrl = function (attribute, pathPrefix) {
+Sequelize.Model.prototype.assetUrl = function assetUrl(attribute, pathPrefix) {
   const file = this.get(attribute);
   if (file) {
     return path.resolve('/api/assets/', pathPrefix, file);
@@ -57,7 +55,7 @@ Sequelize.Model.prototype.assetUrl = function (attribute, pathPrefix) {
   return null;
 };
 
-Sequelize.Model.prototype.handleAssetFile = async function (attribute, pathPrefix, options) {
+Sequelize.Model.prototype.handleAssetFile = async function handleAssetFile(attribute, pathPrefix, options) {
   if (!this.changed(attribute)) {
     return;
   }

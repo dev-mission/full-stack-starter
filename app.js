@@ -36,7 +36,7 @@ app.set('trust proxy', 1);
 app.use(
   cookieSession({
     secret: process.env.SESSION_SECRET,
-    secure: process.env.NODE_ENV == 'production',
+    secure: process.env.NODE_ENV === 'production',
   })
 );
 /// use passport for authentication
@@ -49,7 +49,7 @@ i18n.configure({
 });
 app.use(i18n.init);
 /// set up local variables commonly used in all requests
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   /// set the current logged in user, if any
   res.locals.currentUser = req.user;
   next();
@@ -59,12 +59,12 @@ app.use(function (req, res, next) {
 app.use(routes);
 
 /// catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 /// error handler
-app.use(function (err, req, res) {
+app.use((err, req, res) => {
   /// render the error
   res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
 });
