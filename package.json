@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "heroku-postbuild": "cd client && npm install && npm run build",
+    "pp": "prettier --write --ignore-unknown .",
+    "pp-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
     "start": "nodemon -L -V --ignore ./client --ignore ./migrations --ignore ./public ./bin/www",
     "test": "mocha --recursive"
   },
@@ -41,6 +43,7 @@
     "del-cli": "^4.0.0",
     "foreman": "^3.0.1",
     "mocha": "^9.0.0",
+    "onchange": "^7.1.0",
     "prettier": "^2.3.1",
     "sequelize-fixtures": "^1.2.0",
     "supertest": "^6.1.3",
