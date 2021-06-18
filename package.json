@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "heroku-postbuild": "cd client && npm install && npm run build",
+    "lint": "eslint .",
+    "lint-watch": "onchange \"**/*\" -- eslint {{changed}}",
     "pp": "prettier --write --ignore-unknown .",
     "pp-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
     "start": "nodemon -L -V --ignore ./client --ignore ./migrations --ignore ./public ./bin/www",
