@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const HttpStatus = require('http-status-codes');
 const _ = require('lodash');
@@ -10,7 +8,7 @@ const helpers = require('../helpers');
 
 const router = express.Router();
 
-router.get('/', interceptors.requireAdmin, async function (req, res) {
+router.get('/', interceptors.requireAdmin, async (req, res) => {
   const page = req.query.page || 1;
   const { docs, pages, total } = await models.User.paginate({
     page,
@@ -24,7 +22,7 @@ router.get('/', interceptors.requireAdmin, async function (req, res) {
   res.json(docs.map((d) => d.toJSON()));
 });
 
-router.get('/me', function (req, res, next) {
+router.get('/me', (req, res, next) => {
   if (req.user) {
     res.json(req.user.toJSON());
   } else {
@@ -32,7 +30,7 @@ router.get('/me', function (req, res, next) {
   }
 });
 
-router.get('/:id', interceptors.requireAdmin, async function (req, res) {
+router.get('/:id', interceptors.requireAdmin, async (req, res) => {
   try {
     const user = await models.User.findByPk(req.params.id);
     if (user) {
@@ -45,12 +43,12 @@ router.get('/:id', interceptors.requireAdmin, async function (req, res) {
   }
 });
 
-router.patch('/:id', interceptors.requireLogin, function (req, res) {
+router.patch('/:id', interceptors.requireLogin, (req, res) => {
   if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id)) {
     res.status(HttpStatus.UNAUTHORIZED).end();
     return;
   }
-  models.sequelize.transaction(async function (transaction) {
+  models.sequelize.transaction(async (transaction) => {
     try {
       const user = await models.User.findByPk(req.params.id, { transaction });
       if (!user) {

@@ -1,5 +1,3 @@
-'use strict';
-
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const passportLocal = require('passport-local');
@@ -12,34 +10,30 @@ passport.use(
     {
       usernameField: 'email',
     },
-    function (email, password, done) {
-      models.User.findOne({ where: { email: email } })
-        .then(function (user) {
+    (email, password, done) => {
+      models.User.findOne({ where: { email } })
+        .then((user) => {
           bcrypt
             .compare(password, user.hashedPassword)
-            .then(function (res) {
+            .then((res) => {
               if (res) {
                 return done(null, user);
               }
               return done(null, false, { message: 'Invalid password' });
             })
-            .catch(function (error) {
-              return done(null, false, { message: 'Invalid password' });
-            });
+            .catch((error) => done(null, false, { message: 'Invalid password' }));
         })
-        .catch(function (error) {
-          return done(null, false, { message: 'Invalid login' });
-        });
+        .catch((error) => done(null, false, { message: 'Invalid login' }));
     }
   )
 );
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
-  models.User.findByPk(id).then(function (user) {
+passport.deserializeUser((id, done) => {
+  models.User.findByPk(id).then((user) => {
     done(null, user);
   });
 });

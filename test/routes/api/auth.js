@@ -31,7 +31,7 @@ describe('/api/auth', () => {
         })
         .expect(HttpStatus.CREATED);
 
-      const id = response.body.id;
+      const { id } = response.body;
       assert(id);
       assert.deepStrictEqual(response.body, {
         id,

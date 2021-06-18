@@ -1,5 +1,3 @@
-'use strict';
-
 const { Model } = require('sequelize');
 const { DateTime } = require('luxon');
 

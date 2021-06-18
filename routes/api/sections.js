@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const HttpStatus = require('http-status-codes');
 
@@ -8,7 +6,7 @@ const models = require('../../models');
 
 const router = express.Router();
 
-router.get('/', async function (req, res) {
+router.get('/', async (req, res) => {
   const sections = await models.Section.findAll({
     order: [
       ['position', 'ASC'],
@@ -18,7 +16,7 @@ router.get('/', async function (req, res) {
   res.json(sections);
 });
 
-router.post('/', interceptors.requireLogin, async function (req, res) {
+router.post('/', interceptors.requireLogin, async (req, res) => {
   const section = models.Section.build(req.body);
   try {
     await section.save();
@@ -28,7 +26,7 @@ router.post('/', interceptors.requireLogin, async function (req, res) {
   }
 });
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', async (req, res) => {
   const section = await models.Section.findByPk(req.params.id);
   if (section) {
     res.json(section);
@@ -37,7 +35,7 @@ router.get('/:id', async function (req, res) {
   }
 });
 
-router.patch('/:id', interceptors.requireLogin, async function (req, res) {
+router.patch('/:id', interceptors.requireLogin, async (req, res) => {
   const section = await models.Section.findByPk(req.params.id);
   if (section) {
     try {
@@ -51,7 +49,7 @@ router.patch('/:id', interceptors.requireLogin, async function (req, res) {
   }
 });
 
-router.delete('/:id', interceptors.requireLogin, async function (req, res) {
+router.delete('/:id', interceptors.requireLogin, async (req, res) => {
   const section = await models.Section.findByPk(req.params.id);
   if (section) {
     await section.destroy();

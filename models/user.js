@@ -1,4 +1,3 @@
-'use strict';
 const bcrypt = require('bcrypt');
 const { Model, Op } = require('sequelize');
 const _ = require('lodash');
@@ -30,17 +29,17 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     hashPassword(password, options) {
-      return bcrypt.hash(password, 10).then((hashedPassword) => {
-        return this.update({ hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date() }, options);
-      });
+      return bcrypt
+        .hash(password, 10)
+        .then((hashedPassword) => this.update({ hashedPassword, passwordResetTokenExpiresAt: new Date() }, options));
     }
 
     sendPasswordResetEmail() {
       return this.update({
         passwordResetToken: uuid(),
         passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      }).then((user) => {
-        return mailer.send({
+      }).then((user) =>
+        mailer.send({
           template: 'password-reset',
           message: {
             to: this.fullNameAndEmail,
@@ -48,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
           locals: {
             url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`,
           },
-        });
-      });
+        })
+      );
     }
 
     sendWelcomeEmail() {
