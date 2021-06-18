@@ -22,7 +22,7 @@ router.get('/', interceptors.requireAdmin, async (req, res) => {
   res.json(docs.map((d) => d.toJSON()));
 });
 
-router.get('/me', (req, res, next) => {
+router.get('/me', (req, res) => {
   if (req.user) {
     res.json(req.user.toJSON());
   } else {
@@ -44,7 +44,7 @@ router.get('/:id', interceptors.requireAdmin, async (req, res) => {
 });
 
 router.patch('/:id', interceptors.requireLogin, (req, res) => {
-  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id)) {
+  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id, 10)) {
     res.status(HttpStatus.UNAUTHORIZED).end();
     return;
   }
@@ -58,7 +58,7 @@ router.patch('/:id', interceptors.requireLogin, (req, res) => {
       await user.update(_.pick(req.body, ['firstName', 'lastName', 'email', 'password', 'picture']), { transaction });
       res.json(user.toJSON());
     } catch (error) {
-      if (error.name == 'SequelizeValidationError') {
+      if (error.name === 'SequelizeValidationError') {
         res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: error.errors,

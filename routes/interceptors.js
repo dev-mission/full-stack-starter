@@ -21,9 +21,9 @@ passport.use(
               }
               return done(null, false, { message: 'Invalid password' });
             })
-            .catch((error) => done(null, false, { message: 'Invalid password' }));
+            .catch(() => done(null, false, { message: 'Invalid password' }));
         })
-        .catch((error) => done(null, false, { message: 'Invalid login' }));
+        .catch(() => done(null, false, { message: 'Invalid login' }));
     }
   )
 );
@@ -48,7 +48,7 @@ function sendErrorForbidden(req, res) {
   res.sendStatus(HttpStatus.FORBIDDEN);
 }
 
-function requireLogin(req, res, next, requireAdmin) {
+function requireLoginInternal(req, res, next, requireAdmin) {
   if (req.user) {
     if (requireAdmin) {
       if (req.user.isAdmin) {
@@ -64,10 +64,10 @@ function requireLogin(req, res, next, requireAdmin) {
   }
 }
 
-module.exports.requireLogin = function (req, res, next) {
-  requireLogin(req, res, next, false);
+module.exports.requireLogin = function requireLogin(req, res, next) {
+  requireLoginInternal(req, res, next, false);
 };
 
-module.exports.requireAdmin = function (req, res, next) {
-  requireLogin(req, res, next, true);
+module.exports.requireAdmin = function requireAdmin(req, res, next) {
+  requireLoginInternal(req, res, next, true);
 };

@@ -1,10 +1,7 @@
 const express = require('express');
-const HttpStatus = require('http-status-codes');
 const path = require('path');
 
 const router = express.Router();
-
-const models = require('../models');
 
 /// configure serving up a built client app
 router.use(express.static(path.join(__dirname, '../client/build')));

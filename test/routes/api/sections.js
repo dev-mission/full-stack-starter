@@ -78,7 +78,7 @@ describe('/api/sections', () => {
         assert.strictEqual(section.slug, 'section-1');
         assert.strictEqual(section.position, 1);
 
-        const response = await testSession
+        await testSession
           .patch('/api/sections/1')
           .set('Accept', 'application/json')
           .send({
@@ -97,7 +97,7 @@ describe('/api/sections', () => {
 
     describe('DELETE /:id', () => {
       it('deletes an existing Section specified by id', async () => {
-        const response = await testSession.delete('/api/sections/1').set('Accept', 'application/json').expect(HttpStatus.OK);
+        await testSession.delete('/api/sections/1').set('Accept', 'application/json').expect(HttpStatus.OK);
 
         const section = await models.Section.findByPk(1);
         assert.strictEqual(section, null);

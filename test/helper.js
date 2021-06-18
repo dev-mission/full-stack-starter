@@ -1,4 +1,6 @@
-/// MUST BE FIRST! set the NODE_ENV to test to disable logging, switch to test db
+/* eslint-disable mocha/no-top-level-hooks, mocha/no-hooks-for-single-case, mocha/no-exports */
+
+// MUST BE FIRST! set the NODE_ENV to test to disable logging, switch to test db
 process.env.NODE_ENV = 'test';
 
 const fixtures = require('sequelize-fixtures');
@@ -14,7 +16,7 @@ const loadFixtures = async (files) => {
 };
 
 const resetDatabase = async () => {
-  /// clear all test data (order matters due to foreign key relationships)
+  // clear all test data (order matters due to foreign key relationships)
   await models.sequelize.query(`
     DELETE FROM "SectionItems";
     DELETE FROM "Sections";
@@ -28,7 +30,7 @@ beforeEach(async () => {
 
 // eslint-disable-next-line no-undef
 after(async () => {
-  /// close all db connections
+  // close all db connections
   await models.sequelize.close();
 });
 

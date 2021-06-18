@@ -12,15 +12,15 @@ router.post('/login', (req, res, next) => {
     if (err) {
       next(err);
     } else if (user) {
-      req.logIn(user, (err) => {
-        if (err) {
-          next(err);
+      req.logIn(user, (logInErr) => {
+        if (logInErr) {
+          next(logInErr);
         } else {
           res.status(HttpStatus.OK).json(user);
         }
       });
     } else {
-      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).end();
+      res.status(HttpStatus.UNPROCESSABLE_ENTITY).end();
     }
   })(req, res, next);
 });
@@ -40,12 +40,13 @@ if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
       await user.sendWelcomeEmail();
       req.login(user, (err) => {
         if (err) {
-          return next(err);
+          next(err);
+          return;
         }
         res.status(HttpStatus.CREATED).json(user);
       });
     } catch (error) {
-      if (error.name == 'SequelizeValidationError') {
+      if (error.name === 'SequelizeValidationError') {
         res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: error.errors || [],

@@ -46,6 +46,8 @@ describe('/api/users', () => {
           lastName: 'User',
           email: 'regular.user@test.com',
           isAdmin: false,
+          picture: null,
+          pictureUrl: null,
         });
       });
     });
@@ -68,6 +70,8 @@ describe('/api/users', () => {
           lastName: 'Person',
           email: 'normal.person@test.com',
           isAdmin: false,
+          picture: null,
+          pictureUrl: null,
         });
       });
 
