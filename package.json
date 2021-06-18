@@ -63,6 +63,9 @@
       "plugin:mocha/recommended",
       "prettier"
     ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
     "plugins": [
       "import",
       "mocha"

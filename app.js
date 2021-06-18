@@ -36,7 +36,7 @@ app.set('trust proxy', 1);
 app.use(
   cookieSession({
     secret: process.env.SESSION_SECRET,
-    secure: process.env.NODE_ENV == 'production',
+    secure: process.env.NODE_ENV === 'production',
   })
 );
 /// use passport for authentication
