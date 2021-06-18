@@ -10,7 +10,7 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
+     */
     const now = new Date();
     await queryInterface.bulkInsert('SectionItems', [
       {
@@ -22,7 +22,7 @@ module.exports = {
         startedAt: '2020-09-01',
         endedAt: '2020-12-01',
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       },
       {
         SectionId: 2,
@@ -33,8 +33,8 @@ module.exports = {
         startedAt: '2021-01-01',
         endedAt: null,
         createdAt: now,
-        updatedAt: now
-      }
+        updatedAt: now,
+      },
     ]);
   },
 
@@ -46,5 +46,5 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete('SectionItems');
-  }
+  },
 };

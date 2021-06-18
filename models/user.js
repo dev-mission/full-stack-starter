@@ -1,12 +1,9 @@
 'use strict';
 const bcrypt = require('bcrypt');
-const {
-  Model,
-  Op
-} = require('sequelize');
+const { Model, Op } = require('sequelize');
 const _ = require('lodash');
-const sequelizePaginate = require('sequelize-paginate')
-const {v4: uuid} = require('uuid');
+const sequelizePaginate = require('sequelize-paginate');
+const { v4: uuid } = require('uuid');
 const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {
@@ -29,36 +26,28 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      return _.pick(this.get(), [
-        'id',
-        'firstName',
-        'lastName',
-        'email',
-        'picture',
-        'pictureUrl',
-        'isAdmin'
-      ]);
+      return _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureUrl', 'isAdmin']);
     }
 
     hashPassword(password, options) {
-      return bcrypt.hash(password, 10).then(hashedPassword => {
-        return this.update({hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date()}, options);
+      return bcrypt.hash(password, 10).then((hashedPassword) => {
+        return this.update({ hashedPassword: hashedPassword, passwordResetTokenExpiresAt: new Date() }, options);
       });
     }
 
     sendPasswordResetEmail() {
       return this.update({
         passwordResetToken: uuid(),
-        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       }).then((user) => {
         return mailer.send({
           template: 'password-reset',
           message: {
-            to: this.fullNameAndEmail
+            to: this.fullNameAndEmail,
           },
           locals: {
-            url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`
-          }
+            url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`,
+          },
         });
       });
     }
@@ -67,113 +56,116 @@ module.exports = (sequelize, DataTypes) => {
       return mailer.send({
         template: 'welcome',
         message: {
-          to: this.fullNameAndEmail
-        }
+          to: this.fullNameAndEmail,
+        },
       });
     }
-  };
-  User.init({
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'First name cannot be blank'
-        },
-        notEmpty: {
-          msg: 'First name cannot be blank'
-        }
-      }
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Last name cannot be blank'
-        },
-        notEmpty: {
-          msg: 'Last name cannot be blank'
-        }
-      }
-    },    
-    email: {
-      type: DataTypes.CITEXT,
-      allowNull: false,
-      validate: {
-        notNull: {
-          msg: 'Email cannot be blank'
-        },
-        notEmpty: {
-          msg: 'Email cannot be blank'
-        },
-        async isUnique(value) {
-          if (this.changed('email')) {
-            const user = await User.findOne({
-              where: {
-                id: {
-                  [Op.ne]: this.id
-                },
-                email: value,                
-              }
-            });
-            if (user) {
-              throw new Error('Email already registered');
-            }
-          }
-        }
-      }
-    },
-    fullNameAndEmail: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return `${this.firstName} ${this.lastName} <${this.email}>`;
-      }
-    },
-    password: {
-      type: DataTypes.VIRTUAL,
-      validate: {
-        isStrong(value) {
-          if (this.hashedPassword && this.password === '') {
-            // not changing, skip validation
-            return;
-          }
-          if (value.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) == null) {
-            throw new Error('Minimum eight characters, at least one letter and one number');
-          }
+  }
+  User.init(
+    {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'First name cannot be blank',
+          },
+          notEmpty: {
+            msg: 'First name cannot be blank',
+          },
         },
       },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Last name cannot be blank',
+          },
+          notEmpty: {
+            msg: 'Last name cannot be blank',
+          },
+        },
+      },
+      email: {
+        type: DataTypes.CITEXT,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Email cannot be blank',
+          },
+          notEmpty: {
+            msg: 'Email cannot be blank',
+          },
+          async isUnique(value) {
+            if (this.changed('email')) {
+              const user = await User.findOne({
+                where: {
+                  id: {
+                    [Op.ne]: this.id,
+                  },
+                  email: value,
+                },
+              });
+              if (user) {
+                throw new Error('Email already registered');
+              }
+            }
+          },
+        },
+      },
+      fullNameAndEmail: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.firstName} ${this.lastName} <${this.email}>`;
+        },
+      },
+      password: {
+        type: DataTypes.VIRTUAL,
+        validate: {
+          isStrong(value) {
+            if (this.hashedPassword && this.password === '') {
+              // not changing, skip validation
+              return;
+            }
+            if (value.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) == null) {
+              throw new Error('Minimum eight characters, at least one letter and one number');
+            }
+          },
+        },
+      },
+      hashedPassword: {
+        type: DataTypes.STRING,
+      },
+      picture: {
+        type: DataTypes.STRING,
+      },
+      pictureUrl: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.assetUrl('picture', 'users/picture');
+        },
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      deactivatedAt: {
+        type: DataTypes.DATE,
+      },
+      passwordResetToken: {
+        type: DataTypes.UUID,
+      },
+      passwordResetTokenExpiresAt: {
+        type: DataTypes.DATE,
+      },
     },
-    hashedPassword: {
-      type: DataTypes.STRING
-    },
-    picture: {
-      type: DataTypes.STRING
-    },
-    pictureUrl: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return this.assetUrl('picture', 'users/picture');
-      }
-    },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
-    deactivatedAt: {
-      type: DataTypes.DATE
-    },
-    passwordResetToken: {
-      type: DataTypes.UUID
-    },
-    passwordResetTokenExpiresAt: {
-      type: DataTypes.DATE
+    {
+      sequelize,
+      modelName: 'User',
     }
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  );
 
   User.beforeSave(async (user) => {
     if (user.changed('password') && user.password !== '') {

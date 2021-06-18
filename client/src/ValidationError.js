@@ -7,7 +7,7 @@ class ValidationError extends Error {
   }
 
   errorsFor(name) {
-    const errors = this.data.errors.filter(e => e.path === name);    
+    const errors = this.data.errors.filter((e) => e.path === name);
     return errors.length ? errors : null;
   }
 
@@ -15,7 +15,7 @@ class ValidationError extends Error {
     const errors = this.errorsFor(name);
     if (errors) {
       return (
-        <div className="invalid-feedback d-block">{inflection.capitalize([...new Set(errors.map(e => e.message))].join(', '))}.</div>
+        <div className="invalid-feedback d-block">{inflection.capitalize([...new Set(errors.map((e) => e.message))].join(', '))}.</div>
       );
     }
   }

@@ -6,48 +6,48 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       SectionId: {
         references: {
           model: {
-            tableName: 'Sections'
+            tableName: 'Sections',
           },
-          key: 'id'
+          key: 'id',
         },
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       title: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       subtitle: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       place: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       about: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       startedAt: {
         allowNull: false,
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
       },
       endedAt: {
-        type: Sequelize.DATEONLY
+        type: Sequelize.DATEONLY,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('SectionItems');
-  }
+  },
 };

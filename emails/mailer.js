@@ -17,33 +17,33 @@ if (process.env.SMTP_ENABLED === 'true') {
     secure: process.env.SMTP_PORT === 465,
     auth: {
       user: process.env.SMTP_USERNAME,
-      pass: process.env.SMTP_PASSWORD
-    }
+      pass: process.env.SMTP_PASSWORD,
+    },
   };
 } else {
   transport = {
-    jsonTransport: true
+    jsonTransport: true,
   };
 }
 
 const email = new Email({
   message: {
-    from: `${process.env.REACT_APP_SITE_TITLE} <${process.env.SMTP_FROM_EMAIL_ADDRESS}>`
+    from: `${process.env.REACT_APP_SITE_TITLE} <${process.env.SMTP_FROM_EMAIL_ADDRESS}>`,
   },
   send: true,
   transport,
   views: {
     options: {
-      extension: 'ejs'
-    }
+      extension: 'ejs',
+    },
   },
   juice: true,
   juiceResources: {
     preserveImportant: true,
     webResources: {
-      relativeTo: __dirname
-    }
-  }
+      relativeTo: __dirname,
+    },
+  },
 });
 
 module.exports = email;

@@ -1,12 +1,8 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.scss';
 
-import {AuthContextProvider, AuthProtectedRoute} from './AuthContext';
+import { AuthContextProvider, AuthProtectedRoute } from './AuthContext';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';

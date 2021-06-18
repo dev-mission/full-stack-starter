@@ -12,10 +12,10 @@ describe('models.Section', () => {
     let section = models.Section.build({
       name: 'Test Section',
       slug: 'test-section',
-      position: 1
+      position: 1,
     });
     assert.strictEqual(section.id, null);
-    await section.save()
+    await section.save();
     assert(section.id);
 
     section = await models.Section.findByPk(section.id);

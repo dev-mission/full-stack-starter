@@ -1,9 +1,7 @@
 'use strict';
 
-const {
-  Model
-} = require('sequelize');
-const {DateTime} = require('luxon');
+const { Model } = require('sequelize');
+const { DateTime } = require('luxon');
 
 module.exports = (sequelize, DataTypes) => {
   class SectionItem extends Model {
@@ -29,43 +27,46 @@ module.exports = (sequelize, DataTypes) => {
       }
       return data;
     }
-  };
-  SectionItem.init({
-    title: {
-      allowNull: false,
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          msg: 'Please enter a title'
-        }
-      }
-    },
-    subtitle: DataTypes.STRING,
-    place: DataTypes.STRING,
-    about: DataTypes.TEXT,
-    startedAt: {
-      allowNull: false,
-      type: DataTypes.DATEONLY,
-      validate: {
-        isDate: {
-          msg: 'Please enter a valid start month and year (YYYY-MM)'
+  }
+  SectionItem.init(
+    {
+      title: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: 'Please enter a title',
+          },
         },
-        notEmpty: {
-          msg: 'Please enter a valid start month and year (YYYY-MM)'
-        }
-      }
+      },
+      subtitle: DataTypes.STRING,
+      place: DataTypes.STRING,
+      about: DataTypes.TEXT,
+      startedAt: {
+        allowNull: false,
+        type: DataTypes.DATEONLY,
+        validate: {
+          isDate: {
+            msg: 'Please enter a valid start month and year (YYYY-MM)',
+          },
+          notEmpty: {
+            msg: 'Please enter a valid start month and year (YYYY-MM)',
+          },
+        },
+      },
+      endedAt: {
+        type: DataTypes.DATEONLY,
+        validate: {
+          isDate: {
+            msg: 'Please enter a valid start month and year (YYYY-MM)',
+          },
+        },
+      },
     },
-    endedAt: {
-      type: DataTypes.DATEONLY,
-      validate: {
-        isDate: {
-          msg: 'Please enter a valid start month and year (YYYY-MM)'
-        }
-      }
+    {
+      sequelize,
+      modelName: 'SectionItem',
     }
-  }, {
-    sequelize,
-    modelName: 'SectionItem',
-  });
+  );
   return SectionItem;
 };

@@ -17,10 +17,7 @@ describe('/api/sections', () => {
   describe('GET /', () => {
     it('returns a list of Sections ordered by position', async () => {
       /// request user list
-      const response = await testSession
-        .get('/api/sections')
-        .set('Accept', 'application/json')
-        .expect(HttpStatus.OK);
+      const response = await testSession.get('/api/sections').set('Accept', 'application/json').expect(HttpStatus.OK);
       assert(response.body?.length, 3);
 
       const sections = response.body;
@@ -35,12 +32,9 @@ describe('/api/sections', () => {
 
   describe('GET /:id', () => {
     it('returns the Section specified by the id', async () => {
-      const response = await testSession
-        .get('/api/sections/1')
-        .set('Accept', 'application/json')
-        .expect(HttpStatus.OK);
+      const response = await testSession.get('/api/sections/1').set('Accept', 'application/json').expect(HttpStatus.OK);
       assert(response.body);
-      
+
       const section = response.body;
       assert.strictEqual(section.name, 'Section 1');
       assert.strictEqual(section.slug, 'section-1');
@@ -65,11 +59,11 @@ describe('/api/sections', () => {
           .send({
             name: 'Section 4',
             slug: 'section-4',
-            position: 4
+            position: 4,
           })
           .expect(HttpStatus.CREATED);
         assert(response.body.id);
-        
+
         const section = await models.Section.findByPk(response.body.id);
         assert.strictEqual(section.name, 'Section 4');
         assert.strictEqual(section.slug, 'section-4');
@@ -82,7 +76,7 @@ describe('/api/sections', () => {
         const section = await models.Section.findByPk(1);
         assert.strictEqual(section.name, 'Section 1');
         assert.strictEqual(section.slug, 'section-1');
-        assert.strictEqual(section.position, 1);  
+        assert.strictEqual(section.position, 1);
 
         const response = await testSession
           .patch('/api/sections/1')
@@ -90,10 +84,10 @@ describe('/api/sections', () => {
           .send({
             name: 'Section 4',
             slug: 'section-4',
-            position: 4
+            position: 4,
           })
           .expect(HttpStatus.OK);
-        
+
         await section.reload();
         assert.strictEqual(section.name, 'Section 4');
         assert.strictEqual(section.slug, 'section-4');
@@ -103,11 +97,8 @@ describe('/api/sections', () => {
 
     describe('DELETE /:id', () => {
       it('deletes an existing Section specified by id', async () => {
-        const response = await testSession
-          .delete('/api/sections/1')
-          .set('Accept', 'application/json')
-          .expect(HttpStatus.OK);
-        
+        const response = await testSession.delete('/api/sections/1').set('Accept', 'application/json').expect(HttpStatus.OK);
+
         const section = await models.Section.findByPk(1);
         assert.strictEqual(section, null);
       });
