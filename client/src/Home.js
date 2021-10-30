@@ -34,14 +34,13 @@ function Home() {
     <main className="container">
       <div className="row">
         <div className="col-md-4">
-          <AboutMe />
           
           <ul>
             {skills.map(s => <li>{s.name}</li>)}
           </ul>
 
         </div>
-        <div className="col-md-7 offset-md-1">
+        {/* <div className="col-md-7 offset-md-1">
           {sections.map(s => {
             return (
               <section id={s.slug} key={s.slug}>
@@ -67,7 +66,7 @@ function Home() {
               </section>
             );
           })}
-        </div>
+        </div> */}
       </div>
     </main>    
   );
