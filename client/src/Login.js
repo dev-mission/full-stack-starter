@@ -30,11 +30,13 @@ function Login() {
   }
 
   return (
-    <main className="container">
-      <div className="row justify-content-center">
+
+    <main className="container" >
+      <div className="row justify-content-center" >
         <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
           <div className="card">
             <div className="card-body">
+              <div className="container" >
               <h2 className="card-title">Log in</h2>
               {history.location.state?.flash && (
                 <div className="alert alert-info">{history.location.state.flash}</div>
@@ -56,11 +58,12 @@ function Login() {
                 </div>
                 <div className="mb-3 text-center">
                   <Link to="/passwords/forgot">Forgot your password?</Link>
-                  {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
-                    <><br /><Link to="/register">Need an account?</Link></>
-                  )}
+                  </div>
+                  <div className="mb-3 text-center">
+                  <Link to="/register">Need an account?</Link>
                 </div>
               </form>
+            </div>
             </div>
           </div>
         </div>

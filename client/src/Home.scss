@@ -1,20 +1,47 @@
-#home {  
-  img {
-    border-radius: 50%;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  p {
-    text-align: center;
-  }
 
-  ul {
-    justify-content: center;
+  #leftRegister{
+    background: #0431A6;
+    color: white;
     display: flex;
+    flex-direction: column;
   }
+  #leftRegister h1{
+      margin-top: 20%;
+      flex: none;
+      
+  }
+  #leftRegister p{
+    margin-top: 5%;
+    padding-bottom: 10%;
 }
-  
+  #rightRegister{
+    margin-top: 8%;
+  }
+  .links{
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+    }
+    .links:hover{
+        color: rgb(201, 201, 201);
+    }
+    .logo{
+        height:30em;
+    }
+    .myContainer{
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+    .form-group{
+        margin-top: 2em;
+    }
+    .form-check{
+    margin-top: 18em;
+    margin-bottom: 2em;
+    }
+   #continue{
+       background-color: #1154FF;
+   }
+   #continue:hover{
+       opacity: 0.8;
+   }

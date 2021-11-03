@@ -30,45 +30,73 @@ function Home() {
   };
 
   return (
-    
-    <main className="container">
+    <main className="myContainer">
       <div className="row">
-        <div className="col-md-4">
-          
-          <ul>
-            {skills.map(s => <li>{s.name}</li>)}
-          </ul>
-
+        <div className="col-md-6" id="leftRegister" style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+          <h1 className="text-center">Welcome to InConnect!</h1>
+          <p className="text-center" ></p>
+          {/* <img src={logo} className="logo" alt="FairPlay Logo"></img> */}
         </div>
-        {/* <div className="col-md-7 offset-md-1">
-          {sections.map(s => {
-            return (
-              <section id={s.slug} key={s.slug}>
-                <h2>{s.name}</h2>
-                {user && (<Link className="btn btn-sm btn-outline-primary mb-2" to={`/sectionItems/new?section=${s.slug}`}>New</Link>)}
-                <ul>
-                  {sectionItems.filter(si => si.Section.slug === s.slug).map(si => (
-                    <li key={si.id}>
-                      <h3>{si.title}</h3>
-                      <h4>{si.subtitle}</h4>
-                      <h5>{si.place}</h5>
-                      <h6>{si.startedAt} to {si.endedAt ? si.endedAt : 'Present'}</h6>
-                      <p>{si.about}</p>
-                      {user && (
-                        <p>
-                          <Link className="btn btn-sm btn-outline-primary" to={`/sectionItems/${si.id}/edit`}>Edit</Link>&nbsp;
-                          <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(si)} type="button">Delete</button>
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            );
-          })}
-        </div> */}
+        <div className="col-md-6" id="rightRegister">
+        <h1 className="text-center">Learning Outcomes</h1>
+          <p className="text-center" >Contribute, share, and shape your understanding on how
+to use technical communication and organization skills to
+optimize technical systems in the world of computing. The main areas of focus
+include web technologies, databases fundamentals, infrastructure and systems, and
+programming.</p>
+
+          <div className="list-group">
+            <table className="table table-hover table-dark">
+                <thead>
+                    <tr className="bg-primary text-center">
+                        <th scope="col">Topic</th>
+                        <th scope="col">Difficulty</th>
+                        {user && (<th scope="col">Update</th>)}
+                        <th scope="col">Learn More</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* {topics.map(topic => {
+                        return (
+                            <tr key={topic.id}>
+                            <td>{topic.name}</td>
+                            <td>{topic.difficulty}</td>
+                            <td><button className="btn btn-warning">Update</button></td>
+                            <td><button className="btn btn-primary">Learn More</button></td>
+                        </tr>
+                        )
+                        
+                    })} */}
+                    <tr className="bg-primary text-center">
+                        <td>Web Technologies</td>
+                        <td>Fundamentals/Basic</td>
+                        {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
+                        <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
+                    </tr>
+                    <tr className="bg-primary text-center">
+                        <td>Databases</td>
+                        <td>Fundamentals/Basic</td>
+                        {user && <td><button className="btn btn-warning">Update</button></td>}
+                        <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
+                    </tr>
+                    <tr className="bg-primary text-center">
+                        <td>Infrastructure and Systems</td>
+                        <td>Fundamentals/Basic</td>
+                        {user && <td><button className="btn btn-warning">Update</button></td>}
+                        <td><Link className="nav-link" href="/infra_and_systems" to="/infra_and_systems"><button className="btn btn-primary">Learn</button></Link></td>
+                    </tr>
+                    <tr className="bg-primary text-center">
+                        <td>Programming</td>
+                        <td>Fundamentals/Basic</td>
+                        {user && <td><button className="btn btn-warning">Update</button></td>}
+                        <td><Link className="nav-link" href="/programming" to="/programming"><button className="btn btn-primary">Learn</button></Link></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
       </div>
-    </main>    
+    </main>   
   );
 }
 

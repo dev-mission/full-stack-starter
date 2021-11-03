@@ -16,6 +16,10 @@ import SectionItems from './SectionItems';
 import Sections from './Sections/Sections';
 import Projects from './Projects';
 import Skills from './Skills/Skills';
+import WebTechnologies from './LearningOutcomes/WebTechnologies';
+import InfraSys from './LearningOutcomes/InfraSys';
+import Databases from './LearningOutcomes/Databases';
+import Programming from './LearningOutcomes/Programming';
 
 function App() {
   return (
@@ -26,8 +30,17 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route path="/skills_list">
-            <Skills />
+          <Route path="/web_technologies">
+            <WebTechnologies />
+          </Route>
+          <Route path="/databases">
+            <Databases />
+          </Route>
+          <Route path="/infra_and_systems">
+            <InfraSys />
+          </Route>
+          <Route path="/programming">
+            <Programming />
           </Route>
           <Route path="/login">
             <Login />
