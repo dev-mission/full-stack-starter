@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-    image: postgres:12
+    image: postgres:13
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   mailcatcher:
@@ -11,7 +11,7 @@ services:
       - 1025:1025
   server:
     build: .
-    image: devmission/full-stack-starter:2.0.0
+    image: devmission/full-stack-starter:2.0.1
     command: bash -l -c "bin/init; nf start -j Procfile.dev"
     volumes:
       - .:/opt/node/app
