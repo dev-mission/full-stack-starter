@@ -57,7 +57,7 @@
     "supertest-session": "^4.1.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.13.1"
   },
   "eslintConfig": {
     "extends": [
