@@ -67,30 +67,39 @@ programming.</p>
                         )
                         
                     })} */}
-                    <tr className="bg-primary text-center">
-                        <td>Web Technologies</td>
-                        <td>Fundamentals/Basic</td>
-                        {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
-                        <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
-                    </tr>
+                    {user && (
+                      <tr className="bg-primary text-center">
+                      <td>Web Technologies</td>
+                      <td>Fundamentals/Basic</td>
+                      {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
+                      <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
+                  </tr>
+                    )}
+                    
                     <tr className="bg-primary text-center">
                         <td>Databases</td>
                         <td>Fundamentals/Basic</td>
                         {user && <td><button className="btn btn-warning">Update</button></td>}
                         <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
                     </tr>
-                    <tr className="bg-primary text-center">
-                        <td>Infrastructure and Systems</td>
-                        <td>Fundamentals/Basic</td>
-                        {user && <td><button className="btn btn-warning">Update</button></td>}
-                        <td><Link className="nav-link" href="/infra_and_systems" to="/infra_and_systems"><button className="btn btn-primary">Learn</button></Link></td>
-                    </tr>
-                    <tr className="bg-primary text-center">
-                        <td>Programming</td>
-                        <td>Fundamentals/Basic</td>
-                        {user && <td><button className="btn btn-warning">Update</button></td>}
-                        <td><Link className="nav-link" href="/programming" to="/programming"><button className="btn btn-primary">Learn</button></Link></td>
-                    </tr>
+                    {user && (
+                      <tr className="bg-primary text-center">
+                      <td>Infrastructure and Systems</td>
+                      <td>Fundamentals/Basic</td>
+                      {user && <td><button className="btn btn-warning">Update</button></td>}
+                      <td><Link className="nav-link" href="/infra_and_systems" to="/infra_and_systems"><button className="btn btn-primary">Learn</button></Link></td>
+                  </tr>
+                    )}
+                    {user && (
+                      <tr className="bg-primary text-center">
+                      <td>Programming</td>
+                      <td>Fundamentals/Basic</td>
+                      {user && <td><button className="btn btn-warning">Update</button></td>}
+                      <td><Link className="nav-link" href="/programming" to="/programming"><button className="btn btn-primary">Learn</button></Link></td>
+                  </tr>
+                    )}
+                    
+                    
                 </tbody>
             </table>
         </div>
