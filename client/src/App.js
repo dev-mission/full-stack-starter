@@ -19,7 +19,11 @@ import Skills from './Skills/Skills';
 import WebTechnologies from './LearningOutcomes/WebTechnologies';
 import InfraSys from './LearningOutcomes/InfraSys';
 import Databases from './LearningOutcomes/Databases';
+import DataModeling from './LearningOutcomes/DataModeling';
 import Programming from './LearningOutcomes/Programming';
+import DataArchitecture from './LearningOutcomes/DataArchitecture';
+import SQL from './LearningOutcomes/SQL';
+import DatabaseManagement from './LearningOutcomes/DatabaseManagement';
 
 function App() {
   return (
@@ -35,6 +39,18 @@ function App() {
           </Route>
           <Route path="/databases">
             <Databases />
+          </Route>
+          <Route path="/data_modeling">
+            <DataModeling />
+          </Route>
+          <Route path="/data_architecture">
+            <DataArchitecture />
+          </Route>
+          <Route path="/sql">
+            <SQL />
+          </Route>
+          <Route path="/database_management">
+            <DatabaseManagement />
           </Route>
           <Route path="/infra_and_systems">
             <InfraSys />

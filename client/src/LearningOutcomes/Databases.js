@@ -68,24 +68,24 @@ Structured Query Language commands and query design.</p>
                           
                       })} */}
                       <tr className="bg-primary text-center">
-                          <td>Modeling Databases</td>
+                          <td>Data Modeling</td>
                           {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
-                          <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
+                          <td><Link className="nav-link" href="/data_modeling" to="/data_modeling"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
-                          <td>Architecture</td>
+                          <td>Data Architecture</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
-                          <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
+                          <td><Link className="nav-link" href="/data_architecture" to="/data_architecture"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
                           <td>Structured Query Language</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
-                          <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
+                          <td><Link className="nav-link" href="/sql" to="/sql"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
-                          <td>Query Design</td>
+                          <td>Database Management</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
-                          <td><Link className="nav-link" href="/databases" to="/databases"><button className="btn btn-primary">Learn</button></Link></td>
+                          <td><Link className="nav-link" href="/database_management" to="/database_management"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                   </tbody>
               </table>
