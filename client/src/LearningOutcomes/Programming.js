@@ -83,7 +83,7 @@ algorithms, data structures, and will aim to tackle conceptual understanding as 
                           <td><Link className="nav-link" href="/programming" to="/programming"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
-                          <td>Coding Sandbox</td>
+                          <td>Integrated Development Environment</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
                           <td><Link className="nav-link" href="/programming" to="/programming"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
