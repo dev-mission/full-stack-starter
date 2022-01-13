@@ -67,14 +67,13 @@ programming.</p>
                         )
                         
                     })} */}
-                    {user && (
+                    
                       <tr className="bg-primary text-center">
                       <td>Web Technologies</td>
                       <td>Fundamentals/Basic</td>
                       {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
                       <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
                   </tr>
-                    )}
                     
                     <tr className="bg-primary text-center">
                         <td>Databases</td>
