@@ -69,22 +69,22 @@ debugging.</p>
                           
                       })} */}
                       <tr className="bg-primary text-center">
-                          <td>Web Development</td>
+                          <td>JavaScript, HTML, CSS</td>
                           {user && <td><Link className="nav-link" href="/web_technologies/update" to="/web_technologies/update"><button className="btn btn-warning">Update</button></Link></td>}
                           <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
-                          <td>JavaScript, HTML, CSS</td>
+                          <td>Web Design</td>
+                          {user && <td><button className="btn btn-warning">Update</button></td>}
+                          <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
+                      </tr>
+                      <tr className="bg-primary text-center">
+                          <td>Web Developments</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
                           <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
                       <tr className="bg-primary text-center">
                           <td>Communication Protocols</td>
-                          {user && <td><button className="btn btn-warning">Update</button></td>}
-                          <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
-                      </tr>
-                      <tr className="bg-primary text-center">
-                          <td>General Troubleshooting</td>
                           {user && <td><button className="btn btn-warning">Update</button></td>}
                           <td><Link className="nav-link" href="/web_technologies" to="/web_technologies"><button className="btn btn-primary">Learn</button></Link></td>
                       </tr>
