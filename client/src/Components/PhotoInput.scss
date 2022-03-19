@@ -1,10 +1,10 @@
-.photouploader__preview {
+.photo-input__preview {
   margin: 1rem;
   max-width: 300px;
   position: relative;
 }
 
-.photouploader__remove {
+.photo-input__remove {
   border-radius: 50%;
   font-weight: bold;
   height: 1.5rem;
@@ -16,7 +16,7 @@
   width: 1.5rem;
 }
 
-.photouploader__spinner {
+.photo-input__spinner {
   color: white;
   display: none;
   height: 3rem;
@@ -26,12 +26,12 @@
   width: 3rem;
 }
 
-.photouploader__preview--uploading {
+.photo-input__preview--uploading {
   img {
     opacity: 50%;
   }
 
-  .photouploader__spinner {
+  .photo-input__spinner {
     display: block;
   }
 }

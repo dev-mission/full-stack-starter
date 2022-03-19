@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 
-import Api from './Api';
+import Api from '../Api';
 
-function DropzoneUploader({ className, children, disabled, id, maxFiles, multiple }) {
+function DropzoneUploader({ className, children, disabled, id, maxFiles, multiple, onRemoved, onUploaded, onUploading }) {
   const [files, setFiles] = useState([]);
   const [statuses, setStatuses] = useState([]);
 
@@ -23,6 +23,9 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
       } else if (status.status === 'pending') {
         status.status = 'uploading';
         setStatuses([...statuses]);
+        if (onUploading) {
+          onUploading(status);
+        }
         const blob = {
           filename: status.file.name,
           content_type: status.file.type || 'application/octet-stream',
@@ -38,11 +41,14 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
           .then(() => {
             status.status = 'uploaded';
             setStatuses([...statuses]);
+            if (onUploaded) {
+              onUploaded(status);
+            }
           });
         break;
       }
     }
-  }, [statuses]);
+  }, [onUploaded, onUploading, statuses]);
 
   function onDrop(acceptedFiles) {
     setFiles(
@@ -65,13 +71,21 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
     setStatuses(statuses);
   }
 
+  function onRemove(status) {
+    setFiles(files.filter((f) => f !== status.file));
+    setStatuses(statuses.filter((s) => s !== status));
+    if (onRemoved) {
+      onRemoved(status);
+    }
+  }
+
   return (
     <Dropzone id={id} multiple={multiple} maxFiles={maxFiles ?? 0} onDrop={onDrop} disabled={disabled || files.length > 0}>
       {({ getRootProps, getInputProps }) => (
         <div className={className}>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            {children(statuses)}
+            {children(statuses, onRemove)}
           </div>
         </div>
       )}
