@@ -8,7 +8,6 @@ import Home from './Home';
 import Login from './Login';
 import PasswordRoutes from './Passwords/PasswordRoutes';
 import Register from './Register';
-import SectionItems from './SectionItems';
 import UserRoutes from './Users/UserRoutes';
 
 function App() {
@@ -33,9 +32,6 @@ function App() {
           )}
           <AuthProtectedRoute path="/account">
             <UserRoutes />
-          </AuthProtectedRoute>
-          <AuthProtectedRoute path="/sectionItems">
-            <SectionItems />
           </AuthProtectedRoute>
         </Switch>
       </Router>
