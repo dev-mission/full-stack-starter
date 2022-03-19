@@ -33,7 +33,7 @@ function Header() {
     <nav className="header navbar navbar-expand-md navbar-light bg-light fixed-top">
       <div className="container">
         <Link className="navbar-brand" to="/">
-          My Name
+          Full Stack Starter
         </Link>
         <button
           className="navbar-toggler"
