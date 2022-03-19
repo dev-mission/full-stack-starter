@@ -16,14 +16,14 @@ function Home() {
     Api.sectionItems.index().then((response) => setSectionItems(response.data));
   }, []);
 
-  const onDelete = function (sectionItem) {
+  function onDelete(sectionItem) {
     if (window.confirm(`Are you sure you wish to delete "${sectionItem.title}"?`)) {
       Api.sectionItems.delete(sectionItem.id).then(() => {
         const newSectionItems = sectionItems.filter((si) => si.id !== sectionItem.id);
         setSectionItems(newSectionItems);
       });
     }
-  };
+  }
 
   return (
     <main className="container">

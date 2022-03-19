@@ -41,13 +41,13 @@ function SectionItemForm() {
     [history.location.search, id]
   );
 
-  const onChange = function (event) {
+  function onChange(event) {
     const newSectionItem = { ...sectionItem };
     newSectionItem[event.target.name] = event.target.value;
     setSectionItem(newSectionItem);
-  };
+  }
 
-  const onSubmit = async function (event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setError(null);
     try {
@@ -64,7 +64,7 @@ function SectionItemForm() {
         setError(new UnexpectedError());
       }
     }
-  };
+  }
 
   return (
     <main className="container">

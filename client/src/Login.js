@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
 import Api from './Api';
@@ -8,12 +8,18 @@ function Login() {
   const authContext = useAuthContext();
   const history = useHistory();
 
+  useEffect(() => {
+    if (authContext.user) {
+      history.replace(history.location.state?.from || '/');
+    }
+  }, [authContext.user, history]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [showInvalidError, setShowInvalidError] = useState(false);
 
-  const onSubmit = async function (event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setShowInvalidError(false);
     try {
@@ -27,7 +33,7 @@ function Login() {
         console.log(error);
       }
     }
-  };
+  }
 
   return (
     <main className="container">

@@ -22,12 +22,12 @@ function Header() {
     [setUser]
   );
 
-  const onLogout = async function (event) {
+  async function onLogout(event) {
     event.preventDefault();
     await Api.auth.logout();
     setUser(null);
     history.push('/');
-  };
+  }
 
   return (
     <nav className="header navbar navbar-expand-md navbar-light bg-light fixed-top">

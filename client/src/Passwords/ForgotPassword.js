@@ -9,7 +9,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [showError, setShowError] = useState(false);
 
-  const onSubmit = function (event) {
+  function onSubmit(event) {
     event.preventDefault();
     setShowError(false);
     Api.passwords
@@ -18,7 +18,7 @@ function ForgotPassword() {
         history.push('/login', { flash: 'Please check your email in a few minutes for a reset password link.' });
       })
       .catch(() => setShowError(true));
-  };
+  }
 
   return (
     <main className="container">
