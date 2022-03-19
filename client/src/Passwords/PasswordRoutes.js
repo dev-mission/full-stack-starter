@@ -3,7 +3,7 @@ import { useRouteMatch, Redirect, Route, Switch } from 'react-router-dom';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 
-function Passwords() {
+function PasswordRoutes() {
   const { path, url } = useRouteMatch();
 
   return (
@@ -21,4 +21,4 @@ function Passwords() {
   );
 }
 
-export default Passwords;
+export default PasswordRoutes;

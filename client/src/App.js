@@ -6,10 +6,10 @@ import { AuthContextProvider, AuthProtectedRoute } from './AuthContext';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';
-import Passwords from './Passwords';
+import PasswordRoutes from './Passwords/PasswordRoutes';
 import Register from './Register';
 import SectionItems from './SectionItems';
-import Users from './Users';
+import UserRoutes from './Users/UserRoutes';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
             <Login />
           </Route>
           <Route path="/passwords">
-            <Passwords />
+            <PasswordRoutes />
           </Route>
           {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
             <Route path="/register">
@@ -32,7 +32,7 @@ function App() {
             </Route>
           )}
           <AuthProtectedRoute path="/account">
-            <Users />
+            <UserRoutes />
           </AuthProtectedRoute>
           <AuthProtectedRoute path="/sectionItems">
             <SectionItems />

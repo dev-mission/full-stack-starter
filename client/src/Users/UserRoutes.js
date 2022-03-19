@@ -2,7 +2,7 @@ import { useRouteMatch, Route, Switch } from 'react-router-dom';
 
 import UserForm from './UserForm';
 
-function Users() {
+function UserRoutes() {
   const { path } = useRouteMatch();
 
   return (
@@ -14,4 +14,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default UserRoutes;
