@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Model, Op } = require('sequelize');
 const _ = require('lodash');
-const sequelizePaginate = require('sequelize-paginate');
 const { v4: uuid } = require('uuid');
 const mailer = require('../emails/mailer');
 
@@ -179,8 +178,6 @@ module.exports = (sequelize, DataTypes) => {
   User.afterSave(async (user, options) => {
     user.handleAssetFile('picture', 'users/picture', options);
   });
-
-  sequelizePaginate.paginate(User);
 
   return User;
 };

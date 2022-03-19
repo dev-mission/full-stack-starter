@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/', interceptors.requireAdmin, async (req, res) => {
   const page = req.query.page || 1;
-  const { docs, pages, total } = await models.User.paginate({
+  const { records, pages, total } = await models.User.paginate({
     page,
     order: [
       ['lastName', 'ASC'],
@@ -19,7 +19,7 @@ router.get('/', interceptors.requireAdmin, async (req, res) => {
     ],
   });
   helpers.setPaginationHeaders(req, res, page, pages, total);
-  res.json(docs.map((d) => d.toJSON()));
+  res.json(records.map((r) => r.toJSON()));
 });
 
 router.get('/me', (req, res) => {
