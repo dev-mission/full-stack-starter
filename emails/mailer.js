@@ -23,6 +23,10 @@ if (process.env.SMTP_ENABLED === 'true') {
     jsonTransport: true,
   };
 }
+if (process.env.NODE_ENV === 'test') {
+  // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+  transport = require('nodemailer-mock').createTransport(transport);
+}
 
 const email = new Email({
   message: {

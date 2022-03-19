@@ -7,6 +7,7 @@ process.env.REACT_APP_FEATURE_REGISTRATION = 'true';
 
 const fixtures = require('sequelize-fixtures');
 const path = require('path');
+const nodemailerMock = require('nodemailer-mock');
 
 const models = require('../models');
 
@@ -28,6 +29,7 @@ const resetDatabase = async () => {
 
 beforeEach(async () => {
   await resetDatabase();
+  nodemailerMock.mock.reset();
 });
 
 // eslint-disable-next-line no-undef
