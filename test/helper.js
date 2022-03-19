@@ -2,6 +2,8 @@
 
 // MUST BE FIRST! set the NODE_ENV to test to disable logging, switch to test db
 process.env.NODE_ENV = 'test';
+process.env.ASSET_PATH_PREFIX = 'test';
+process.env.REACT_APP_FEATURE_REGISTRATION = 'true';
 
 const fixtures = require('sequelize-fixtures');
 const path = require('path');

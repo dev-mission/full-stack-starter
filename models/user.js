@@ -142,7 +142,7 @@ module.exports = (sequelize, DataTypes) => {
       pictureUrl: {
         type: DataTypes.VIRTUAL,
         get() {
-          return this.assetUrl('picture', 'users/picture');
+          return this.assetUrl('picture');
         },
       },
       isAdmin: {
@@ -176,7 +176,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.afterSave(async (user, options) => {
-    user.handleAssetFile('picture', 'users/picture', options);
+    user.handleAssetFile('picture', options);
   });
 
   return User;
