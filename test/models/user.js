@@ -118,7 +118,7 @@ describe('models.User', () => {
 
     afterEach(() => {
       fs.removeSync(path.resolve(__dirname, `../../tmp/uploads/${picture}`));
-      fs.removeSync(path.resolve(__dirname, `../../public/assets/users/picture/${picture}`));
+      fs.removeSync(path.resolve(__dirname, `../../public/assets`, process.env.ASSET_PATH_PREFIX));
     });
 
     it('handles a picture asset upload', async () => {
@@ -130,7 +130,11 @@ describe('models.User', () => {
         picture,
       });
       await user.save();
-      assert(fs.pathExistsSync(path.resolve(__dirname, '../../public/assets/users/picture', picture)));
+      assert(
+        fs.pathExistsSync(
+          path.resolve(__dirname, '../../public/assets', process.env.ASSET_PATH_PREFIX, 'users', `${user.id}`, 'picture', picture)
+        )
+      );
     });
 
     describe('.pictureUrl', () => {
@@ -138,7 +142,7 @@ describe('models.User', () => {
         const user = models.User.build({
           picture,
         });
-        assert.deepStrictEqual(user.pictureUrl, `/api/assets/users/picture/${picture}`);
+        assert.deepStrictEqual(user.pictureUrl, `/api/assets/users/${user.id}/picture/${picture}`);
       });
     });
   });

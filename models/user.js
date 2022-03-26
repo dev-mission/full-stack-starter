@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const { Model, Op } = require('sequelize');
 const _ = require('lodash');
-const sequelizePaginate = require('sequelize-paginate');
 const { v4: uuid } = require('uuid');
 const mailer = require('../emails/mailer');
 
@@ -143,7 +142,7 @@ module.exports = (sequelize, DataTypes) => {
       pictureUrl: {
         type: DataTypes.VIRTUAL,
         get() {
-          return this.assetUrl('picture', 'users/picture');
+          return this.assetUrl('picture');
         },
       },
       isAdmin: {
@@ -177,10 +176,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.afterSave(async (user, options) => {
-    user.handleAssetFile('picture', 'users/picture', options);
+    user.handleAssetFile('picture', options);
   });
-
-  sequelizePaginate.paginate(User);
 
   return User;
 };

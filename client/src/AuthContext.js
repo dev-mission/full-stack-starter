@@ -20,19 +20,23 @@ function AuthContextProvider({ children }) {
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 
-function AuthProtectedRoute({ children, ...rest }) {
+function AuthProtectedRoute({ isAdminRequired, children, ...rest }) {
   const authContext = useAuthContext();
   return (
     <Route
       {...rest}
-      render={({ location }) =>
-        authContext.user ? (
-          children
+      render={(props) =>
+        authContext.user && (!isAdminRequired || authContext.user.isAdmin) ? (
+          children ? (
+            children
+          ) : (
+            rest.render?.(props)
+          )
         ) : (
           <Redirect
             to={{
               pathname: '/login',
-              state: { from: location },
+              state: { from: props.location },
             }}
           />
         )

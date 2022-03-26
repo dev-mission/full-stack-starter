@@ -20,13 +20,13 @@ function Register() {
   });
   const [error, setError] = useState(null);
 
-  const onChange = function (event) {
+  function onChange(event) {
     const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
     setUser(newUser);
-  };
+  }
 
-  const onSubmit = async function (event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setError(null);
     try {
@@ -40,7 +40,7 @@ function Register() {
         setError(new UnexpectedError());
       }
     }
-  };
+  }
 
   return (
     <main className="container">

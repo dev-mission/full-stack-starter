@@ -12,7 +12,7 @@ function ResetPassword() {
   const [showExpired, setShowExpired] = useState(false);
   const [showInvalid, setShowInvalid] = useState(false);
 
-  const onSubmit = function (event) {
+  function onSubmit(event) {
     event.preventDefault();
     setShowError(false);
     setShowInvalid(false);
@@ -20,7 +20,7 @@ function ResetPassword() {
       .update(token, password)
       .then((response) => history.push('/login', { flash: 'Your new password has been saved.' }))
       .catch((error) => setShowError(true));
-  };
+  }
 
   useEffect(
     function () {

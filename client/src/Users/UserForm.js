@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import Api from '../Api';
 import { useAuthContext } from '../AuthContext';
-import PhotoUploader from '../PhotoUploader';
+import PhotoInput from '../Components/PhotoInput';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 
@@ -16,13 +16,13 @@ function UserForm() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const onChange = function (event) {
+  function onChange(event) {
     const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
     setUser(newUser);
-  };
+  }
 
-  const onSubmit = async function (event) {
+  async function onSubmit(event) {
     event.preventDefault();
     setError(null);
     setSuccess(false);
@@ -37,7 +37,7 @@ function UserForm() {
         setError(new UnexpectedError());
       }
     }
-  };
+  }
 
   return (
     <main className="container">
@@ -53,7 +53,7 @@ function UserForm() {
                   <label className="form-label" htmlFor="picture">
                     Picture
                   </label>
-                  <PhotoUploader
+                  <PhotoInput
                     className="card"
                     id="picture"
                     name="picture"
@@ -64,7 +64,7 @@ function UserForm() {
                     <div className="card-body">
                       <div className="card-text">Drag-and-drop a photo file here, or click here to browse and select a file.</div>
                     </div>
-                  </PhotoUploader>
+                  </PhotoInput>
                   {error?.errorMessagesHTMLFor?.('picture')}
                 </div>
                 <div className="mb-3">

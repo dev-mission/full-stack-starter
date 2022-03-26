@@ -73,7 +73,7 @@ router.put('/:path([^?]+)', interceptors.requireLogin, (req, res) => {
   });
 });
 
-router.get('/:path([^?]+)', interceptors.requireLogin, async (req, res) => {
+router.get('/:path([^?]+)', async (req, res) => {
   if (process.env.AWS_S3_BUCKET) {
     const url = await s3.getSignedUrlPromise('getObject', {
       Bucket: process.env.AWS_S3_BUCKET,

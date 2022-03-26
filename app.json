@@ -14,7 +14,7 @@
     },
     "REACT_APP_SITE_TITLE": {
       "description": "The title of the website that will appear in the browser tab",
-      "value": "My Name"
+      "value": "Full Stack Starter"
     },
     "SESSION_SECRET": {
       "description": "A secret key for verifying the integrity of signed cookies.",
