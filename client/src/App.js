@@ -1,8 +1,8 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import './App.scss';
 
-import { AuthContextProvider, AuthProtectedRoute } from './AuthContext';
+import { AuthContextProvider, AuthProtected } from './AuthContext';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';
@@ -15,25 +15,20 @@ function App() {
     <AuthContextProvider>
       <Router>
         <Header />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/passwords">
-            <PasswordRoutes />
-          </Route>
-          {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
-            <Route path="/register">
-              <Register />
-            </Route>
-          )}
-          <AuthProtectedRoute path="/account">
-            <UserRoutes />
-          </AuthProtectedRoute>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/passwords/*" element={<PasswordRoutes />} />
+          {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
+          <Route
+            path="/account/*"
+            element={
+              <AuthProtected>
+                <UserRoutes />
+              </AuthProtected>
+            }
+          />
+        </Routes>
       </Router>
     </AuthContextProvider>
   );

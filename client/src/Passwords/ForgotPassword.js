@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Api from '../Api';
 
 function ForgotPassword() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [showError, setShowError] = useState(false);
 
@@ -15,7 +15,7 @@ function ForgotPassword() {
     Api.passwords
       .reset(email)
       .then(() => {
-        history.push('/login', { flash: 'Please check your email in a few minutes for a reset password link.' });
+        navigate('/login', { state: { flash: 'Please check your email in a few minutes for a reset password link.' } });
       })
       .catch(() => setShowError(true));
   }

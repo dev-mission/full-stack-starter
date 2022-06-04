@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import Api from '../Api';
 
 function ResetPassword() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { token } = useParams();
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
@@ -18,7 +18,7 @@ function ResetPassword() {
     setShowInvalid(false);
     Api.passwords
       .update(token, password)
-      .then((response) => history.push('/login', { flash: 'Your new password has been saved.' }))
+      .then((response) => navigate('/login', { state: { flash: 'Your new password has been saved.' } }))
       .catch((error) => setShowError(true));
   }
 
@@ -51,7 +51,7 @@ function ResetPassword() {
                 <div className="alert alert-danger">
                   <p>Sorry, this password reset link is invalid.</p>
                   <p>
-                    <Link to="/passwords/forgot">Request another?</Link>
+                    <Link to="forgot">Request another?</Link>
                   </p>
                 </div>
               )}
@@ -59,7 +59,7 @@ function ResetPassword() {
                 <div className="alert alert-danger">
                   <p>Sorry, this password reset link has expired.</p>
                   <p>
-                    <Link to="/passwords/forgot">Request another?</Link>
+                    <Link to="forgot">Request another?</Link>
                   </p>
                 </div>
               )}

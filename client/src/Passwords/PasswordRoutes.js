@@ -1,23 +1,15 @@
-import { useRouteMatch, Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 
 function PasswordRoutes() {
-  const { path, url } = useRouteMatch();
-
   return (
-    <Switch>
-      <Route exact path={path}>
-        <Redirect to={`${url}/forgot`} />
-      </Route>
-      <Route path={`${path}/forgot`}>
-        <ForgotPassword />
-      </Route>
-      <Route path={`${path}/reset/:token`}>
-        <ResetPassword />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path="" element={<Navigate to="forgot" replace />} />
+      <Route path="forgot" element={<ForgotPassword />} />
+      <Route path="reset/:token" element={<ResetPassword />} />
+    </Routes>
   );
 }
 

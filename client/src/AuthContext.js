@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const authContext = createContext();
 
@@ -20,29 +20,14 @@ function AuthContextProvider({ children }) {
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }
 
-function AuthProtectedRoute({ isAdminRequired, children, ...rest }) {
+function AuthProtected({ isAdminRequired, children }) {
+  const location = useLocation();
   const authContext = useAuthContext();
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authContext.user && (!isAdminRequired || authContext.user.isAdmin) ? (
-          children ? (
-            children
-          ) : (
-            rest.render?.(props)
-          )
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      }
-    />
+  return authContext.user && (!isAdminRequired || authContext.user.isAdmin) ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
   );
 }
 
-export { useAuthContext, AuthContextProvider, AuthProtectedRoute };
+export { useAuthContext, AuthContextProvider, AuthProtected };

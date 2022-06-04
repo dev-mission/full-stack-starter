@@ -1,6 +1,14 @@
 # Full-Stack Starter
 
-This repository contains a "starter" project for web application development in JavaScript.
+This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
+
+- React 18.1.0
+- React Router 6.3.3
+- Bootstrap 5.1.3
+- Node.js 16.15.0
+- Express 4.18.1
+- Sequelize 6.20.1
+- Postgres 13
 
 ## One-time Setup
 

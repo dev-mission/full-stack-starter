@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 
 import Api from './Api';
 import { useAuthContext } from './AuthContext';
 
 function Login() {
   const authContext = useAuthContext();
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authContext.user) {
-      history.replace(history.location.state?.from || '/');
+      navigate(location.state?.from || '/', { replace: true });
     }
-  }, [authContext.user, history]);
+  }, [authContext.user, location, navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,7 +26,7 @@ function Login() {
     try {
       const response = await Api.auth.login(email, password);
       authContext.setUser(response.data);
-      history.replace(history.location.state?.from || '/');
+      navigate(location.state?.from || '/', { replace: true });
     } catch (error) {
       if (error.response?.status === 422) {
         setShowInvalidError(true);
@@ -42,6 +43,7 @@ function Login() {
           <div className="card">
             <div className="card-body">
               <h2 className="card-title">Log in</h2>
+              {location.state?.flash && <div className="alert alert-success">{location.state?.flash}</div>}
               {showInvalidError && <div className="alert alert-danger">Invalid email and/or password.</div>}
               <form onSubmit={onSubmit}>
                 <div className="mb-3">

@@ -1,5 +1,5 @@
 # Start with the ltest Node.js LTS release
-FROM node:16.13.1
+FROM node:16.15.0
 
 # Set an env variable for the location of the app files
 ENV APP_HOME=/opt/node/app

@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import './Header.scss';
 import Api from './Api';
 import { useAuthContext } from './AuthContext';
 
 function Header() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { user, setUser } = useAuthContext();
 
   useEffect(
@@ -26,7 +26,7 @@ function Header() {
     event.preventDefault();
     await Api.auth.logout();
     setUser(null);
-    history.push('/');
+    navigate('/');
   }
 
   return (
