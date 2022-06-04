@@ -11,7 +11,9 @@ RESULT=$?
 if [ $RESULT -ne 0 ]; then
   sequelize db:create
   sequelize db:migrate
-  sequelize db:seed:all
+  if [ -d seeders ]; then
+    sequelize db:seed:all
+  fi
 fi
 
 # check if .env file exists, if not copy from example
