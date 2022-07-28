@@ -55,6 +55,8 @@ module.exports = {
       fields: ['passwordResetToken'],
       unique: true,
     });
+    // set starting id to larger value so it doesn't conflict with test fixtures
+    await queryInterface.sequelize.query('ALTER SEQUENCE "Users_id_seq" RESTART WITH 100;');
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Users');
