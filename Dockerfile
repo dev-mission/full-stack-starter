@@ -29,3 +29,4 @@ RUN npm install
 
 # Set workdir back to root
 WORKDIR $APP_HOME
+RUN npm install
