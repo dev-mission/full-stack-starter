@@ -1,16 +1,16 @@
 # Start with the ltest Node.js LTS release
-FROM node:16.15.0
+FROM node:16.17.1
 
 # Set an env variable for the location of the app files
 ENV APP_HOME=/opt/node/app
 
 # update path to include any installed node module executables
-RUN echo "export PATH=$APP_HOME/node_modules/.bin:\$PATH\n" >> /root/.bashrc
+RUN echo "export PATH=$APP_HOME/node_modules/.bin:$APP_HOME/client/node_modules/.bin:$APP_HOME/server/node_modules/.bin:\$PATH\n" >> /root/.bashrc
 
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - && \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list && \
     apt-get update -y && \
-    apt-get install -y postgresql-client-13 && \
+    apt-get install -y postgresql-client-14 && \
     apt-get clean
 
 # Create a directory for the server app to run from
@@ -24,5 +24,8 @@ WORKDIR $APP_HOME/client
 RUN npm install
 
 # Switch to the server directory and install its dependencies
-WORKDIR $APP_HOME
+WORKDIR $APP_HOME/server
 RUN npm install
+
+# Set workdir back to root
+WORKDIR $APP_HOME
