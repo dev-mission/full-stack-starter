@@ -7,27 +7,28 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: cimg/node:16.15.0
+      - image: cimg/node:16.17.1
         environment:
           DATABASE_URL: 'postgres://postgres@localhost/app'
-      - image: cimg/postgres:12.11
+      - image: cimg/postgres:14.5
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - restore_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}-{{ checksum "client/package-lock.json" }}
+          key: v1-deps-{{ checksum "package-lock.json" }}-{{ checksum "client/package-lock.json" }}-{{ checksum "server/package-lock.json" }}
       - run:
-          command: npm install && cd client && npm install
+          command: npm install && cd client && npm install && cd ../server && npm install
       - save_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}-{{ checksum "client/package-lock.json" }}
+          key: v1-deps-{{ checksum "package-lock.json" }}-{{ checksum "client/package-lock.json" }}-{{ checksum "server/package-lock.json" }}
           paths:
+            - server/node_modules
             - client/node_modules
             - node_modules
       - run:
-          command: npx sequelize db:create --env test
+          command: cd server && npx sequelize db:create --env test
       - run:
-          command: npx sequelize db:migrate --env test
+          command: cd server && npx sequelize db:migrate --env test
       - run:
           command: eval $(cat example.env | grep -v DATABASE_URL | sed 's/^/export /'); npm run test
 

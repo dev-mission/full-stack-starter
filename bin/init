@@ -9,17 +9,16 @@ done
 psql ${DATABASE_URL} -c '' >/dev/null 2>&1
 RESULT=$?
 if [ $RESULT -ne 0 ]; then
+  cd server
   sequelize db:create
   sequelize db:migrate
   if [ -d seeders ]; then
     sequelize db:seed:all
   fi
+  cd ..
 fi
 
 # check if .env file exists, if not copy from example
 if [ ! -f .env ]; then
   cp example.env .env
-fi
-if [ ! -f client/.env ]; then
-  cp client/example.env client/.env
 fi

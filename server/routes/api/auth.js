@@ -27,8 +27,9 @@ router.post('/login', (req, res, next) => {
 
 /// handle logging out the current user
 router.get('/logout', (req, res) => {
-  req.logout();
-  res.status(HttpStatus.NO_CONTENT).end();
+  req.logout(() => {
+    res.status(HttpStatus.NO_CONTENT).end();
+  });
 });
 
 /// register a new user if enabled

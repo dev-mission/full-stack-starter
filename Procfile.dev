@@ -1,4 +1,2 @@
-server: PORT=3100 npm start
-client: cd client && PORT=3000 npm start
-linter: npm run lint-watch
-prettier: npm run pp-watch
+server: cp .env server/.env && cd server && PORT=3100 npm start
+client: cp .env client/.env && cd client && PORT=3000 npm start

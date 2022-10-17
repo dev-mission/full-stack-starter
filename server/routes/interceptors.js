@@ -5,6 +5,57 @@ const HttpStatus = require('http-status-codes');
 
 const models = require('../models');
 
+/* eslint-disable no-param-reassign, no-underscore-dangle */
+function SessionManager(options, serializeUser) {
+  if (typeof options === 'function') {
+    serializeUser = options;
+    options = undefined;
+  }
+  options = options || {};
+  this._key = options.key || 'passport';
+  this._serializeUser = serializeUser;
+}
+
+SessionManager.prototype.logIn = function logIn(req, user, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+  options = options || {};
+  const self = this;
+  this._serializeUser(user, req, (err, obj) => {
+    if (err) {
+      cb(err);
+      return;
+    }
+    if (!req.session) {
+      req.session = {};
+    }
+    if (!req.session[self._key]) {
+      req.session[self._key] = {};
+    }
+    req.session[self._key].user = obj;
+    cb();
+  });
+};
+
+SessionManager.prototype.logOut = function logOut(req, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+  options = options || {};
+  if (req.session && req.session[this._key]) {
+    delete req.session[this._key].user;
+  }
+  if (cb) {
+    cb();
+  }
+};
+/* eslint-enable no-param-reassign */
+
+passport._sm = new SessionManager(passport.serializeUser.bind(passport));
+
 passport.use(
   new passportLocal.Strategy(
     {
