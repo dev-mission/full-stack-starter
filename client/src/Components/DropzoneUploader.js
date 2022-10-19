@@ -6,6 +6,7 @@ import Api from '../Api';
 
 function DropzoneUploader({ className, children, disabled, id, maxFiles, multiple, onRemoved, onUploaded, onUploading }) {
   const [files, setFiles] = useState([]);
+  const [rejectedFiles, setRejectedFiles] = useState([]);
   const [statuses, setStatuses] = useState([]);
 
   useEffect(
@@ -40,17 +41,19 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
           })
           .then(() => {
             status.status = 'uploaded';
-            setStatuses([...statuses]);
             if (onUploaded) {
-              onUploaded(status);
+              return Promise.resolve(onUploaded(status));
             }
+          })
+          .then(() => {
+            setStatuses([...statuses]);
           });
         break;
       }
     }
   }, [onUploaded, onUploading, statuses]);
 
-  function onDrop(acceptedFiles) {
+  function onDropAccepted(acceptedFiles) {
     setFiles(
       acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -71,6 +74,10 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
     setStatuses(statuses);
   }
 
+  function onDropRejected(rejectedFiles) {
+    setRejectedFiles(rejectedFiles);
+  }
+
   function onRemove(status) {
     setFiles(files.filter((f) => f !== status.file));
     setStatuses(statuses.filter((s) => s !== status));
@@ -80,12 +87,18 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
   }
 
   return (
-    <Dropzone id={id} multiple={multiple} maxFiles={maxFiles ?? 0} onDrop={onDrop} disabled={disabled || files.length > 0}>
+    <Dropzone
+      id={id}
+      multiple={multiple}
+      maxFiles={maxFiles ?? 0}
+      onDropAccepted={onDropAccepted}
+      onDropRejected={onDropRejected}
+      disabled={disabled || files.length > 0}>
       {({ getRootProps, getInputProps }) => (
         <div className={className}>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            {children(statuses, onRemove)}
+            {children({ statuses, onRemove, rejectedFiles })}
           </div>
         </div>
       )}

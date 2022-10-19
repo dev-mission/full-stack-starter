@@ -9,9 +9,6 @@ router.use(express.static(path.join(__dirname, '../../client/build')));
 /// configure serving any static file in public folder
 router.use(express.static(path.join(__dirname, '../public')));
 
-/// serve libraries installed as node modules
-router.use('/libraries/bootstrap', express.static(path.join(__dirname, '../../client/node_modules/bootstrap/dist')));
-
 /// serve some paths from other nested routers
 router.use('/api', require('./api'));
 

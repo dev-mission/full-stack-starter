@@ -10,6 +10,7 @@
     "inflection": "^1.13.1",
     "luxon": "^3.0.4",
     "react": "^18.1.0",
+    "react-bootstrap": "^2.5.0",
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.3",
     "react-router-dom": "^6.3.0",

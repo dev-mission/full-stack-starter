@@ -25,7 +25,7 @@ function PhotoInput({ className, children, id, name, onChange, onUploading, valu
       disabled={value && value !== ''}
       onRemoved={onRemoved}
       onUploaded={onUploaded}>
-      {(statuses, onRemove) => {
+      {({ statuses, onRemove }) => {
         if (statuses.length > 0) {
           return statuses.map((s) => (
             <div

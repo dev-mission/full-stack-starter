@@ -1,4 +1,3 @@
-const AWS = require('aws-sdk');
 const express = require('express');
 const fs = require('fs-extra');
 const HttpStatus = require('http-status-codes');
@@ -7,20 +6,9 @@ const path = require('path');
 const { v4: uuid } = require('uuid');
 
 const interceptors = require('../interceptors');
+const s3 = require('../../lib/s3');
 
 const router = express.Router();
-
-const s3options = {};
-if (process.env.AWS_ACCESS_KEY_ID) {
-  s3options.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-}
-if (process.env.AWS_SECRET_ACCESS_KEY) {
-  s3options.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-}
-if (process.env.AWS_S3_BUCKET_REGION) {
-  s3options.region = process.env.AWS_S3_BUCKET_REGION;
-}
-const s3 = new AWS.S3(s3options);
 
 router.post('/', interceptors.requireLogin, async (req, res) => {
   const id = uuid();
@@ -34,13 +22,7 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
   }
   if (process.env.AWS_S3_BUCKET) {
     /// store in S3, in tmp uploads dir
-    const url = await s3.getSignedUrlPromise('putObject', {
-      ACL: 'private',
-      Bucket: process.env.AWS_S3_BUCKET,
-      ContentType: response.content_type,
-      Key: `uploads/${response.signed_id}`,
-      ServerSideEncryption: 'AES256',
-    });
+    const url = await s3.getSignedUploadUrl(response.content_type, `uploads/${response.signed_id}`);
     response.direct_upload = {
       url,
       headers: {
@@ -74,15 +56,16 @@ router.put('/:path([^?]+)', interceptors.requireLogin, (req, res) => {
 });
 
 router.get('/:path([^?]+)', async (req, res) => {
+  let { path: assetPath } = req.params;
+  if (process.env.ASSET_PATH_PREFIX) {
+    assetPath = path.join(process.env.ASSET_PATH_PREFIX, assetPath);
+  }
   if (process.env.AWS_S3_BUCKET) {
-    const url = await s3.getSignedUrlPromise('getObject', {
-      Bucket: process.env.AWS_S3_BUCKET,
-      Expires: 60,
-      Key: req.params.path,
-    });
+    const url = await s3.getSignedAssetUrl(assetPath, 900);
+    res.set('Cache-Control', 'public, max-age=845');
     res.redirect(url);
   } else {
-    res.redirect(`/assets/${req.params.path}`);
+    res.redirect(`/assets/${assetPath}`);
   }
 });
 
