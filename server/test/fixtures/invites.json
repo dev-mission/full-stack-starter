@@ -1,0 +1,26 @@
+[
+  {
+    "model": "Invite",
+    "data": {
+      "id": "14a500b7-f14c-48cd-b815-3685a8b54370",
+      "firstName": "Invited",
+      "lastName": "User 1",
+      "email": "invited.user.1@test.com",
+      "message": "This is an invitation to Invited User 1.",
+      "createdAt": "2022-01-29T22:58:56+0000",
+      "CreatedByUserId": 1
+    }
+  },
+  {
+    "model": "Invite",
+    "data": {
+      "id": "675ccf53-dcc3-4aac-a279-3e98f2d6e031",
+      "firstName": "Invited",
+      "lastName": "User 2",
+      "email": "invited.user.2@test.com",
+      "message": "This is an invitation to Invited User 2.",
+      "createdAt": "2022-01-29T22:59:56+0000",
+      "CreatedByUserId": 1
+    }
+  }
+]

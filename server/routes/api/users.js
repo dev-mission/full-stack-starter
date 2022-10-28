@@ -30,7 +30,11 @@ router.get('/me', (req, res) => {
   }
 });
 
-router.get('/:id', interceptors.requireAdmin, async (req, res) => {
+router.get('/:id', interceptors.requireLogin, async (req, res) => {
+  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id, 10)) {
+    res.status(HttpStatus.UNAUTHORIZED).end();
+    return;
+  }
   try {
     const user = await models.User.findByPk(req.params.id);
     if (user) {
@@ -55,7 +59,11 @@ router.patch('/:id', interceptors.requireLogin, (req, res) => {
         res.status(HttpStatus.NOT_FOUND).end();
         return;
       }
-      await user.update(_.pick(req.body, ['firstName', 'lastName', 'email', 'password', 'picture']), { transaction });
+      const attrs = ['firstName', 'lastName', 'email', 'password', 'picture'];
+      if (req.user.isAdmin) {
+        attrs.push('isAdmin');
+      }
+      await user.update(_.pick(req.body, attrs), { transaction });
       res.json(user.toJSON());
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {

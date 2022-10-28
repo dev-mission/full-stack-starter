@@ -59,6 +59,13 @@ function Header() {
             <div className="flex-grow-1 d-flex justify-content-end">
               {user && (
                 <>
+                  {user.isAdmin && (
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/admin" onClick={hideNavbar}>
+                        Admin
+                      </Link>
+                    </li>
+                  )}
                   <li className="nav-item me-3">
                     <span className="nav-link d-inline-block me-1">
                       Hello,{' '}

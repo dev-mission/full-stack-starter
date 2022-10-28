@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 
-function PasswordRoutes() {
+function PasswordsRoutes() {
   return (
     <Routes>
       <Route path="" element={<Navigate to="forgot" replace />} />
@@ -13,4 +13,4 @@ function PasswordRoutes() {
   );
 }
 
-export default PasswordRoutes;
+export default PasswordsRoutes;

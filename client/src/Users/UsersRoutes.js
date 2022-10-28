@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import UserForm from './UserForm';
 
-function UserRoutes() {
+function UsersRoutes() {
   return (
     <Routes>
       <Route path="" element={<UserForm />} />
@@ -10,4 +10,4 @@ function UserRoutes() {
   );
 }
 
-export default UserRoutes;
+export default UsersRoutes;

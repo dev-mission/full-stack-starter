@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { StatusCodes } from 'http-status-codes';
 
@@ -10,15 +11,42 @@ import ValidationError from '../ValidationError';
 
 function UserForm() {
   const authContext = useAuthContext();
+  const location = useLocation();
+  const params = useParams();
+  const userId = params.userId ?? authContext.user.id;
 
-  const [user, setUser] = useState({ ...authContext.user, password: '' });
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    picture: '',
+    isAdmin: false,
+  });
   const [isUploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    if (userId) {
+      Api.users.get(userId).then((response) =>
+        setUser({
+          ...response.data,
+          password: '',
+        })
+      );
+    }
+  }, [userId]);
+
   function onChange(event) {
     const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
+    setUser(newUser);
+  }
+
+  function onToggle(event) {
+    const newUser = { ...user };
+    newUser[event.target.name] = event.target.checked;
     setUser(newUser);
   }
 
@@ -28,7 +56,9 @@ function UserForm() {
     setSuccess(false);
     try {
       const response = await Api.users.update(user.id, user);
-      authContext.setUser(response.data);
+      if (user.id === authContext.user.id) {
+        authContext.setUser(response.data);
+      }
       setSuccess(true);
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
@@ -46,6 +76,7 @@ function UserForm() {
           <div className="card">
             <div className="card-body">
               <h2 className="card-title">My Account</h2>
+              {location.state?.flash && <div className="alert alert-success">{location.state?.flash}</div>}
               <form onSubmit={onSubmit}>
                 {error && error.message && <div className="alert alert-danger">{error.message}</div>}
                 {success && <div className="alert alert-info">Your account has been updated!</div>}
@@ -123,6 +154,27 @@ function UserForm() {
                   />
                   {error?.errorMessagesHTMLFor?.('password')}
                 </div>
+                {authContext.user.isAdmin && (
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="isAdmin">
+                      Administrator
+                    </label>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className={classNames('form-check-input', { 'is-invalid': error?.errorsFor?.('isAdmin') })}
+                        id="isAdmin"
+                        name="isAdmin"
+                        onChange={onToggle}
+                        checked={user.isAdmin}
+                      />
+                      <label htmlFor="isAdmin" className="form-check-label">
+                        Is an administrator?
+                      </label>
+                    </div>
+                    {error?.errorMessagesHTMLFor?.('isAdmin')}
+                  </div>
+                )}
                 <div className="mb-3 d-grid">
                   <button disabled={isUploading} className="btn btn-primary" type="submit">
                     Submit
