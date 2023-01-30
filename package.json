@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "scripts": {
-    "heroku-postbuild": "cd client && npm install && npm run build",
+    "heroku-postbuild": "cd server && npm install && cd ../client && npm install && npm run build",
     "lint": "cd client && npm run lint && cd ../server && npm run lint",
     "lint:changed": "cd client && npm run lint:changed && cd ../server && npm run lint:changed",
     "pp": "prettier --write --ignore-unknown .",
