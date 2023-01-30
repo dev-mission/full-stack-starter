@@ -28,14 +28,14 @@
   "formation": {
     "web": {
       "quantity": 1,
-      "size": "free"
+      "size": "eco"
     }
   },
   "addons": [
     {
-      "plan": "heroku-postgresql:hobby-dev",
+      "plan": "heroku-postgresql:mini",
       "options": {
-        "version": "13"
+        "version": "14"
       }
     },
     {
