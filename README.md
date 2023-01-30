@@ -135,7 +135,7 @@ This repository contains a "starter" project for web application development in 
 5. Once linked, you can execute Heroku CLI commands. For example, to run the user creation script on the server:
 
    ```
-   heroku run bin/create-admin Firstname Lastname email password
+   heroku run "cd server && bin/create-admin Firstname Lastname email password"
    ```
 
 ## Shell Command Quick Reference

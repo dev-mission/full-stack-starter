@@ -5,7 +5,7 @@
   "repository": "https://github.com/dev-mission/full-stack-starter/",
   "logo": "https://devmission.org/wp-content/uploads/2017/04/cropped-Dev-Mission-Icon-JPG-270x270.jpg",
   "scripts": {
-    "postdeploy": "sequelize db:migrate; if [ -d seeders ]; then sequelize db:seed:all; fi"
+    "postdeploy": "cd server; sequelize db:migrate; if [ -d seeders ]; then sequelize db:seed:all; fi"
   },
   "env": {
     "REACT_APP_FEATURE_REGISTRATION": {
