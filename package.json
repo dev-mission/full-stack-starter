@@ -1,6 +1,6 @@
 {
   "name": "full-stack-starter",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "private": true,
   "scripts": {
     "heroku-postbuild": "cd client && npm install && npm run build",
@@ -14,7 +14,7 @@
     "prettier": "^2.7.1"
   },
   "engines": {
-    "node": "16.17.1"
+    "node": "18.13.0"
   },
   "prettier": {
     "bracketSameLine": true,
