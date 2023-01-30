@@ -5,7 +5,7 @@
   "repository": "https://github.com/dev-mission/full-stack-starter/",
   "logo": "https://devmission.org/wp-content/uploads/2017/04/cropped-Dev-Mission-Icon-JPG-270x270.jpg",
   "scripts": {
-    "postdeploy": "sequelize db:migrate; if [ -d seeders ]; then sequelize db:seed:all; fi"
+    "postdeploy": "cd server; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi"
   },
   "env": {
     "REACT_APP_FEATURE_REGISTRATION": {
@@ -28,14 +28,14 @@
   "formation": {
     "web": {
       "quantity": 1,
-      "size": "free"
+      "size": "eco"
     }
   },
   "addons": [
     {
-      "plan": "heroku-postgresql:hobby-dev",
+      "plan": "heroku-postgresql:mini",
       "options": {
-        "version": "13"
+        "version": "14"
       }
     },
     {
