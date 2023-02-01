@@ -2,13 +2,13 @@
 
 This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
 
-- React 18.1.0
-- React Router 6.3.3
-- Bootstrap 5.1.3
-- Node.js 16.15.0
-- Express 4.18.1
-- Sequelize 6.20.1
-- Postgres 13
+- React 18.2.0
+- React Router 6.8.0
+- Bootstrap 5.2.3
+- Node.js 18.13.0
+- Express 4.18.2
+- Sequelize 6.28.0
+- Postgres 14
 
 ## One-time Setup
 
