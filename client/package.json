@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=./jest-env.js",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:changed": "eslint $(git diff --name-only; git ls-files -o --exclude-standard)"
@@ -51,8 +51,8 @@
     "@testing-library/user-event": "^14.4.3"
   },
   "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!(axios)/)"
-    ]
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }
