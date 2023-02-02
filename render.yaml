@@ -3,7 +3,7 @@ services:
     name: server
     env: node
     rootDir: server
-    buildCommand: npm install && cd ../client && npm install && npm run build
+    buildCommand: npm install; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123; cd ../client; npm install; npm run build
     plan: free
     startCommand: node ./bin/www
     envVars:
