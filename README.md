@@ -96,7 +96,9 @@ This repository contains a "starter" project for web application development in 
 
 ## Heroku Deployment Setup
 
-1. Create a free Heroku account at: https://signup.heroku.com/
+1. Sign up for a Heroku account at: https://signup.heroku.com/
+
+   You will need to add a credit card to your account and enable a billing subscription for Eco dynos.
 
 2. Click on the Deploy button below:
 
@@ -137,6 +139,27 @@ This repository contains a "starter" project for web application development in 
    ```
    heroku run "cd server && bin/create-admin Firstname Lastname email password"
    ```
+
+## Render Deployment Setup
+
+1. Sign up for a Render account at: https://render.com/
+
+   You will need to add a credit card number to your account, even if using free instances.
+
+2. In the Dashboard, go to Blueprints, and click on New Blueprint Instance.
+
+3. Connect your Github account and return to this page. Select your forked repository.
+
+4. Enter a name for your deployment, and optionally the branch you wish to deploy (if not main).
+
+5. Set values for REACT_APP_FEATURE_REGISTRATION (true/false to enable/disable user registration), REACT_APP_SITE_TITLE (the name you wish to appear in the browser title bar), and SMTP_ENABLED (true/false to enable/disable mail, recommend false to start until mail server is set up).
+
+6. Click on Apply and wait, this can take quite a few minutes. You can click on the web service server link to follow the deployment event and watch the logs if you like.
+
+7. Once completed, you can see the site at the provided generated URL.
+
+8. Go to the web service server Settings, and edit the Build Command. Remove the call to the create-admin script (`bin/create-admin Site Admin admin@test.com changeme123;`). You
+can log in to the site with this email and temporary password (change it immediately after logging in!).
 
 ## Shell Command Quick Reference
 
