@@ -3,9 +3,9 @@ services:
     name: server
     env: node
     rootDir: server
-    buildCommand: npm run heroku-postbuild
+    buildCommand: npm install && cd ../client && npm install && npm run build
     plan: free
-    startCommand: cd server && node ./bin/www
+    startCommand: node ./bin/www
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -24,3 +24,4 @@ databases:
   - name: db
     databaseName: fss # optional (Render may add a suffix)
     plan: free
+    postgresMajorVersion: 14
