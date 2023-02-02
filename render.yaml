@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: server
+    env: node
+    rootDir: server
+    buildCommand: npm run heroku-postbuild
+    plan: free
+    startCommand: cd server && node ./bin/www
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: db
+          property: connectionString
+      - key: REACT_APP_FEATURE_REGISTRATION
+        sync: false
+      - key: REACT_APP_SITE_TITLE
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: SMTP_ENABLED
+        sync: false
+
+databases:
+  - name: db
+    databaseName: fss # optional (Render may add a suffix)
