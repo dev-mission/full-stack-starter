@@ -158,8 +158,7 @@ This repository contains a "starter" project for web application development in 
 
 7. Once completed, you can see the site at the provided generated URL.
 
-8. Go to the web service server Settings, and edit the Build Command. Remove the command to create a first admin user (`bin/create-admin Site Admin admin@test.com changeme123;`). You
-   can log in to the site with this email and temporary password (change it immediately after logging in!).
+8. Go to the web service server Settings, and edit the Build Command. Remove the command to create a first admin user (`bin/create-admin Site Admin admin@test.com changeme123;`). You can log in to the site with this email and temporary password (change it immediately after logging in!).
 
 ## Shell Command Quick Reference
 
