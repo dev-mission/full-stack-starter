@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: server
+    env: node
+    rootDir: server
+    buildCommand: npm install; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123; cd ../client; npm install; npm run build
+    plan: free
+    startCommand: node ./bin/www
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: db
+          property: connectionString
+      - key: REACT_APP_FEATURE_REGISTRATION
+        sync: false
+      - key: REACT_APP_SITE_TITLE
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: SMTP_ENABLED
+        sync: false
+
+databases:
+  - name: db
+    databaseName: fss # optional (Render may add a suffix)
+    plan: free
+    postgresMajorVersion: 14
