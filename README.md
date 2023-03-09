@@ -36,7 +36,13 @@ This repository contains a "starter" project for web application development in 
    docker compose pull
    docker compose up
    ```
-
+   > !! - Possible Issue for Windows User:  
+   > Due to Windows adding `CL` (carriage return) additional to `LF`(line feed) from Window's git,  
+   > you might need to edit the `./bin/init` file for docker commands to work.
+   > Solution:
+   > You can use VSCode's editor or download tools like `dos2unix` [here](https://sourceforge.net/projects/dos2unix/)
+   > For more information, check [here](https://stackoverflow.com/questions/48692741/how-can-i-make-all-line-endings-eols-in-all-files-in-visual-studio-code-unix).
+   
    It will take a while the first time you run these commands to download the "images" to
    run the web application code in Docker "containers". When you see messages that look
    like this, the server is running:
@@ -45,6 +51,8 @@ This repository contains a "starter" project for web application development in 
    server_1       | 4:13:08 AM webpack.1 |  You can now view full-stack-starter in the browser.
    server_1       | 4:13:08 AM webpack.1 |    Local:            http://localhost:3000
    ```
+   
+   
 
 5. Now you should be able to open the web app in your browser at: http://localhost:3000/
 
