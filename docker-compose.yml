@@ -5,13 +5,13 @@ services:
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   mailcatcher:
-    image: dockage/mailcatcher:0.7.1
+    image: dockage/mailcatcher:0.8.2
     ports:
       - 1080:1080
       - 1025:1025
   server:
     build: .
-    image: devmission/full-stack-starter:4.0.0
+    image: devmission/full-stack-starter:4.0.1
     command: bash -l -c "bin/init; nf start -j Procfile.dev"
     volumes:
       - .:/opt/node/app

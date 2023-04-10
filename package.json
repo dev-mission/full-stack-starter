@@ -1,20 +1,24 @@
 {
   "name": "full-stack-starter",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "heroku-postbuild": "cd server && npm install && cd ../client && npm install && npm run build",
-    "lint": "cd client && npm run lint && cd ../server && npm run lint",
-    "lint:changed": "cd client && npm run lint:changed && cd ../server && npm run lint:changed",
+    "heroku-postbuild": "npm run build -w client",
+    "lint": "npm run lint -w client && npm run lint -w server",
+    "lint:changed": "npm run lint:changed -w client && npm run lint:changed -w server",
     "pp": "prettier --write --ignore-unknown .",
     "pp:changed": "prettier --write --ignore-unknown $(git diff --name-only; git ls-files -o --exclude-standard)",
-    "test": "prettier --check . && npm run lint && cd client && CI=true npm test && cd ../server && npm test"
+    "test": "prettier --check . && npm run lint && CI=true npm test -w client && CI=true npm test -w server"
   },
   "devDependencies": {
     "prettier": "^2.7.1"
   },
   "engines": {
-    "node": "18.13.0"
+    "node": "18.15.0"
   },
   "prettier": {
     "bracketSameLine": true,

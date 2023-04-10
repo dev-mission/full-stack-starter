@@ -3,10 +3,12 @@ services:
     name: server
     env: node
     rootDir: server
-    buildCommand: npm install; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123; cd ../client; npm install; npm run build
+    buildCommand: cd ..; node --version; npm --version; npm install; npm run heroku-postbuild; cd server; ../node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then ../node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123;
     plan: free
     startCommand: node ./bin/www
     envVars:
+      - key: NODE_VERSION
+        value: 18.15.0
       - key: DATABASE_URL
         fromDatabase:
           name: db

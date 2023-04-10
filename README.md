@@ -3,11 +3,11 @@
 This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
 
 - React 18.2.0
-- React Router 6.8.0
+- React Router 6.10.0
 - Bootstrap 5.2.3
-- Node.js 18.13.0
+- Node.js 18.15.0
 - Express 4.18.2
-- Sequelize 6.28.0
+- Sequelize 6.31.0
 - Postgres 14
 
 ## One-time Setup
@@ -158,7 +158,7 @@ This repository contains a "starter" project for web application development in 
 
 7. Once completed, you can see the site at the provided generated URL.
 
-8. Go to the web service server Settings, and edit the Build Command. Remove the command to create a first admin user (`bin/create-admin Site Admin admin@test.com changeme123;`). You can log in to the site with this email and temporary password (change it immediately after logging in!).
+8. Go to the web service server Settings, and edit the Build Command. Remove the command to run seeders and to create a first admin user so it doesn't re-run on subsequent builds (`if [ -d seeders ]; then ../node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123;`). You can log in to the site with this email and temporary password (change it immediately after logging in!).
 
 ## Shell Command Quick Reference
 

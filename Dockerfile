@@ -1,5 +1,5 @@
 # Start with the ltest Node.js LTS release
-FROM node:18.13.0
+FROM node:18.15.0
 
 # Set an env variable for the location of the app files
 ENV APP_HOME=/opt/node/app
@@ -19,14 +19,6 @@ RUN mkdir -p $APP_HOME
 # Add the project files into the app directory
 ADD . $APP_HOME
 
-# Switch to the client directory and install its dependencies
-WORKDIR $APP_HOME/client
-RUN npm install
-
-# Switch to the server directory and install its dependencies
-WORKDIR $APP_HOME/server
-RUN npm install
-
-# Set workdir back to root
+# Set workdir and install dependencies
 WORKDIR $APP_HOME
 RUN npm install
