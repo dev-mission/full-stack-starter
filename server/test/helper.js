@@ -5,6 +5,9 @@ process.env.NODE_ENV = 'test';
 process.env.ASSET_PATH_PREFIX = 'test';
 process.env.REACT_APP_FEATURE_REGISTRATION = 'true';
 
+// Load .env config after above overrides
+require('dotenv').config();
+
 const fixtures = require('sequelize-fixtures');
 const path = require('path');
 const fs = require('fs-extra');

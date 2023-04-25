@@ -1,126 +1,157 @@
-const AWS = require('aws-sdk');
-const fs = require('fs-extra');
+const {
+  S3Client,
+  CopyObjectCommand,
+  CreateBucketCommand,
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
+const { getSignedUrl: getSignedS3Url } = require('@aws-sdk/s3-request-presigner');
+const { getSignedUrl: getSignedCloudFrontUrl } = require('@aws-sdk/cloudfront-signer');
+const fs = require('fs');
+const { DateTime } = require('luxon');
 const path = require('path');
 
-const s3options = {};
-if (process.env.AWS_ACCESS_KEY_ID) {
-  s3options.accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-}
-if (process.env.AWS_SECRET_ACCESS_KEY) {
-  s3options.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-}
-if (process.env.AWS_S3_BUCKET_REGION) {
-  s3options.region = process.env.AWS_S3_BUCKET_REGION;
-}
-const s3 = new AWS.S3(s3options);
-
-let cf;
-if (process.env.AWS_CLOUDFRONT_DOMAIN) {
-  const privateKey = process.env.AWS_CLOUDFRONT_PRIVATE_KEY.replace(/\\n/g, '\n');
-  cf = new AWS.CloudFront.Signer(process.env.AWS_CLOUDFRONT_KEYPAIR_ID, privateKey);
+let client;
+let signerClient;
+if (process.env.AWS_S3_ENDPOINT) {
+  const options = {
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    endpoint: process.env.AWS_S3_ENDPOINT,
+    region: 'us-east-1', // placeholder region, parameter is required but will be unused if endpoint is fully qualified with region embedded
+    forcePathStyle: true,
+  };
+  client = new S3Client(options);
+  if (process.env.AWS_S3_SIGNER_ENDPOINT) {
+    signerClient = new S3Client({
+      ...options,
+      endpoint: process.env.AWS_S3_SIGNER_ENDPOINT,
+    });
+  }
 }
 
 function copyObject(CopySource, Key) {
-  return s3
-    .copyObject({
-      ACL: 'private',
+  return client.send(
+    new CopyObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       CopySource,
       Key,
-      ServerSideEncryption: 'AES256',
     })
-    .promise();
+  );
+}
+
+function createBucket(Bucket) {
+  return client.send(
+    new CreateBucketCommand({
+      Bucket,
+    })
+  );
 }
 
 function deleteObject(Key) {
-  return s3
-    .deleteObject({
+  return client.send(
+    new DeleteObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
     })
-    .promise();
+  );
 }
 
 async function deleteObjects(Prefix) {
-  const data = await s3
-    .listObjectsV2({
+  const response = await client.send(
+    new ListObjectsV2Command({
       Bucket: process.env.AWS_S3_BUCKET,
       Prefix,
     })
-    .promise();
-  await s3
-    .deleteObjects({
-      Bucket: process.env.AWS_S3_BUCKET,
-      Delete: {
-        Objects: data.Contents.map((obj) => ({ Key: obj.Key })),
-      },
-    })
-    .promise();
+  );
+  if (response.Contents) {
+    return client.send(
+      new DeleteObjectsCommand({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Delete: {
+          Objects: response.Contents.map((obj) => ({ Key: obj.Key })),
+        },
+      })
+    );
+  }
+  return Promise.resolve();
 }
 
 async function getObject(Key) {
-  const data = await s3
-    .getObject({
+  const response = await client.send(
+    new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
     })
-    .promise();
+  );
   const filePath = path.resolve(__dirname, '../tmp/downloads', Key);
   const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
-  fs.ensureDirSync(dirPath);
-  fs.writeFileSync(filePath, data.Body);
-  return filePath;
+  await fs.promises.mkdir(dirPath, { recursive: true });
+  return fs.promises.writeFile(filePath, response.Body);
 }
 
-function getSignedAssetUrl(Key, Expires = 60) {
-  if (cf) {
+function getSignedAssetUrl(Key, expiresIn = 60) {
+  if (process.env.AWS_CLOUDFRONT_DOMAIN) {
     const url = `https://${process.env.AWS_CLOUDFRONT_DOMAIN}/${Key}`;
-    const expires = Math.ceil(Date.now() / 1000) + Expires;
-    return cf.getSignedUrl({ url, expires });
+    const keyPairId = process.env.AWS_CLOUDFRONT_KEYPAIR_ID;
+    const privateKey = process.env.AWS_CLOUDFRONT_PRIVATE_KEY.replace(/\\n/g, '\n');
+    const dateLessThan = DateTime.now().plus({ seconds: expiresIn }).toISO();
+    return getSignedCloudFrontUrl({ url, keyPairId, privateKey, dateLessThan });
   }
-  return s3.getSignedUrlPromise('getObject', {
-    Bucket: process.env.AWS_S3_BUCKET,
-    Expires,
-    Key,
-  });
+  return getSignedS3Url(
+    signerClient ?? client,
+    new GetObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key,
+    }),
+    { expiresIn }
+  );
 }
 
 function getSignedUploadUrl(ContentType, Key) {
-  return s3.getSignedUrlPromise('putObject', {
-    ACL: 'private',
-    Bucket: process.env.AWS_S3_BUCKET,
-    ContentType,
-    Key,
-    ServerSideEncryption: 'AES256',
-  });
+  return getSignedS3Url(
+    signerClient ?? client,
+    new PutObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET,
+      ContentType,
+      Key,
+    })
+  );
 }
 
 async function objectExists(Key) {
   try {
-    const data = await s3
-      .headObject({
+    const response = await client.send(
+      new HeadObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET,
         Key,
       })
-      .promise();
-    return data !== null;
-  } catch {
+    );
+    return response !== null;
+  } catch (err) {
     return false;
   }
 }
 
 function putObject(Key, filePath) {
-  return s3
-    .putObject({
+  return client.send(
+    new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
       Body: fs.createReadStream(filePath),
     })
-    .promise();
+  );
 }
 
 module.exports = {
   copyObject,
+  createBucket,
   deleteObject,
   deleteObjects,
   getObject,

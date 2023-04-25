@@ -26,8 +26,6 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
     response.direct_upload = {
       url,
       headers: {
-        'x-amz-acl': 'private',
-        'x-amz-server-side-encryption': 'AES256',
         'Content-Type': response.content_type,
       },
     };

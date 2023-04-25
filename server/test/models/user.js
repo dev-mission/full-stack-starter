@@ -1,6 +1,5 @@
 const assert = require('assert');
 const _ = require('lodash');
-const fs = require('fs-extra');
 const path = require('path');
 const { v4: uuid } = require('uuid');
 
@@ -110,15 +109,13 @@ describe('models.User', () => {
   context('picture attachment', () => {
     let picture;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       picture = `${uuid()}.png`;
-      fs.ensureDirSync(path.resolve(__dirname, '../../tmp/uploads'));
-      fs.copySync(path.resolve(__dirname, '../fixtures/files/512x512.png'), path.resolve(__dirname, `../../tmp/uploads/${picture}`));
+      await helper.loadUploads([['512x512.png', picture]]);
     });
 
-    afterEach(() => {
-      fs.removeSync(path.resolve(__dirname, `../../tmp/uploads/${picture}`));
-      fs.removeSync(path.resolve(__dirname, `../../public/assets`, process.env.ASSET_PATH_PREFIX));
+    afterEach(async () => {
+      await helper.cleanAssets();
     });
 
     it('handles a picture asset upload', async () => {
@@ -130,11 +127,8 @@ describe('models.User', () => {
         picture,
       });
       await user.save();
-      assert(
-        fs.pathExistsSync(
-          path.resolve(__dirname, '../../public/assets', process.env.ASSET_PATH_PREFIX, 'users', `${user.id}`, 'picture', picture)
-        )
-      );
+      await helper.sleep(100);
+      assert(await helper.assetPathExists(path.join('users', `${user.id}`, 'picture', picture)));
     });
 
     describe('.pictureUrl', () => {

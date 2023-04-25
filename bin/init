@@ -18,6 +18,13 @@ if [ $RESULT -ne 0 ]; then
   cd ..
 fi
 
+# check if minio alias set up- if not, create and set up bucket
+RESULT=`mc alias list | grep myminio`
+if [ "$RESULT" != "myminio" ]; then
+  mc alias set myminio http://minio:9000 minioadmin minioadmin
+  mc mb --ignore-existing myminio/app
+fi
+
 # check if .env file exists, if not copy from example
 if [ ! -f .env ]; then
   cp example.env .env

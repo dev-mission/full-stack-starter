@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+'use strict';
+
+if (process.argv.length != 3) {
+  console.log('Usage: bin/create-bucket bucketname');
+  return;
+}
+
+require('dotenv').config();
+const s3 = require('../lib/s3');
+s3.createBucket(process.argv[2]).then(console.log).catch(console.error);
