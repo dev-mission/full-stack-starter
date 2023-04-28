@@ -27,8 +27,7 @@ This repository contains a "starter" project for web application development in 
 
 3. Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
-   1. If you have Windows Home Edition, you will need to install Docker Toolbox instead.
-      See the troubleshooting notes below.
+   1. Windows users see notes below...
 
 4. Open a command-line shell, change into your repo directory, and execute these commands:
 
@@ -279,28 +278,23 @@ This repository contains a "starter" project for web application development in 
   docker compose build server
   ```
 
-## Docker Troubleshooting
+## Windows Docker Notes
 
-- On some PC laptops, a hardware CPU feature called virtualization is disabled by default, which is required by Docker. To enable it, reboot your computer into its BIOS interface (typically by pressing a key like DELETE or F1 during the boot process), and look for an option to enable it. It may be called something like _Intel Virtualization Technology_, _Intel VT_, _AMD-V_, or some similar variation.
+- On some PC laptops, a hardware CPU feature called virtualization is disabled by default, which is required. To enable it, reboot your computer into its BIOS interface (typically by pressing a key like DELETE, ESC, or F1 during the boot process), and look for an option to enable it. It may be called something like _Intel Virtualization Technology_, _Intel VT_, _AMD-V_, or some similar variation.
 
-- On Windows, Docker Desktop cannot run on Windows Home edition. Install Docker Toolbox instead:
+https://support.microsoft.com/en-us/windows/enable-virtualization-on-windows-11-pcs-c5578302-6e43-4b4b-a449-8ced115f58e1
 
-  https://docs.docker.com/toolbox/overview/
+- Install the Windows Subsystem for Linux (WSL) and make sure to check "Use WSL 2 instead of Hyper-V" when installing Docker Desktop for Windows.
 
-  https://github.com/docker/toolbox/releases
+https://learn.microsoft.com/en-us/windows/wsl/install
+https://docs.docker.com/desktop/install/windows-install/
 
-  Use the _Docker QuickStart shell_ installed with Docker Toolbox to open a command-line shell that launches Docker for you when it starts. On Windows, right-click on the shotcut and Run as Administrator. Note: this can take a long time to start, depending upon your computer, as it needs to start a virtual machine running Linux.
-
-  The virtual machine will have its own, separate IP address on your computer. To view this IP address, run this command in the command-line shell:
-
-  ```
-  docker-machine ip
-  ```
+- Use Microsoft Terminal to open a command-line shell running in your WSL distribution (typically Ubuntu), and use the git command line to _clone this project into your Linux filesystem_. If you attempt to run this project in Docker from the Windows file system, performance will be degraded and file change detection will not work. Editors like VSCode can edit files in the Linux filesystem of WSL.
 
 ## License
 
 Full-Stack Starter  
-Copyright (C) 2021 <dev/Mission>
+Copyright (C) 2023 <dev/Mission>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
