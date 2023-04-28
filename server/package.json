@@ -1,6 +1,6 @@
 {
   "name": "full-stack-starter-server",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "private": true,
   "scripts": {
     "lint": "eslint .",
@@ -12,7 +12,6 @@
     "@aws-sdk/client-s3": "^3.319.0",
     "@aws-sdk/cloudfront-signer": "^3.316.0",
     "@aws-sdk/s3-request-presigner": "^3.319.0",
-    "aws-sdk": "^2.1353.0",
     "bcrypt": "^5.1.0",
     "cookie-session": "^2.0.0",
     "debug": "~4.3.1",
