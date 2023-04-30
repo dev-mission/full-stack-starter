@@ -14,12 +14,18 @@
     }
   },
   "Resources": {
+    "KeyPair": {
+      "Type": "AWS::EC2::KeyPair",
+      "Properties": {
+        "KeyName": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, "key-pair"]] }
+      }
+    },
     "EBApp": {
-       "Type" : "AWS::ElasticBeanstalk::Application",
-       "Properties" : {
-          "ApplicationName" : { "Ref": "ApplicationName" },
-          "Description" : { "Ref": "ApplicationDescription" }
-       }
+      "Type": "AWS::ElasticBeanstalk::Application",
+      "Properties": {
+        "ApplicationName": { "Ref": "ApplicationName" },
+        "Description": { "Ref": "ApplicationDescription" }
+      }
     }
   },
   "Outputs": {
@@ -27,7 +33,7 @@
       "Description": "The name of the Elastic Beanstalk application",
       "Value": { "Ref": "EBApp" },
       "Export": {
-        "Name": { "Fn::Join": ["-", [{ "Ref": "AWS::StackName" }, "eb-app-name"]]}
+        "Name": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, "eb-app-name"]] }
       }
     }
   }
