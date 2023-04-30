@@ -18,6 +18,16 @@ RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key ad
     curl https://dl.min.io/client/mc/release/linux-$TARGETARCH/mc --create-dirs -o ~/minio-binaries/mc && \
     chmod +x ~/minio-binaries/mc
 
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"; \
+    fi && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm awscliv2.zip && \
+    rm -Rf aws
+
 # Create a directory for the server app to run from
 RUN mkdir -p $APP_HOME
 
