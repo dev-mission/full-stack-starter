@@ -1,0 +1,34 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Template to set up an AWS Elastic Beanstalk application",
+  "Parameters": {
+    "ApplicationName": {
+      "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
+      "Type": "String",
+      "Default": "fss"
+    },
+    "ApplicationDescription": {
+      "Description": "Description of the application",
+      "Type": "String",
+      "Default": "Full Stack Starter"
+    }
+  },
+  "Resources": {
+    "EBApp": {
+       "Type" : "AWS::ElasticBeanstalk::Application",
+       "Properties" : {
+          "ApplicationName" : { "Ref": "ApplicationName" },
+          "Description" : { "Ref": "ApplicationDescription" }
+       }
+    }
+  },
+  "Outputs": {
+    "EBAppName": {
+      "Description": "The name of the Elastic Beanstalk application",
+      "Value": { "Ref": "EBApp" },
+      "Export": {
+        "Name": { "Fn::Join": ["-", [{ "Ref": "AWS::StackName" }, "eb-app-name"]]}
+      }
+    }
+  }
+}

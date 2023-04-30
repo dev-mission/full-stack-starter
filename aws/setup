@@ -1,0 +1,6 @@
+#!/bin/bash
+
+APP_NAME=${1:-"fss"}
+REGION=${2:-"us-west-1"}
+
+aws cloudformation create-stack --region $REGION --stack-name "${APP_NAME}-app" --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME
