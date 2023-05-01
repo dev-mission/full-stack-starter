@@ -25,8 +25,10 @@
    application name.
 
    This initial setup script creates a CloudFormation stack with an Elastic
-   Beanstalk (EB) "Application" and an EC2 Key Pair. The EB "Application" acts
-   like a top level container for as many different "Environments" you would
-   like to deploy. For example, you could have "test", "staging", and "production"
-   environments. The EC2 Key Pair is used to log in to instances using ssh
-   and is saved in `~/.ssh`.
+   Beanstalk (EB) Application and an Elastic Container Registry (ECR) repository.
+   The EB "Application" acts as a top level container for as many different
+   "Environments" you would like to deploy. For example, you could have "test",
+   "staging", and "production" environments. The ECR repository will hold
+   the built Docker images for the application.
+
+6.

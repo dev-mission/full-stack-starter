@@ -13,7 +13,7 @@ RUN echo "export PATH=$APP_HOME/node_modules/.bin:~/minio-binaries:\$PATH\n" >> 
 RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - && \
     echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" >> /etc/apt/sources.list.d/pgdg.list && \
     apt-get update -y && \
-    apt-get install -y less postgresql-client-14 && \
+    apt-get install -y docker.io less postgresql-client-14 && \
     apt-get clean && \
     curl https://dl.min.io/client/mc/release/linux-$TARGETARCH/mc --create-dirs -o ~/minio-binaries/mc && \
     chmod +x ~/minio-binaries/mc
@@ -34,6 +34,13 @@ RUN mkdir -p $APP_HOME
 # Add the project files into the app directory
 ADD . $APP_HOME
 
-# Set workdir and install dependencies
+# Set workdir
 WORKDIR $APP_HOME
-RUN npm install
+
+# Install dependencies, build client app
+RUN npm install && \
+    npm run build -w client
+
+# Set up default command to run Node on port 3000
+EXPOSE 3000
+CMD ["./node_modules/.bin/pm2-runtime", "./server/bin/www"]

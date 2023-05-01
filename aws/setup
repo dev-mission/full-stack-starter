@@ -1,15 +1,5 @@
 #!/bin/bash
 
-APP_NAME=${1:-"fss"}
+APP_NAME=$1
 
-aws cloudformation create-stack --stack-name "${APP_NAME}-app" --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME
-
-while : ; do
-  KEY_NAME=`aws ec2 describe-key-pairs --filters Name=key-name,Values=${APP_NAME}-key-pair --query KeyPairs[*].KeyPairId --output text`
-  if [ "$KEY_NAME" != "" ]; then
-    break
-  fi
-  sleep 1
-done
-
-aws ssm get-parameter --name /ec2/keypair/${KEY_NAME} --with-decryption --query Parameter.Value --output text > ~/.ssh/${APP_NAME}-key-pair.pem
+aws cloudformation create-stack --stack-name $APP_NAME --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME

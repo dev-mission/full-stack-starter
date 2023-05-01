@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Template to set up an AWS Elastic Beanstalk application",
+  "Description": "Full Stack Starter Setup",
   "Parameters": {
     "ApplicationName": {
       "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
@@ -14,17 +14,17 @@
     }
   },
   "Resources": {
-    "KeyPair": {
-      "Type": "AWS::EC2::KeyPair",
-      "Properties": {
-        "KeyName": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, "key-pair"]] }
-      }
-    },
     "EBApp": {
       "Type": "AWS::ElasticBeanstalk::Application",
       "Properties": {
         "ApplicationName": { "Ref": "ApplicationName" },
         "Description": { "Ref": "ApplicationDescription" }
+      }
+    },
+    "ECRRepo": {
+      "Type": "AWS::ECR::Repository",
+      "Properties": {
+        "RepositoryName": { "Ref": "ApplicationName" }
       }
     }
   },
@@ -33,7 +33,14 @@
       "Description": "The name of the Elastic Beanstalk application",
       "Value": { "Ref": "EBApp" },
       "Export": {
-        "Name": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, "eb-app-name"]] }
+        "Name": { "Fn::Sub": "${ApplicationName}-eb-app-name" }
+      }
+    },
+    "ECRRepoName": {
+      "Description": "The name of the ECR repository for images",
+      "Value": { "Ref": "ECRRepo" },
+      "Export": {
+        "Name": { "Fn::Sub": "${ApplicationName}-ecr-repo-name" }
       }
     }
   }

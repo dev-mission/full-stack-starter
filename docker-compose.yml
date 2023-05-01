@@ -22,6 +22,7 @@ services:
     image: devmission/full-stack-starter:4.1.1
     command: bash -l -c "bin/init; nf --env=/dev/null start -j Procfile.dev"
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ~/.aws:/root/.aws
       - ~/.ssh:/root/.ssh
       - .:/opt/node/app

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+APP_NAME=$1
+VERSION=$2
+
+# get account id
+IDENTITY=`aws sts get-caller-identity --output text`
+if [[ $IDENTITY =~ ([^[:space:]]*) ]]; then
+  IDENTITY=${BASH_REMATCH[1]}
+fi
+
+# get region
+REGION=`aws configure get region`
+
+# generate repo url
+REPO=${IDENTITY}.dkr.ecr.${REGION}.amazonaws.com
+
+# log in to the repository
+aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
+
+# tag the locally built mongo image with the repo url and name
+docker tag devmission/full-stack-starter:$VERSION $REPO/${APP_NAME}:$VERSION
+docker push $REPO/${APP_NAME}:$VERSION
