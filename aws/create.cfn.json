@@ -1,0 +1,269 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Template to create a new Elastic Beanstalk environment with supporting services",
+  "Parameters": {
+    "ApplicationName": {
+      "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
+      "Type": "String",
+      "Default": "fss"
+    },
+    "EnvironmentName": {
+      "Description": "The unique environment name for this instantiation- will be appended as a suffix, i.e. staging -> fss-staging",
+      "Type": "String"
+    },
+    "InstanceType": {
+      "Description": "The application server instance type",
+      "Type": "String",
+      "Default": "t4g.micro",
+      "AllowedValues": ["t4g.nano", "t4g.micro", "t4g.small", "t4g.medium", "t4g.large"]
+    },
+    "DBInstanceType": {
+      "Description": "The DB instance type",
+      "Type": "String",
+      "Default": "db.t4g.micro",
+      "AllowedValues": ["db.t4g.micro", "db.t4g.small", "db.t4g.medium", "db.t4g.large"]
+    },
+    "DBUsername": {
+      "Description": "The DB master username",
+      "Type": "String",
+      "Default": "dbuser"
+    },
+    "DBPassword": {
+      "Description": "The DB master password",
+      "Type": "String",
+      "Default": "dbpassword"
+    },
+    "DomainName": {
+      "Description": "The domain name for accessing this application, to be used in requesting an SSL cert",
+      "Type": "String",
+      "Default": ""
+    },
+    "FeatureRegistration": {
+      "Description": "A feature flag to enable/disable user registration",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": ["true", "false"]
+    },
+    "LetsEncryptEmail": {
+      "Description": "The email address used to request an SSL certificate from Let's Encrypt",
+      "Type": "String"
+    },
+    "SessionSecret": {
+      "Description": "A secret key for encrypting cookie sessions",
+      "Type": "String"
+    },
+    "SiteTitle": {
+      "Description": "The name of the app to be displayed in the browser title, email footers, etc",
+      "Type": "String"
+    },
+    "Version": {
+      "Type": "String",
+      "Description": "The version of the app to deploy"
+    }
+  },
+  "Conditions": {
+    "DomainNameIsEmpty": { "Fn::Equals": [{ "Ref": "DomainName" }, ""] }
+  },
+  "Resources": {
+    "InstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-role" },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["ec2.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+        ]
+      }
+    },
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "InstanceProfileName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-profile" },
+        "Roles": [{ "Ref": "InstanceRole" }]
+      }
+    },
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-sg" },
+        "GroupDescription": "Allow http/https/ssh traffic",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22
+          }
+        ]
+      }
+    },
+    "KeyPair": {
+      "Type": "AWS::EC2::KeyPair",
+      "Properties": {
+        "KeyName": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, { "Ref": "EnvironmentName" }, "key-pair"]] }
+      }
+    },
+    "DatabaseSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-db-sg" },
+        "GroupDescription": "Allow postgres inbound traffic",
+        "SecurityGroupIngress": [
+          {
+            "SourceSecurityGroupId": { "Fn::GetAtt": ["InstanceSecurityGroup", "GroupId"] },
+            "IpProtocol": "tcp",
+            "FromPort": 5432,
+            "ToPort": 5432
+          }
+        ]
+      }
+    },
+    "Database": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": 20,
+        "DBInstanceClass": { "Ref": "DBInstanceType" },
+        "DBInstanceIdentifier": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-db" },
+        "DBName": { "Ref": "ApplicationName" },
+        "Engine": "postgres",
+        "EngineVersion": "14.6",
+        "MasterUsername": { "Ref": "DBUsername" },
+        "MasterUserPassword": { "Ref": "DBPassword" },
+        "MaxAllocatedStorage": 40,
+        "StorageEncrypted": true,
+        "VPCSecurityGroups": [{ "Fn::GetAtt": ["DatabaseSecurityGroup", "GroupId"] }]
+      },
+      "UpdateReplacePolicy": "Snapshot",
+      "DeletionPolicy": "Snapshot"
+    },
+    "Environment": {
+      "Type": "AWS::ElasticBeanstalk::Environment",
+      "Properties": {
+        "ApplicationName": { "Fn::ImportValue": { "Fn::Sub": "${ApplicationName}-eb-app-name" } },
+        "CNAMEPrefix": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
+        "EnvironmentName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
+        "VersionLabel": { "Ref": "Version" },
+        "SolutionStackName": "64bit Amazon Linux 2 v3.2.7 running ECS",
+        "Tier": {
+          "Name": "WebServer",
+          "Type": "Standard"
+        },
+        "OptionSettings": [
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "EnvironmentType",
+            "Value": "SingleInstance"
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "IamInstanceProfile",
+            "Value": { "Ref": "InstanceProfile" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "InstanceType",
+            "Value": { "Ref": "InstanceType" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "EC2KeyName",
+            "Value": { "Ref": "KeyPair" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "RootVolumeSize",
+            "Value": 16
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "SecurityGroups",
+            "Value": { "Ref": "InstanceSecurityGroup" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "NODE_ENV",
+            "Value": "production"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "DATABASE_URL",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "postgres://",
+                  { "Ref": "DBUsername" },
+                  ":",
+                  { "Ref": "DBPassword" },
+                  "@",
+                  { "Fn::GetAtt": ["Database", "Endpoint.Address"] },
+                  ":",
+                  { "Fn::GetAtt": ["Database", "Endpoint.Port"] },
+                  "/",
+                  { "Ref": "ApplicationName" }
+                ]
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_DOMAIN",
+            "Value": {
+              "Fn::If": [
+                "DomainNameIsEmpty",
+                { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                { "Ref": "DomainName" }
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_EMAIL",
+            "Value": { "Ref": "LetsEncryptEmail" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SESSION_SECRET",
+            "Value": { "Ref": "SessionSecret" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "REACT_APP_SITE_TITLE",
+            "Value": { "Ref": "SiteTitle" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "REACT_APP_FEATURE_REGISTRATION",
+            "Value": { "Ref": "FeatureRegistration" }
+          }
+        ]
+      }
+    }
+  }
+}

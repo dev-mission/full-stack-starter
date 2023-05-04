@@ -20,7 +20,8 @@ sed -i "s/\"image\": \"\"/\"image\": \"$REPO\/$APP_NAME:$VERSION\"/g" Dockerrun.
 sed -i "s/\"value\": \"\"/\"value\": \"$VERSION\"/g" Dockerrun.aws.json
 
 # zip and upload to the s3 bucket for the app
-zip -r artifact.zip nginx Dockerrun.aws.json
+rm -f artifact.zip
+zip -r artifact.zip .ebextensions nginx Dockerrun.aws.json
 BUCKET_NAME=elasticbeanstalk-$REGION-$IDENTITY
 BUCKET_KEY=$APP_NAME/$VERSION.zip
 aws s3 cp artifact.zip s3://$BUCKET_NAME/$BUCKET_KEY

@@ -2,4 +2,5 @@
 
 APP_NAME=$1
 
+# create the stack
 aws cloudformation create-stack --stack-name $APP_NAME --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME

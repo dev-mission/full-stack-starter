@@ -1,0 +1,25 @@
+#!/bin/bash
+
+APP_NAME=$1
+ENV_NAME=$2
+VERSION=$3
+
+read -p "Contact email to use for LetsEncrypt SSL registration: " EMAIL
+read -p "Human readable name of app (browser title, footers, etc): " SITE_TITLE
+read -p "Enable user registration? [y/n]: " FEATURE_REGISTRATION
+[[ $FEATURE_REGISTRATION = "y" ]] && FEATURE_REGISTRATION="true" || FEATURE_REGISTRATION="false"
+
+DB_PASSWORD=`echo $RANDOM | md5sum | head -c 20`
+SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32`
+
+aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name ${APP_NAME}-${ENV_NAME} --template-body file://./create.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME ParameterKey=EnvironmentName,ParameterValue=$ENV_NAME ParameterKey=Version,ParameterValue=$VERSION ParameterKey=DBPassword,ParameterValue=$DB_PASSWORD ParameterKey=LetsEncryptEmail,ParameterValue=$EMAIL ParameterKey=SessionSecret,ParameterValue=$SESSION_SECRET ParameterKey=SiteTitle,ParameterValue="$SITE_TITLE" ParameterKey=FeatureRegistration,ParameterValue=$FEATURE_REGISTRATION
+
+while : ; do
+  KEY_NAME=`aws ec2 describe-key-pairs --filters Name=key-name,Values=${APP_NAME}-${ENV_NAME}-key-pair --query KeyPairs[*].KeyPairId --output text`
+  if [ "$KEY_NAME" != "" ]; then
+    break
+  fi
+  sleep 1
+done
+
+aws ssm get-parameter --name /ec2/keypair/${KEY_NAME} --with-decryption --query Parameter.Value --output text > ~/.ssh/${APP_NAME}-${ENV_NAME}-key-pair.pem
