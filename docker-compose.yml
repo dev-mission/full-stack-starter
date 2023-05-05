@@ -40,6 +40,7 @@ services:
       - AWS_S3_SECRET_ACCESS_KEY=minioadmin
       - AWS_S3_BUCKET=app
       - AWS_S3_ENDPOINT=http://minio:9000
+      - AWS_S3_REGION=us-east-1
       - AWS_S3_SIGNER_ENDPOINT=http://localhost:9000
     ports:
       - 3000:3000

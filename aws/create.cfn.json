@@ -129,6 +129,92 @@
         "KeyName": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, { "Ref": "EnvironmentName" }, "key-pair"]] }
       }
     },
+    "BucketUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-bucket-policy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "VisualEditor0",
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:GetObject", "s3:ListBucket", "s3:DeleteObject"],
+                  "Resource": [
+                    { "Fn::Join": ["", ["arn:aws:s3:::", { "Ref": "Bucket" }, "/*"]] },
+                    { "Fn::Join": ["", ["arn:aws:s3:::", { "Ref": "Bucket" }]] }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "UserName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-bucket-user" }
+      }
+    },
+    "BucketUserAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "Status": "Active",
+        "UserName": { "Ref": "BucketUser" }
+      }
+    },
+    "Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "CorsConfiguration": {
+          "CorsRules": [
+            {
+              "AllowedHeaders": ["*"],
+              "AllowedMethods": ["GET", "PUT"],
+              "AllowedOrigins": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "https://",
+                      {
+                        "Fn::If": [
+                          "DomainNameIsEmpty",
+                          { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                          { "Ref": "DomainName" }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "DeleteOrphanUploadsRule",
+              "Prefix": "uploads/",
+              "Status": "Enabled",
+              "ExpirationInDays": 1
+            }
+          ]
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": "TRUE",
+          "BlockPublicPolicy": "TRUE",
+          "IgnorePublicAcls": "TRUE",
+          "RestrictPublicBuckets": "TRUE"
+        }
+      },
+      "DeletionPolicy": "Delete"
+    },
     "DatabaseSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -207,8 +293,28 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "NODE_ENV",
-            "Value": "production"
+            "OptionName": "AWS_S3_ACCESS_KEY_ID",
+            "Value": { "Ref": "BucketUserAccessKey" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_SECRET_ACCESS_KEY",
+            "Value": { "Fn::GetAtt": ["BucketUserAccessKey", "SecretAccessKey"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_BUCKET",
+            "Value": { "Ref": "Bucket" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_ENDPOINT",
+            "Value": { "Fn::Sub": "https://s3.${AWS::Region}.amazonaws.com" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_REGION",
+            "Value": { "Ref": "AWS::Region" }
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -249,8 +355,8 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "SESSION_SECRET",
-            "Value": { "Ref": "SessionSecret" }
+            "OptionName": "NODE_ENV",
+            "Value": "production"
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
@@ -261,6 +367,11 @@
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "REACT_APP_FEATURE_REGISTRATION",
             "Value": { "Ref": "FeatureRegistration" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SESSION_SECRET",
+            "Value": { "Ref": "SessionSecret" }
           }
         ]
       }
