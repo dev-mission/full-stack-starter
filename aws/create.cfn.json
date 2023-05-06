@@ -33,6 +33,14 @@
       "Type": "String",
       "Default": "dbpassword"
     },
+    "CDNSigningPrivateKey": {
+      "Description": "The private key used for signing requests to CloudFront",
+      "Type": "String"
+    },
+    "CDNSigningPublicKey": {
+      "Description": "The public key used for signing requests to CloudFront",
+      "Type": "String"
+    },
     "DomainName": {
       "Description": "The domain name for accessing this application, to be used in requesting an SSL cert",
       "Type": "String",
@@ -215,6 +223,119 @@
       },
       "DeletionPolicy": "Delete"
     },
+    "BucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": { "Ref": "Bucket" },
+        "PolicyDocument": {
+          "Version": "2008-10-17",
+          "Id": "PolicyForCloudFrontPrivateContent",
+          "Statement": [
+            {
+              "Sid": "AllowCloudFrontServicePrincipal",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudfront.amazonaws.com"
+              },
+              "Action": "s3:GetObject",
+              "Resource": { "Fn::Join": ["", [{ "Fn::GetAtt": ["Bucket", "Arn"] }, "/*"]] },
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceArn": {
+                    "Fn::Join": ["", ["arn:aws:cloudfront::", { "Ref": "AWS::AccountId" }, ":distribution/", { "Ref": "CDN" }]]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "CDN": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "AllowedMethods": ["GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"],
+            "CachedMethods": ["GET", "HEAD"],
+            "CachePolicyId": { "Ref": "CDNCachePolicy" },
+            "Compress": "true",
+            "TargetOriginId": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin" },
+            "TrustedKeyGroups": [{ "Ref": "CDNKeyGroup" }],
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "Enabled": "true",
+          "HttpVersion": "http2",
+          "IPV6Enabled": "true",
+          "Origins": [
+            {
+              "DomainName": { "Fn::GetAtt": ["Bucket", "RegionalDomainName"] },
+              "Id": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin" },
+              "OriginAccessControlId": { "Fn::GetAtt": ["CDNOriginAccessControl", "Id"] },
+              "S3OriginConfig": {
+                "OriginAccessIdentity": ""
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_All"
+        }
+      }
+    },
+    "CDNCachePolicy": {
+      "Type": "AWS::CloudFront::CachePolicy",
+      "Properties": {
+        "CachePolicyConfig": {
+          "Comment": "Policy with caching enabled. Supports Gzip and Brotli compression.",
+          "DefaultTTL": 86400,
+          "MaxTTL": 31536000,
+          "MinTTL": 1,
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-cache-policy" },
+          "ParametersInCacheKeyAndForwardedToOrigin": {
+            "CookiesConfig": {
+              "CookieBehavior": "none"
+            },
+            "EnableAcceptEncodingBrotli": "true",
+            "EnableAcceptEncodingGzip": "true",
+            "HeadersConfig": {
+              "HeaderBehavior": "none"
+            },
+            "QueryStringsConfig": {
+              "QueryStringBehavior": "none"
+            }
+          }
+        }
+      }
+    },
+    "CDNKeyGroup": {
+      "Type": "AWS::CloudFront::KeyGroup",
+      "Properties": {
+        "KeyGroupConfig": {
+          "Items": [{ "Ref": "CDNPublicKey" }],
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-key-group" }
+        }
+      }
+    },
+    "CDNOriginAccessControl": {
+      "Type": "AWS::CloudFront::OriginAccessControl",
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin-access-control" },
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4"
+        }
+      }
+    },
+    "CDNPublicKey": {
+      "Type": "AWS::CloudFront::PublicKey",
+      "Properties": {
+        "PublicKeyConfig": {
+          "CallerReference": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-public-key-caller-reference" },
+          "EncodedKey": { "Ref": "CDNSigningPublicKey" },
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-public-key" }
+        }
+      }
+    },
     "DatabaseSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -290,6 +411,21 @@
             "Namespace": "aws:autoscaling:launchconfiguration",
             "OptionName": "SecurityGroups",
             "Value": { "Ref": "InstanceSecurityGroup" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_DOMAIN",
+            "Value": { "Fn::GetAtt": ["CDN", "DomainName"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_KEYPAIR_ID",
+            "Value": { "Fn::GetAtt": ["CDNPublicKey", "Id"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_PRIVATE_KEY",
+            "Value": { "Ref": "CDNSigningPrivateKey" }
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",

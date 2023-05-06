@@ -8,3 +8,4 @@ dist
 node_modules
 webpack-stats.json
 **/artifact.zip
+**/*.pem
