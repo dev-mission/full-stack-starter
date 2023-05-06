@@ -3,10 +3,7 @@ const Email = require('email-templates');
 
 let transport;
 
-if (process.env.NODE_ENV === 'test') {
-  // eslint-disable-next-line global-require, import/no-extraneous-dependencies
-  transport = require('nodemailer-mock').createTransport(transport);
-} else if (process.env.SMTP_ENABLED === 'true') {
+if (process.env.SMTP_ENABLED === 'true') {
   if (process.env.MAILGUN_SMTP_SERVER) {
     process.env.SMTP_HOST = process.env.MAILGUN_SMTP_SERVER;
     process.env.SMTP_PORT = process.env.MAILGUN_SMTP_PORT;
@@ -45,6 +42,11 @@ if (process.env.NODE_ENV === 'test') {
   transport = {
     jsonTransport: true,
   };
+}
+
+if (process.env.NODE_ENV === 'test') {
+  // eslint-disable-next-line global-require, import/no-extraneous-dependencies
+  transport = require('nodemailer-mock').createTransport(transport);
 }
 
 const email = new Email({
