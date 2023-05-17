@@ -1,9 +1,8 @@
 {
-  "name": "Full Stack Starter",
-  "description": "This starter codebase includes a React SPA client and a Node/Express RESTful API endpoint that uses a Postgres SQL database.",
-  "website": "https://devmission.org/",
-  "repository": "https://github.com/dev-mission/full-stack-starter/",
-  "logo": "https://devmission.org/wp-content/uploads/2017/04/cropped-Dev-Mission-Icon-JPG-270x270.jpg",
+  "name": "XR Tour",
+  "description": "XR Tour is a content management system and platform for building walking tours.",
+  "website": "https://chsa.org/",
+  "repository": "https://github.com/francisli/xrtour/",
   "scripts": {
     "postdeploy": "cd server; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi"
   },
@@ -14,7 +13,7 @@
     },
     "REACT_APP_SITE_TITLE": {
       "description": "The title of the website that will appear in the browser tab",
-      "value": "Full Stack Starter"
+      "value": "XR Tour"
     },
     "SESSION_SECRET": {
       "description": "A secret key for verifying the integrity of signed cookies.",

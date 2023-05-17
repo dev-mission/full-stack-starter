@@ -19,7 +19,7 @@ services:
       - ./data:/data
   server:
     build: .
-    image: devmission/full-stack-starter:4.1.0
+    image: francisli/xrtour:1.0.0
     command: bash -l -c "bin/init; nf --env=/dev/null start -j Procfile.dev"
     volumes:
       - .:/opt/node/app

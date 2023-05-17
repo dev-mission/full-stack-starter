@@ -4,6 +4,6 @@ BRANCH=`git rev-parse --abbrev-ref HEAD`
 if [[ $BRANCH == 'main' ]]; then
   TAG=`git describe --tags`
   if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[^-]+)?$ ]]; then
-    docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag devmission/full-stack-starter:$TAG .
+    docker buildx build --push --platform linux/arm64/v8,linux/amd64 --tag francisli/xrtour:$TAG .
   fi
 fi

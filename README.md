@@ -1,6 +1,6 @@
-# Full-Stack Starter
+# XR Tour
 
-This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
+This repository contains the code for XR Tour, a platform and content management system for creating mobile web-based walking tours.
 
 - React 18.2.0
 - React Router 6.10.0
@@ -20,11 +20,6 @@ This repository contains a "starter" project for web application development in 
 2. Clone YOUR copy of the git repo to a "local" directory (on your computer), then change
    into the directory.
 
-   ```
-   git clone https://github.com/YOUR_ACCOUNT_ID/full-stack-starter.git
-   cd full-stack-starter
-   ```
-
 3. Install Docker Desktop: https://www.docker.com/products/docker-desktop
 
    1. Windows users see notes below...
@@ -41,14 +36,11 @@ This repository contains a "starter" project for web application development in 
    like this, the server is running:
 
    ```
-   server_1       | 4:13:08 AM webpack.1 |  You can now view full-stack-starter in the browser.
-   server_1       | 4:13:08 AM webpack.1 |    Local:            http://localhost:3000
+   xrtour-server-1       | 4:01:54 PM client.1 |  You can now view xrtour-client in the browser.
+   xrtour-server-1       | 4:01:54 PM client.1 |    Local:            http://localhost:3000
    ```
 
 5. Now you should be able to open the web app in your browser at: http://localhost:3000/
-
-   1. If you had to install Docker Toolbox, then replace "localhost" with the IP
-      address of the Docker Virtual Machine.
 
 6. Open a new tab or window of your shell, change into your repo directory as needed, and execute this command:
 
@@ -69,9 +61,9 @@ This repository contains a "starter" project for web application development in 
    If it is successful, you will see something like this:
 
    ```
-   Killing full-stack-starter_db_1           ... done
-   Killing full-stack-starter_server_1       ... done
-   Killing full-stack-starter_mailcatcher_1  ... done
+   Killing xrtour_db_1           ... done
+   Killing xrtour_server_1       ... done
+   Killing xrtour_mailcatcher_1  ... done
    ```
 
    If it is not successful, you may see something like this:
@@ -85,9 +77,9 @@ This repository contains a "starter" project for web application development in 
 
    ```
    docker compose stop
-   Stopping full-stack-starter_db_1          ... done
-   Stopping full-stack-starter_server_1      ... done
-   Stopping full-stack-starter_mailcatcher_1 ... done
+   Stopping xrtour_db_1          ... done
+   Stopping xrtour_server_1      ... done
+   Stopping xrtour_mailcatcher_1 ... done
    ```
 
 8. That's it! After all this setup is complete, the only command you need to run to get
@@ -293,8 +285,8 @@ This repository contains a "starter" project for web application development in 
 
 ## License
 
-Full-Stack Starter  
-Copyright (C) 2023 <Dev/Mission>
+XR Tour  
+Copyright (C) 2023 CHSA
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
