@@ -2,7 +2,7 @@
   {
     "model": "User",
     "data": {
-      "id": 1,
+      "id": "552be152-a88b-43c0-b009-1a087caad67a",
       "firstName": "Admin",
       "lastName": "User",
       "email": "admin.user@test.com",
@@ -13,7 +13,7 @@
   {
     "model": "User",
     "data": {
-      "id": 2,
+      "id": "b9d53b71-faac-4ead-bbb6-745412b79bbf",
       "firstName": "Regular",
       "lastName": "User",
       "email": "regular.user@test.com",

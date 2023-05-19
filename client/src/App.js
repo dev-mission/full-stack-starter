@@ -10,6 +10,7 @@ import AdminRoutes from './Admin/AdminRoutes';
 import InvitesRoutes from './Invites/InvitesRoutes';
 import PasswordsRoutes from './Passwords/PasswordsRoutes';
 import Register from './Register';
+import TeamsRoutes from './Teams/TeamsRoutes';
 import UsersRoutes from './Users/UsersRoutes';
 
 function App() {
@@ -28,6 +29,14 @@ function App() {
             element={
               <AuthProtected>
                 <UsersRoutes />
+              </AuthProtected>
+            }
+          />
+          <Route
+            path="/teams/*"
+            element={
+              <AuthProtected>
+                <TeamsRoutes />
               </AuthProtected>
             }
           />

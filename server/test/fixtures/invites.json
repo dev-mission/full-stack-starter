@@ -8,7 +8,7 @@
       "email": "invited.user.1@test.com",
       "message": "This is an invitation to Invited User 1.",
       "createdAt": "2022-01-29T22:58:56+0000",
-      "CreatedByUserId": 1
+      "CreatedByUserId": "552be152-a88b-43c0-b009-1a087caad67a"
     }
   },
   {
@@ -20,7 +20,7 @@
       "email": "invited.user.2@test.com",
       "message": "This is an invitation to Invited User 2.",
       "createdAt": "2022-01-29T22:59:56+0000",
-      "CreatedByUserId": 1
+      "CreatedByUserId": "552be152-a88b-43c0-b009-1a087caad67a"
     }
   }
 ]

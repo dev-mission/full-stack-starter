@@ -1,5 +1,5 @@
 const assert = require('assert');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const _ = require('lodash');
 const session = require('supertest-session');
 
@@ -29,7 +29,7 @@ describe('/api/auth', () => {
           email: 'normal.person@test.com',
           password: 'abcd1234',
         })
-        .expect(HttpStatus.CREATED);
+        .expect(StatusCodes.CREATED);
 
       const { id } = response.body;
       assert(id);
@@ -54,10 +54,10 @@ describe('/api/auth', () => {
           email: '',
           password: '',
         })
-        .expect(HttpStatus.UNPROCESSABLE_ENTITY);
+        .expect(StatusCodes.UNPROCESSABLE_ENTITY);
 
       const error = response.body;
-      assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
+      assert.deepStrictEqual(error.status, StatusCodes.UNPROCESSABLE_ENTITY);
       assert.deepStrictEqual(error.errors.length, 4);
       assert(
         _.find(error.errors, {
@@ -95,10 +95,10 @@ describe('/api/auth', () => {
           email: 'regular.user@test.com',
           password: 'abcd1234',
         })
-        .expect(HttpStatus.UNPROCESSABLE_ENTITY);
+        .expect(StatusCodes.UNPROCESSABLE_ENTITY);
 
       const error = response.body;
-      assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
+      assert.deepStrictEqual(error.status, StatusCodes.UNPROCESSABLE_ENTITY);
       assert.deepStrictEqual(error.errors.length, 1);
       assert(
         _.find(error.errors, {

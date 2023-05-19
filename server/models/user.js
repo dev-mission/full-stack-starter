@@ -6,14 +6,9 @@ const mailer = require('../emails/mailer');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    // eslint-disable-next-line no-unused-vars
     static associate(models) {
-      // define association here
+      User.hasMany(models.Membership);
+      User.belongsToMany(models.Team, { through: models.Membership });
     }
 
     static isValidPassword(password) {
@@ -25,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      return _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureUrl', 'isAdmin']);
+      const json = _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureUrl', 'isAdmin']);
+      if (this.Memberships) {
+        json.Memberships = this.Memberships.map((m) => m.toJSON());
+      }
+      return json;
     }
 
     hashPassword(password, options) {

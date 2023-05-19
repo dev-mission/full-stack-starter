@@ -89,7 +89,7 @@ describe('models.User', () => {
   });
 
   it('validates email uniqueness on update', async () => {
-    const user = await models.User.findByPk(2);
+    const user = await models.User.findByPk('b9d53b71-faac-4ead-bbb6-745412b79bbf');
     assert(user);
     assert.deepStrictEqual(user.email, 'regular.user@test.com');
     user.email = 'admin.user@test.com';

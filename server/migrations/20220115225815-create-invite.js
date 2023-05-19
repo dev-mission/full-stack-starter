@@ -21,11 +21,9 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       AcceptedByUserId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: {
-            tableName: 'Users',
-          },
+          model: 'Users',
           key: 'id',
         },
       },
@@ -33,11 +31,9 @@ module.exports = {
         type: Sequelize.DATE,
       },
       RevokedByUserId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: {
-            tableName: 'Users',
-          },
+          model: 'Users',
           key: 'id',
         },
       },
@@ -46,11 +42,9 @@ module.exports = {
       },
       CreatedByUserId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
-          model: {
-            tableName: 'Users',
-          },
+          model: 'Users',
           key: 'id',
         },
       },

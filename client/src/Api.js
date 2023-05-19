@@ -67,6 +67,17 @@ const Api = {
       return instance.patch(`/api/passwords/${token}`, { password });
     },
   },
+  teams: {
+    create(data) {
+      return instance.post('/api/teams', data);
+    },
+    get(id) {
+      return instance.get(`/api/teams/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/teams/${id}`, data);
+    },
+  },
   users: {
     index() {
       return instance.get(`/api/users`);

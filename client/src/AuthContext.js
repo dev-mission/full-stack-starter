@@ -9,9 +9,12 @@ function useAuthContext() {
 
 function AuthContextValue() {
   const [user, setUser] = useState(null);
+  const [team, setTeam] = useState(null);
   return {
     user,
     setUser,
+    team,
+    setTeam,
   };
 }
 

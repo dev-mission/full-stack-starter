@@ -5,9 +5,9 @@ module.exports = {
     await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
       },
       firstName: {
         allowNull: false,
@@ -55,8 +55,6 @@ module.exports = {
       fields: ['passwordResetToken'],
       unique: true,
     });
-    // set starting id to larger value so it doesn't conflict with test fixtures
-    await queryInterface.sequelize.query('ALTER SEQUENCE "Users_id_seq" RESTART WITH 100;');
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Users');
