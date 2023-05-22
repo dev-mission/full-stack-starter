@@ -78,6 +78,20 @@ const Api = {
       return instance.patch(`/api/teams/${id}`, data);
     },
   },
+  tours: {
+    index(TeamId) {
+      return instance.get(`/api/tours`, { params: { TeamId } });
+    },
+    create(data) {
+      return instance.post('/api/tours', data);
+    },
+    get(id) {
+      return instance.get(`/api/tours/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/tours/${id}`, data);
+    },
+  },
   users: {
     index() {
       return instance.get(`/api/users`);

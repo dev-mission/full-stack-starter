@@ -38,6 +38,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+    await queryInterface.addIndex('Memberships', ['TeamId', 'UserId'], { unique: true });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Memberships');

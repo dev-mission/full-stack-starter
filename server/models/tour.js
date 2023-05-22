@@ -2,40 +2,19 @@ const _ = require('lodash');
 const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Team extends Model {
+  class Tour extends Model {
     static associate(models) {
-      Team.hasMany(models.Membership);
+      Tour.belongsTo(models.Team);
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'link', 'name', 'variants']);
-      if (this.Memberships) {
-        json.Memberships = this.Memberships.map((m) => m.toJSON());
-      }
+      const json = _.pick(this.get(), ['id', 'TeamId', 'link', 'names', 'descriptions', 'variants', 'visibility']);
       return json;
-    }
-
-    async getMembership(user, options) {
-      const memberships = await this.getMemberships({
-        where: {
-          UserId: user.id,
-        },
-        transaction: options?.transaction,
-      });
-      return memberships.length ? memberships[0] : null;
     }
   }
 
-  Team.init(
+  Tour.init(
     {
-      name: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: {
-            msg: 'Name cannot be blank',
-          },
-        },
-      },
       link: {
         type: DataTypes.CITEXT,
         validate: {
@@ -44,11 +23,12 @@ module.exports = (sequelize, DataTypes) => {
           },
           async isUnique(value) {
             if (this.changed('link')) {
-              const record = await Team.findOne({
+              const record = await Tour.findOne({
                 where: {
                   id: {
                     [Op.ne]: this.id,
                   },
+                  TeamId: this.TeamId,
                   link: value,
                 },
               });
@@ -63,13 +43,29 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: 'Name cannot be blank',
+          },
+        },
+      },
+      names: DataTypes.JSONB,
+      descriptions: DataTypes.JSONB,
       variants: DataTypes.JSONB,
+      visibility: DataTypes.ENUM('PUBLIC', 'UNLISTED', 'PRIVATE'),
     },
     {
       sequelize,
-      modelName: 'Team',
+      modelName: 'Tour',
     }
   );
 
-  return Team;
+  Tour.beforeValidate((record) => {
+    const [variant] = record.variants;
+    record.name = record.names[variant.code] ?? '';
+  });
+
+  return Tour;
 };

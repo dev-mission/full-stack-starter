@@ -7,6 +7,7 @@ router.use('/auth', require('./auth'));
 router.use('/invites', require('./invites'));
 router.use('/passwords', require('./passwords'));
 router.use('/teams', require('./teams'));
+router.use('/tours', require('./tours'));
 router.use('/users', require('./users'));
 
 module.exports = router;

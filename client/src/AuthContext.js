@@ -9,12 +9,12 @@ function useAuthContext() {
 
 function AuthContextValue() {
   const [user, setUser] = useState(null);
-  const [team, setTeam] = useState(null);
+  const [membership, setMembership] = useState(null);
   return {
     user,
     setUser,
-    team,
-    setTeam,
+    membership,
+    setMembership,
   };
 }
 
@@ -26,6 +26,7 @@ function AuthContextProvider({ children }) {
 function AuthProtected({ isAdminRequired, children }) {
   const location = useLocation();
   const authContext = useAuthContext();
+
   return authContext.user && (!isAdminRequired || authContext.user.isAdmin) ? (
     children
   ) : (

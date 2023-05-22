@@ -8,7 +8,7 @@ import FormGroup from '../Components/FormGroup';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 
-function Team() {
+function TeamForm() {
   const navigate = useNavigate();
   const { user, setUser } = useAuthContext();
   const { teamId } = useParams();
@@ -55,7 +55,6 @@ function Team() {
       setUser({ ...user });
       navigate('/');
     } catch (error) {
-      console.log(error);
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));
       } else {
@@ -103,4 +102,4 @@ function Team() {
     </main>
   );
 }
-export default Team;
+export default TeamForm;

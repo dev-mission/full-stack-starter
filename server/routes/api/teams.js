@@ -2,19 +2,13 @@ const express = require('express');
 const { StatusCodes } = require('http-status-codes');
 const _ = require('lodash');
 
-const helpers = require('../helpers');
 const models = require('../../models');
 const interceptors = require('../interceptors');
 
 const router = express.Router();
 
 router.get('/', interceptors.requireLogin, async (req, res) => {
-  const options = {
-    page: req.query.page || '1',
-    order: [['name', 'ASC']],
-  };
-  const { records, pages, total } = await models.Team.paginate(options);
-  helpers.setPaginationHeaders(req, res, options.page, pages, total);
+  const records = await req.user.getTeams();
   res.json(records.map((record) => record.toJSON()));
 });
 
@@ -50,9 +44,18 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
 });
 
 router.get('/:id', interceptors.requireLogin, async (req, res) => {
-  const record = await models.Team.findByPk(req.params.id);
+  let record;
+  let membership;
+  await models.sequelize.transaction(async (transaction) => {
+    record = await models.Team.findByPk(req.params.id, { transaction });
+    membership = await record.getMembership(req.user, { transaction });
+  });
   if (record) {
-    res.json(record.toJSON());
+    if (membership) {
+      res.json(record.toJSON());
+    } else {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+    }
   } else {
     res.status(StatusCodes.NOT_FOUND).end();
   }

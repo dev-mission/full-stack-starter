@@ -3,3 +3,11 @@
 body {
   padding-top: 5rem;
 }
+
+label {
+  font-weight: bold;
+}
+
+.form-label + .form-control-plaintext {
+  margin-top: -0.5rem;
+}

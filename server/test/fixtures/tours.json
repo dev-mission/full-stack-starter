@@ -1,0 +1,28 @@
+[
+  {
+    "model": "Tour",
+    "data": {
+      "id": "ae61f3e7-7de7-40e2-b9a1-c5ad9ff94806",
+      "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
+      "link": "tour1",
+      "name": "Tour 1",
+      "names": { "en-us": "Tour 1" },
+      "descriptions": { "en-us": "Tour 1 description" },
+      "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }],
+      "visibility": "PUBLIC"
+    }
+  },
+  {
+    "model": "Tour",
+    "data": {
+      "id": "495b18a8-ae05-4f44-a06d-c1809add0352",
+      "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
+      "link": "tour2",
+      "name": "Tour 2",
+      "names": { "en-us": "Tour 2" },
+      "descriptions": { "en-us": "Tour 2 description" },
+      "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }],
+      "visibility": "PRIVATE"
+    }
+  }
+]

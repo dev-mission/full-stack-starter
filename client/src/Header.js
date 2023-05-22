@@ -56,6 +56,15 @@ function Header() {
                 Home
               </Link>
             </li>
+            {user && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" aria-current="page" to="/teams" onClick={hideNavbar}>
+                    Teams
+                  </Link>
+                </li>
+              </>
+            )}
             <div className="flex-grow-1 d-flex justify-content-end">
               {user && (
                 <>
