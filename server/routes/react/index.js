@@ -1,7 +1,26 @@
-
-
 const express = require('express');
 const path = require('path');
+
+require('@babel/register')({
+  only: [
+    function only(filepath) {
+      return filepath.startsWith(path.resolve(__dirname, '../../../client'));
+    },
+  ],
+  presets: ['@babel/preset-env', '@babel/preset-react'],
+  plugins: [
+    [
+      'transform-assets',
+      {
+        extensions: ['css', 'svg'],
+        name: 'static/media/[name].[hash:8].[ext]',
+      },
+    ],
+  ],
+});
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const App = require('../../../client/src/App').default;
 
 const router = express.Router();
 
