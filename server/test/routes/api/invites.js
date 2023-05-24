@@ -23,9 +23,9 @@ describe('/api/invites', () => {
   describe('GET /', () => {
     it('returns a list of sent invites', async () => {
       const response = await testSession.get('/api/invites').set('Accept', 'application/json').expect(StatusCodes.OK);
-      assert(response.body.length, 2);
-      assert(response.body[0].lastName, 'User 2');
-      assert(response.body[1].lastName, 'User 1');
+      assert.deepStrictEqual(response.body.length, 2);
+      assert.deepStrictEqual(response.body[0].lastName, 'User 2');
+      assert.deepStrictEqual(response.body[1].lastName, 'User 1');
     });
   });
 

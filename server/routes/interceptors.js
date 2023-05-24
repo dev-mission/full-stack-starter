@@ -83,10 +83,15 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  models.User.findByPk(id).then((user) => {
-    done(null, user);
-  });
+passport.deserializeUser((req, id, done) => {
+  models.User.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((error) => {
+      req.session = null;
+      done(error);
+    });
 });
 
 module.exports.passport = passport;

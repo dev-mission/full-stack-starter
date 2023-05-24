@@ -23,8 +23,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=./jest-env.js",
     "eject": "react-scripts eject",
+    "pp": "prettier --write --ignore-unknown .",
+    "pp:changed": "prettier --write --ignore-unknown $(git diff --name-only --relative .; git ls-files -o --exclude-standard)",
     "lint": "eslint .",
-    "lint:changed": "eslint $(git diff --name-only; git ls-files -o --exclude-standard)"
+    "lint:changed": "eslint $(git diff --name-only --relative .; git ls-files -o --exclude-standard)"
   },
   "eslintConfig": {
     "extends": [

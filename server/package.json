@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "pp": "prettier --write --ignore-unknown .",
+    "pp:changed": "prettier --write --ignore-unknown $(git diff --name-only --relative .; git ls-files -o --exclude-standard)",
     "lint": "eslint .",
-    "lint:changed": "eslint $(git diff --name-only; git ls-files -o --exclude-standard)",
+    "lint:changed": "eslint $(git diff --name-only --relative .; git ls-files -o --exclude-standard)",
     "start": "nodemon -V --ignore ./client --ignore ./migrations --ignore ./public --ignore ./test ./bin/www",
     "test": "mocha --recursive"
   },
