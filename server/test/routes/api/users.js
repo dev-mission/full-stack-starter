@@ -27,7 +27,7 @@ describe('/api/users', () => {
       it('returns a list of Users ordered by last name, first name, email', async () => {
         /// request user list
         const response = await testSession.get('/api/users').set('Accept', 'application/json').expect(HttpStatus.OK);
-        assert(response.body?.length, 2);
+        assert.deepStrictEqual(response.body?.length, 2);
 
         const users = response.body;
         assert.deepStrictEqual(users[0].firstName, 'Admin');
