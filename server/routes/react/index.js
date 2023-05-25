@@ -24,7 +24,9 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const { matchPath } = require('react-router-dom');
 const { StaticRouter } = require('react-router-dom/server');
-const { StaticContextProvider } = require('../../../client/src/StaticContext');
+const { HelmetProvider } = require('react-helmet-async');
+
+const { defaultValue: defaultStaticContext, StaticContextProvider } = require('../../../client/src/StaticContext');
 const App = require('../../../client/src/App').default;
 const { ADMIN_AUTH_PROTECTED_PATHS, AUTH_PROTECTED_PATHS, REDIRECTS } = require('../../../client/src/AppRedirects');
 
@@ -75,19 +77,24 @@ router.get('/*', async (req, res, next) => {
           return;
         }
       }
-      const staticContext = { authContext: { user: req.user?.toJSON() ?? null } };
+      const staticContext = { ...defaultStaticContext, authContext: { user: req.user?.toJSON() ?? null } };
+      const helmetContext = {};
       const reactApp = ReactDOMServer.renderToString(
         React.createElement(
           StaticContextProvider,
           { value: staticContext },
-          React.createElement(StaticRouter, { location }, React.createElement(App))
+          React.createElement(
+            HelmetProvider,
+            { context: helmetContext },
+            React.createElement(StaticRouter, { location }, React.createElement(App))
+          )
         )
       );
+      const { helmet } = helmetContext;
       res.send(
-        HTML.replace('window.env.STATIC_CONTEXT={}', `window.env.STATIC_CONTEXT=${JSON.stringify(staticContext)};`).replace(
-          '<div id="root"></div>',
-          `<div id="root">${reactApp}</div>`
-        )
+        HTML.replace(/<title\b[^>]*>(.*?)<\/title>/i, helmet.title.toString())
+          .replace('window.STATIC_CONTEXT={}', `window.STATIC_CONTEXT=${JSON.stringify(staticContext)}`)
+          .replace('<div id="root"></div>', `<div id="root">${reactApp}</div>`)
       );
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

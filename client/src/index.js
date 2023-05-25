@@ -1,16 +1,19 @@
 import React from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { StaticContextProvider } from './StaticContext';
+import { defaultValue, StaticContextProvider } from './StaticContext';
 import reportWebVitals from './reportWebVitals';
 
 const container = document.getElementById('root');
 const app = (
-  <StaticContextProvider value={window.env.STATIC_CONTEXT}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+  <StaticContextProvider value={{ ...defaultValue, ...window.STATIC_CONTEXT }}>
+    <HelmetProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </HelmetProvider>
   </StaticContextProvider>
 );
 if (process.env.NODE_ENV === 'development') {
