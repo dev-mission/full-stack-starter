@@ -1,5 +1,5 @@
 const express = require('express');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const _ = require('lodash');
 
 const interceptors = require('../interceptors');
@@ -16,11 +16,11 @@ router.post('/login', (req, res, next) => {
         if (logInErr) {
           next(logInErr);
         } else {
-          res.status(HttpStatus.OK).json(user);
+          res.status(StatusCodes.OK).json(user);
         }
       });
     } else {
-      res.status(HttpStatus.UNPROCESSABLE_ENTITY).end();
+      res.status(StatusCodes.UNPROCESSABLE_ENTITY).end();
     }
   })(req, res, next);
 });
@@ -28,7 +28,7 @@ router.post('/login', (req, res, next) => {
 /// handle logging out the current user
 router.get('/logout', (req, res) => {
   req.logout(() => {
-    res.status(HttpStatus.NO_CONTENT).end();
+    res.status(StatusCodes.NO_CONTENT).end();
   });
 });
 
@@ -44,16 +44,16 @@ if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
           next(err);
           return;
         }
-        res.status(HttpStatus.CREATED).json(user);
+        res.status(StatusCodes.CREATED).json(user);
       });
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
+        res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+          status: StatusCodes.UNPROCESSABLE_ENTITY,
           errors: error.errors || [],
         });
       } else {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
       }
     }
   });

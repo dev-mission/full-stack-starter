@@ -1,5 +1,5 @@
 const assert = require('assert');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const _ = require('lodash');
 const session = require('supertest-session');
 
@@ -20,13 +20,13 @@ describe('/api/users', () => {
         .post('/api/auth/login')
         .set('Accept', 'application/json')
         .send({ email: 'admin.user@test.com', password: 'abcd1234' })
-        .expect(HttpStatus.OK);
+        .expect(StatusCodes.OK);
     });
 
     describe('GET /', () => {
       it('returns a list of Users ordered by last name, first name, email', async () => {
         /// request user list
-        const response = await testSession.get('/api/users').set('Accept', 'application/json').expect(HttpStatus.OK);
+        const response = await testSession.get('/api/users').set('Accept', 'application/json').expect(StatusCodes.OK);
         assert.deepStrictEqual(response.body?.length, 2);
 
         const users = response.body;
@@ -38,7 +38,7 @@ describe('/api/users', () => {
     describe('GET /:id', () => {
       it('returns a User by its id', async () => {
         /// request user list
-        const response = await testSession.get('/api/users/2').set('Accept', 'application/json').expect(HttpStatus.OK);
+        const response = await testSession.get('/api/users/2').set('Accept', 'application/json').expect(StatusCodes.OK);
 
         assert.deepStrictEqual(response.body, {
           id: 2,
@@ -62,7 +62,7 @@ describe('/api/users', () => {
             lastName: 'Person',
             email: 'normal.person@test.com',
           })
-          .expect(HttpStatus.OK);
+          .expect(StatusCodes.OK);
 
         assert.deepStrictEqual(response.body, {
           id: 2,
@@ -85,10 +85,10 @@ describe('/api/users', () => {
             email: '',
             password: 'foo',
           })
-          .expect(HttpStatus.UNPROCESSABLE_ENTITY);
+          .expect(StatusCodes.UNPROCESSABLE_ENTITY);
 
         const error = response.body;
-        assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.deepStrictEqual(error.status, StatusCodes.UNPROCESSABLE_ENTITY);
         assert.deepStrictEqual(error.errors.length, 4);
         assert(
           _.find(error.errors, {
@@ -123,10 +123,10 @@ describe('/api/users', () => {
           .send({
             email: 'admin.user@test.com',
           })
-          .expect(HttpStatus.UNPROCESSABLE_ENTITY);
+          .expect(StatusCodes.UNPROCESSABLE_ENTITY);
 
         const error = response.body;
-        assert.deepStrictEqual(error.status, HttpStatus.UNPROCESSABLE_ENTITY);
+        assert.deepStrictEqual(error.status, StatusCodes.UNPROCESSABLE_ENTITY);
         assert.deepStrictEqual(error.errors.length, 1);
         assert(
           _.find(error.errors, {

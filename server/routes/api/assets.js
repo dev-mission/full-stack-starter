@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs-extra');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const mime = require('mime-types');
 const path = require('path');
 const { v4: uuid } = require('uuid');
@@ -46,9 +46,9 @@ router.put('/:path([^?]+)', interceptors.requireLogin, (req, res) => {
   fs.ensureDirSync(path.dirname(tmpFile));
   fs.writeFile(tmpFile, req.body, (err) => {
     if (err) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     } else {
-      res.status(HttpStatus.OK).end();
+      res.status(StatusCodes.OK).end();
     }
   });
 });

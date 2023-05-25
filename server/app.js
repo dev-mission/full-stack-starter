@@ -8,7 +8,7 @@ const logger = require('morgan');
 const passport = require('passport');
 const fileUpload = require('express-fileupload');
 const i18n = require('i18n');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 const routes = require('./routes');
 
@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 /// error handler
 app.use((err, req, res) => {
   /// render the error
-  res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err);
 });
 
 module.exports = app;

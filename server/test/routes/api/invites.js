@@ -1,5 +1,5 @@
 const assert = require('assert');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const nodemailerMock = require('nodemailer-mock');
 const session = require('supertest-session');
 
@@ -17,12 +17,12 @@ describe('/api/invites', () => {
       .post('/api/auth/login')
       .set('Accept', 'application/json')
       .send({ email: 'admin.user@test.com', password: 'abcd1234' })
-      .expect(HttpStatus.OK);
+      .expect(StatusCodes.OK);
   });
 
   describe('GET /', () => {
     it('returns a list of sent invites', async () => {
-      const response = await testSession.get('/api/invites').set('Accept', 'application/json').expect(HttpStatus.OK);
+      const response = await testSession.get('/api/invites').set('Accept', 'application/json').expect(StatusCodes.OK);
       assert.deepStrictEqual(response.body.length, 2);
       assert.deepStrictEqual(response.body[0].lastName, 'User 2');
       assert.deepStrictEqual(response.body[1].lastName, 'User 1');
@@ -35,7 +35,7 @@ describe('/api/invites', () => {
         .post('/api/invites')
         .set('Accept', 'application/json')
         .send({ firstName: 'Invitee', lastName: 'Name', email: 'invitee.name@test.com', message: 'Welcome!' })
-        .expect(HttpStatus.CREATED);
+        .expect(StatusCodes.CREATED);
 
       assert(response.body?.id);
       const invite = await models.Invite.findByPk(response.body.id);
@@ -58,7 +58,7 @@ describe('/api/invites', () => {
       const response = await testSession
         .get('/api/invites/14a500b7-f14c-48cd-b815-3685a8b54370')
         .set('Accept', 'application/json')
-        .expect(HttpStatus.OK);
+        .expect(StatusCodes.OK);
       const data = { ...response.body };
       delete data.updatedAt;
       assert.deepStrictEqual(data, {
@@ -79,7 +79,10 @@ describe('/api/invites', () => {
 
   describe('DELETE /:id', () => {
     it('revokes an Invite by id', async () => {
-      await testSession.delete('/api/invites/14a500b7-f14c-48cd-b815-3685a8b54370').set('Accept', 'application/json').expect(HttpStatus.OK);
+      await testSession
+        .delete('/api/invites/14a500b7-f14c-48cd-b815-3685a8b54370')
+        .set('Accept', 'application/json')
+        .expect(StatusCodes.OK);
       const invite = await models.Invite.findByPk('14a500b7-f14c-48cd-b815-3685a8b54370');
       assert(invite.revokedAt);
       assert.deepStrictEqual(invite.RevokedByUserId, 1);
@@ -99,7 +102,7 @@ describe('/api/invites', () => {
           password: 'abcd1234',
           confirmPassword: 'abcd1234',
         })
-        .expect(HttpStatus.CREATED);
+        .expect(StatusCodes.CREATED);
       const { id } = response.body;
       assert(id);
       assert.deepStrictEqual(response.body, {
