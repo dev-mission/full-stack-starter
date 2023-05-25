@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureUrl', 'isAdmin']);
+      const json = _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureURL', 'isAdmin']);
       if (this.Memberships) {
         json.Memberships = this.Memberships.map((m) => m.toJSON());
       }
@@ -138,7 +138,7 @@ module.exports = (sequelize, DataTypes) => {
       picture: {
         type: DataTypes.STRING,
       },
-      pictureUrl: {
+      pictureURL: {
         type: DataTypes.VIRTUAL,
         get() {
           return this.assetUrl('picture');

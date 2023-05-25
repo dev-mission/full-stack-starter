@@ -1,0 +1,22 @@
+[
+  {
+    "model": "TourResource",
+    "data": {
+      "id": "a26afd2c-b8bc-41d3-ac56-2ac06377993f",
+      "TourId": "495b18a8-ae05-4f44-a06d-c1809add0352",
+      "ResourceId": "0cb2ce76-c5ca-454f-9fb1-47051b0f21ab",
+      "start": "",
+      "end": ""
+    }
+  },
+  {
+    "model": "TourResource",
+    "data": {
+      "id": "c12c53d9-efe7-4682-a36c-034f7a4d8390",
+      "TourId": "495b18a8-ae05-4f44-a06d-c1809add0352",
+      "ResourceId": "6ebacda9-8d33-4c3e-beb5-18dffb119046",
+      "start": "",
+      "end": ""
+    }
+  }
+]

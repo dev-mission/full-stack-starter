@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import DropzoneUploader from './DropzoneUploader';
 import './PhotoInput.scss';
 
-function PhotoInput({ className, children, id, name, onChange, onUploading, value, valueUrl }) {
+function PhotoInput({ className, children, disabled, id, name, onChange, onUploading, value, valueUrl }) {
   function onRemoved() {
     if (onChange) {
       onChange({ target: { name, value: '' } });
@@ -22,7 +22,7 @@ function PhotoInput({ className, children, id, name, onChange, onUploading, valu
       id={id}
       className={classNames('photo-input', className)}
       multiple={false}
-      disabled={value && value !== ''}
+      disabled={!!disabled || (value && value !== '')}
       onRemoved={onRemoved}
       onUploaded={onUploaded}>
       {({ statuses, onRemove }) => {

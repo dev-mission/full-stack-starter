@@ -40,7 +40,7 @@ describe('/api/auth', () => {
         email: 'normal.person@test.com',
         isAdmin: false,
         picture: null,
-        pictureUrl: null,
+        pictureURL: null,
       });
     });
 

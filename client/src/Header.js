@@ -82,7 +82,7 @@ function Header() {
                         {user.firstName}!
                       </Link>
                     </span>
-                    {user.pictureUrl && <div className="header__picture" style={{ backgroundImage: `url(${user.pictureUrl})` }}></div>}
+                    {user.pictureURL && <div className="header__picture" style={{ backgroundImage: `url(${user.pictureURL})` }}></div>}
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="/logout" onClick={onLogout}>

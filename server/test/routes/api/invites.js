@@ -112,7 +112,7 @@ describe('/api/invites', () => {
         email: 'accepting.user@test.com',
         isAdmin: false,
         picture: null,
-        pictureUrl: null,
+        pictureURL: null,
       });
 
       const invite = await models.Invite.findByPk('14a500b7-f14c-48cd-b815-3685a8b54370');

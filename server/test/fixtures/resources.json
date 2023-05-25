@@ -1,0 +1,22 @@
+[
+  {
+    "model": "Resource",
+    "data": {
+      "id": "0cb2ce76-c5ca-454f-9fb1-47051b0f21ab",
+      "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
+      "name": "Resource 1",
+      "type": "IMAGE",
+      "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }]
+    }
+  },
+  {
+    "model": "Resource",
+    "data": {
+      "id": "6ebacda9-8d33-4c3e-beb5-18dffb119046",
+      "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
+      "name": "Resource 2",
+      "type": "AUDIO",
+      "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }]
+    }
+  }
+]

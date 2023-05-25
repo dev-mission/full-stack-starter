@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { StatusCodes } from 'http-status-codes';
-import classNames from 'classnames';
 
 import Api from '../Api';
 import { useAuthContext } from '../AuthContext';
 import FormGroup from '../Components/FormGroup';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
+import VariantTabs from '../Components/VariantTabs';
 
 function TourForm() {
   const navigate = useNavigate();
@@ -102,19 +102,7 @@ function TourForm() {
                   record={tour}
                   error={error}
                 />
-                <ul className="nav nav-tabs mb-3">
-                  {tour.variants.map((v) => (
-                    <li key={v.code} className="nav-item">
-                      <a
-                        onClick={() => setVariant(v)}
-                        className={classNames('nav-link', { active: v === variant })}
-                        aria-current="page"
-                        href={`#${v.code}`}>
-                        {v.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <VariantTabs variants={tour.variants} current={variant} setVariant={setVariant} />
                 <FormGroup name="name" label="Name" onChange={onChange} value={tour.names[variant?.code]} error={error} />
                 <FormGroup
                   type="textarea"

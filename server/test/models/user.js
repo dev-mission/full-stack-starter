@@ -131,12 +131,12 @@ describe('models.User', () => {
       assert(await helper.assetPathExists(path.join('users', `${user.id}`, 'picture', picture)));
     });
 
-    describe('.pictureUrl', () => {
+    describe('.pictureURL', () => {
       it('returns an asset url for the picture', () => {
         const user = models.User.build({
           picture,
         });
-        assert.deepStrictEqual(user.pictureUrl, `/api/assets/users/${user.id}/picture/${picture}`);
+        assert.deepStrictEqual(user.pictureURL, `/api/assets/users/${user.id}/picture/${picture}`);
       });
     });
   });

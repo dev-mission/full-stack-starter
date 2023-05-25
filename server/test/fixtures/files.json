@@ -1,0 +1,20 @@
+[
+  {
+    "model": "File",
+    "data": {
+      "id": "ed2f158a-e44e-432d-971e-e5da1a2e33b4",
+      "ResourceId": "0cb2ce76-c5ca-454f-9fb1-47051b0f21ab",
+      "variant": "en-us",
+      "key": "cdd8007d-dcaf-4163-b497-92d378679668.png"
+    }
+  },
+  {
+    "model": "File",
+    "data": {
+      "id": "84b62056-05a4-4751-953f-7854ac46bc0f",
+      "ResourceId": "6ebacda9-8d33-4c3e-beb5-18dffb119046",
+      "variant": "en-us",
+      "key": "d2e150be-b277-4f68-96c7-22a477e0022f.m4a"
+    }
+  }
+]

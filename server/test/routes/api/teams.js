@@ -22,8 +22,8 @@ describe('/api/teams', () => {
   describe('GET /', () => {
     it('returns a list of the Teams the User is a member of', async () => {
       const response = await testSession.get('/api/teams').set('Accept', 'application/json').expect(StatusCodes.OK);
-      assert(response.body.length, 1);
-      assert(response.body[0].name, "Regular's Personal Team");
+      assert.deepStrictEqual(response.body.length, 1);
+      assert.deepStrictEqual(response.body[0].name, "Regular's Personal Team");
     });
   });
 

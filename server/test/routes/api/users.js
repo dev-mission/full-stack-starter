@@ -38,7 +38,7 @@ describe('/api/users', () => {
           isAdmin: false,
           lastName: 'User',
           picture: null,
-          pictureUrl: null,
+          pictureURL: null,
           Memberships: [
             {
               Team: {
@@ -99,7 +99,7 @@ describe('/api/users', () => {
           email: 'regular.user@test.com',
           isAdmin: false,
           picture: null,
-          pictureUrl: null,
+          pictureURL: null,
         });
       });
     });
@@ -123,7 +123,7 @@ describe('/api/users', () => {
           email: 'normal.person@test.com',
           isAdmin: false,
           picture: null,
-          pictureUrl: null,
+          pictureURL: null,
         });
       });
 

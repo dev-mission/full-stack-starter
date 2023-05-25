@@ -5,10 +5,14 @@ module.exports = (sequelize, DataTypes) => {
   class Tour extends Model {
     static associate(models) {
       Tour.belongsTo(models.Team);
+      Tour.hasMany(models.TourResource);
     }
 
     toJSON() {
       const json = _.pick(this.get(), ['id', 'TeamId', 'link', 'names', 'descriptions', 'variants', 'visibility']);
+      if (this.TourResources) {
+        json.TourResources = this.TourResources.map((tr) => tr.toJSON());
+      }
       return json;
     }
   }

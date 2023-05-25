@@ -67,6 +67,20 @@ const Api = {
       return instance.patch(`/api/passwords/${token}`, { password });
     },
   },
+  resources: {
+    index(TeamId, type, search) {
+      return instance.get(`/api/resources`, { params: { TeamId, type, search } });
+    },
+    create(data) {
+      return instance.post('/api/resources', data);
+    },
+    get(id) {
+      return instance.get(`/api/resources/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/resources/${id}`, data);
+    },
+  },
   teams: {
     create(data) {
       return instance.post('/api/teams', data);
@@ -90,6 +104,16 @@ const Api = {
     },
     update(id, data) {
       return instance.patch(`/api/tours/${id}`, data);
+    },
+    resources(id) {
+      return {
+        index() {
+          return instance.get(`/api/tours/${id}/resources`);
+        },
+        create(data) {
+          return instance.post(`/api/tours/${id}/resources`, data);
+        },
+      };
     },
   },
   users: {
