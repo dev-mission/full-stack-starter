@@ -1,6 +1,8 @@
 import { createContext, useContext, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
+import { useStaticContext } from './StaticContext';
+
 const authContext = createContext();
 
 function useAuthContext() {
@@ -8,7 +10,8 @@ function useAuthContext() {
 }
 
 function AuthContextValue() {
-  const [user, setUser] = useState(null);
+  const staticContext = useStaticContext();
+  const [user, setUser] = useState(staticContext.authContext?.user);
   const [membership, setMembership] = useState(null);
   return {
     user,
