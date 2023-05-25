@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import './App.scss';
 
@@ -15,32 +15,30 @@ import UsersRoutes from './Users/UsersRoutes';
 function App() {
   return (
     <AuthContextProvider>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/passwords/*" element={<PasswordsRoutes />} />
-          <Route path="/invites/*" element={<InvitesRoutes />} />
-          {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
-          <Route
-            path="/account/*"
-            element={
-              <AuthProtected>
-                <UsersRoutes />
-              </AuthProtected>
-            }
-          />
-          <Route
-            path="/admin/*"
-            element={
-              <AuthProtected isAdminRequired={true}>
-                <AdminRoutes />
-              </AuthProtected>
-            }
-          />
-        </Routes>
-      </Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/passwords/*" element={<PasswordsRoutes />} />
+        <Route path="/invites/*" element={<InvitesRoutes />} />
+        {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
+        <Route
+          path="/account/*"
+          element={
+            <AuthProtected>
+              <UsersRoutes />
+            </AuthProtected>
+          }
+        />
+        <Route
+          path="/admin/*"
+          element={
+            <AuthProtected isAdminRequired={true}>
+              <AdminRoutes />
+            </AuthProtected>
+          }
+        />
+      </Routes>
     </AuthContextProvider>
   );
 }

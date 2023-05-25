@@ -1,19 +1,18 @@
 import React from 'react';
-import { createRoot, hydrateRoot } from 'react-dom/client';
+import { hydrateRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const container = document.getElementById('root');
-if (process.env.NODE_ENV === 'development') {
-  const root = createRoot(container);
-  root.render(
-    <React.StrictMode>
+hydrateRoot(
+  container,
+  <React.StrictMode>
+    <BrowserRouter>
       <App />
-    </React.StrictMode>
-  );
-} else {
-  hydrateRoot(container, <App />);
-}
+    </BrowserRouter>
+  </React.StrictMode>
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
