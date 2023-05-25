@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { StatusCodes } from 'http-status-codes';
 
@@ -7,8 +8,10 @@ import { useAuthContext } from '../AuthContext';
 import RegistrationForm from '../RegistrationForm';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
+import { useStaticContext } from '../StaticContext';
 
 function Invite() {
+  const staticContext = useStaticContext();
   const { setUser: setAuthUser } = useAuthContext();
   const navigate = useNavigate();
   const { inviteId } = useParams();
@@ -60,22 +63,27 @@ function Invite() {
   }
 
   return (
-    <main className="container">
-      <div className="row justify-content-center">
-        <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="card-title">You're Invited</h2>
-              {invite?.acceptedAt && <p>This invite has already been accepted.</p>}
-              {invite?.revokedAt && <p>This invite is no longer available.</p>}
-              {invite && invite.acceptedAt === null && invite.revokedAt === null && (
-                <RegistrationForm onSubmit={onSubmit} onChange={onChange} error={error} user={user} isLoading={isLoading} />
-              )}
+    <>
+      <Helmet>
+        <title>You're Invited - {staticContext.env.REACT_APP_SITE_TITLE}</title>
+      </Helmet>
+      <main className="container">
+        <div className="row justify-content-center">
+          <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div className="card">
+              <div className="card-body">
+                <h2 className="card-title">You're Invited</h2>
+                {invite?.acceptedAt && <p>This invite has already been accepted.</p>}
+                {invite?.revokedAt && <p>This invite is no longer available.</p>}
+                {invite && invite.acceptedAt === null && invite.revokedAt === null && (
+                  <RegistrationForm onSubmit={onSubmit} onChange={onChange} error={error} user={user} isLoading={isLoading} />
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 export default Invite;
