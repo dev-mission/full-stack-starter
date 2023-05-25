@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-dom';
 
 import Api from './Api';
 import { useAuthContext } from './AuthContext';
@@ -7,13 +7,16 @@ import { useAuthContext } from './AuthContext';
 function Login() {
   const authContext = useAuthContext();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const from = location.state?.from || searchParams.get('from') || '/';
 
   useEffect(() => {
     if (authContext.user) {
-      navigate(location.state?.from || '/', { replace: true });
+      navigate(from, { replace: true });
     }
-  }, [authContext.user, location, navigate]);
+  }, [authContext.user, from, navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +29,7 @@ function Login() {
     try {
       const response = await Api.auth.login(email, password);
       authContext.setUser(response.data);
-      navigate(location.state?.from || '/', { replace: true });
+      navigate(from, { replace: true });
     } catch (error) {
       if (error.response?.status === 422) {
         setShowInvalidError(true);

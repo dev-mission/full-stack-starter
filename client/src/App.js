@@ -2,7 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 
 import './App.scss';
 
-import { AuthContextProvider, AuthProtected } from './AuthContext';
+import { AuthContextProvider } from './AuthContext';
+import AppRedirects from './AppRedirects';
 import Header from './Header';
 import Home from './Home';
 import Login from './Login';
@@ -17,25 +18,20 @@ function App() {
     <AuthContextProvider>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/passwords/*" element={<PasswordsRoutes />} />
-        <Route path="/invites/*" element={<InvitesRoutes />} />
-        {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
         <Route
-          path="/account/*"
+          path="*"
           element={
-            <AuthProtected>
-              <UsersRoutes />
-            </AuthProtected>
-          }
-        />
-        <Route
-          path="/admin/*"
-          element={
-            <AuthProtected isAdminRequired={true}>
-              <AdminRoutes />
-            </AuthProtected>
+            <AppRedirects>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/passwords/*" element={<PasswordsRoutes />} />
+                <Route path="/invites/*" element={<InvitesRoutes />} />
+                {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
+                <Route path="/account/*" element={<UsersRoutes />} />
+                <Route path="/admin/*" element={<AdminRoutes />} />
+              </Routes>
+            </AppRedirects>
           }
         />
       </Routes>
