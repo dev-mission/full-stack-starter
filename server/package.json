@@ -1,6 +1,6 @@
 {
   "name": "full-stack-starter-server",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "private": true,
   "scripts": {
     "pp": "prettier --write --ignore-unknown .",
