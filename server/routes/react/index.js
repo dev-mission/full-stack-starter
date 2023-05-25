@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs/promises');
+const fs = require('fs');
 const { StatusCodes } = require('http-status-codes');
 const path = require('path');
 
@@ -24,10 +24,13 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const { matchPath } = require('react-router-dom');
 const { StaticRouter } = require('react-router-dom/server');
+const { StaticContextProvider } = require('../../../client/src/StaticContext');
 const App = require('../../../client/src/App').default;
 const { ADMIN_AUTH_PROTECTED_PATHS, AUTH_PROTECTED_PATHS, REDIRECTS } = require('../../../client/src/AppRedirects');
 
 const router = express.Router();
+
+const HTML = fs.readFileSync(path.join(__dirname, '../../../client/build', 'index.html'), { encoding: 'utf8' });
 
 // serve up the client app for all other routes, per SPA client-side routing
 router.get('/*', async (req, res, next) => {
@@ -72,9 +75,20 @@ router.get('/*', async (req, res, next) => {
           return;
         }
       }
-      const reactApp = ReactDOMServer.renderToString(React.createElement(StaticRouter, { location }, React.createElement(App)));
-      const html = await fs.readFile(path.join(__dirname, '../../../client/build', 'index.html'), { encoding: 'utf8' });
-      res.send(html.replace('<div id="root"></div>', `<div id="root">${reactApp}</div>`));
+      const staticContext = { authContext: { user: req.user?.toJSON() ?? null } };
+      const reactApp = ReactDOMServer.renderToString(
+        React.createElement(
+          StaticContextProvider,
+          { value: staticContext },
+          React.createElement(StaticRouter, { location }, React.createElement(App))
+        )
+      );
+      res.send(
+        HTML.replace('window.env.STATIC_CONTEXT={}', `window.env.STATIC_CONTEXT=${JSON.stringify(staticContext)};`).replace(
+          '<div id="root"></div>',
+          `<div id="root">${reactApp}</div>`
+        )
+      );
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
