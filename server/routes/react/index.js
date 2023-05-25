@@ -32,7 +32,14 @@ const { ADMIN_AUTH_PROTECTED_PATHS, AUTH_PROTECTED_PATHS, REDIRECTS } = require(
 
 const router = express.Router();
 
-const HTML = fs.readFileSync(path.join(__dirname, '../../../client/build', 'index.html'), { encoding: 'utf8' });
+function readIndexFile() {
+  const filePath = path.join(__dirname, '../../../client/build', 'index.html');
+  if (fs.existsSync(filePath)) {
+    return fs.readFileSync(filePath, { encoding: 'utf8' });
+  }
+  return '';
+}
+const HTML = readIndexFile();
 
 // serve up the client app for all other routes, per SPA client-side routing
 router.get('/*', async (req, res, next) => {
