@@ -81,6 +81,30 @@ const Api = {
       return instance.patch(`/api/resources/${id}`, data);
     },
   },
+  stops: {
+    index(TeamId, search) {
+      return instance.get(`/api/stops`, { params: { TeamId, search } });
+    },
+    create(data) {
+      return instance.post('/api/stops', data);
+    },
+    get(id) {
+      return instance.get(`/api/stops/${id}`);
+    },
+    update(id, data) {
+      return instance.patch(`/api/stops/${id}`, data);
+    },
+    resources(StopId) {
+      return {
+        index() {
+          return instance.get(`/api/stops/${StopId}/resources`);
+        },
+        create(data) {
+          return instance.post(`/api/stops/${StopId}/resources`, data);
+        },
+      };
+    },
+  },
   teams: {
     create(data) {
       return instance.post('/api/teams', data);
@@ -112,6 +136,19 @@ const Api = {
         },
         create(data) {
           return instance.post(`/api/tours/${id}/resources`, data);
+        },
+      };
+    },
+    stops(TourId) {
+      return {
+        index() {
+          return instance.get(`/api/tours/${TourId}/stops`);
+        },
+        create(data) {
+          return instance.post(`/api/tours/${TourId}/stops`, data);
+        },
+        get(id) {
+          return instance.get(`/api/tours/${TourId}/stops/${id}`);
         },
       };
     },

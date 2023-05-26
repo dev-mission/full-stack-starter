@@ -84,7 +84,7 @@ function UserForm() {
               <div className="card-body">
                 <h2 className="card-title">My Account</h2>
                 {location.state?.flash && <div className="alert alert-success">{location.state?.flash}</div>}
-                <form onSubmit={onSubmit}>
+                <form autoComplete="off" onSubmit={onSubmit}>
                   {error && error.message && <div className="alert alert-danger">{error.message}</div>}
                   {success && <div className="alert alert-info">Your account has been updated!</div>}
                   <div className="mb-3">

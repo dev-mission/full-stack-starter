@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import TeamForm from './TeamForm';
 import TeamsList from './TeamsList';
@@ -9,7 +9,6 @@ function TeamsRoutes() {
     <Routes>
       <Route path="new" element={<TeamForm />} />
       <Route path=":TeamId/tours/*" element={<ToursRoutes />} />
-      <Route path=":TeamId" element={<Navigate to="tours" />} />
       <Route path="" element={<TeamsList />} />
     </Routes>
   );

@@ -21,7 +21,7 @@ router.get('/', interceptors.requireLogin, async (req, res) => {
     order: [['name', 'ASC']],
     where: { TeamId },
   };
-  const { records, pages, total } = await models.Tour.paginate(options);
+  const { records, pages, total } = await models.Stop.paginate(options);
   helpers.setPaginationHeaders(req, res, options.page, pages, total);
   res.json(records.map((record) => record.toJSON()));
 });
@@ -30,11 +30,11 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
   const { TeamId } = req.body;
   const team = await models.Team.findByPk(TeamId);
   const membership = await team.getMembership(req.user);
-  if (!membership || !membership.isEditor) {
+  if (!membership) {
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
-  const record = models.Tour.build(_.pick(req.body, ['TeamId', 'link', 'names', 'descriptions', 'variants', 'visibility']));
+  const record = models.Stop.build(_.pick(req.body, ['TeamId', 'link', 'address', 'radius', 'names', 'descriptions', 'variants']));
   try {
     await record.save();
     res.status(StatusCodes.CREATED).json(record.toJSON());
@@ -50,11 +50,10 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
   }
 });
 
-router.use('/:TourId/resources', require('./tourResources'));
-router.use('/:TourId/stops', require('./tourStops'));
+router.use('/:StopId/resources', require('./stopResources'));
 
 router.get('/:id', interceptors.requireLogin, async (req, res) => {
-  const record = await models.Tour.findByPk(req.params.id, {
+  const record = await models.Stop.findByPk(req.params.id, {
     include: ['Team'],
   });
   if (record) {
@@ -70,14 +69,14 @@ router.get('/:id', interceptors.requireLogin, async (req, res) => {
 });
 
 router.patch('/:id', interceptors.requireLogin, async (req, res) => {
-  const record = await models.Tour.findByPk(req.params.id, { include: 'Team' });
+  const record = await models.Stop.findByPk(req.params.id, { include: 'Team' });
   if (record) {
     const membership = await record.Team.getMembership(req.user);
-    if (!membership || !membership.isEditor) {
+    if (!membership) {
       res.status(StatusCodes.UNAUTHORIZED).end();
     } else {
       try {
-        await record.update(_.pick(req.body, ['link', 'names', 'descriptions', 'variants', 'visibility']));
+        await record.update(_.pick(req.body, ['link', 'address', 'radius', 'names', 'descriptions', 'variants', 'visibility']));
         res.json(record.toJSON());
       } catch (error) {
         if (error.name === 'SequelizeValidationError') {

@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 import './ResourcesModal.scss';
 import ResourcesList from './ResourcesList';
-import { useState } from 'react';
 import ResourceForm from './ResourceForm';
 
 function ResourcesModal({ isShowing, onHide, onSelect }) {

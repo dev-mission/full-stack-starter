@@ -41,6 +41,7 @@ describe('/api/teams', () => {
       assert(response.body?.id);
       assert.deepStrictEqual(response.body?.Memberships?.length, 1);
       assert.deepStrictEqual(response.body.Memberships[0], {
+        id: response.body.Memberships[0].id,
         TeamId: response.body.id,
         UserId: 'b9d53b71-faac-4ead-bbb6-745412b79bbf',
         role: 'OWNER',

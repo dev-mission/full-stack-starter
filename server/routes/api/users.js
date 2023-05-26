@@ -35,7 +35,7 @@ router.get('/me', async (req, res) => {
 });
 
 router.get('/:id', interceptors.requireLogin, async (req, res) => {
-  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id, 10)) {
+  if (!req.user.isAdmin && req.user.id !== req.params.id) {
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
@@ -52,7 +52,7 @@ router.get('/:id', interceptors.requireLogin, async (req, res) => {
 });
 
 router.patch('/:id', interceptors.requireLogin, (req, res) => {
-  if (!req.user.isAdmin && req.user.id !== parseInt(req.params.id, 10)) {
+  if (!req.user.isAdmin && req.user.id !== req.params.id) {
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }

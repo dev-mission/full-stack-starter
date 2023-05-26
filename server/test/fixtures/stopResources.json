@@ -1,0 +1,22 @@
+[
+  {
+    "model": "StopResource",
+    "data": {
+      "id": "407bc47d-2dfe-4567-b6ed-027deb802944",
+      "StopId": "e39b97ad-a5e9-422c-b256-d50fec355285",
+      "ResourceId": "0cb2ce76-c5ca-454f-9fb1-47051b0f21ab",
+      "start": "",
+      "end": ""
+    }
+  },
+  {
+    "model": "StopResource",
+    "data": {
+      "id": "3f2cb117-a9d8-4d2e-80c2-5b9461b975f5",
+      "StopId": "e39b97ad-a5e9-422c-b256-d50fec355285",
+      "ResourceId": "6ebacda9-8d33-4c3e-beb5-18dffb119046",
+      "start": "",
+      "end": ""
+    }
+  }
+]

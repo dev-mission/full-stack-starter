@@ -2,6 +2,7 @@
   {
     "model": "Membership",
     "data": {
+      "id": "5a313737-e5ff-48fd-ba6b-b82983a7a7bf",
       "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
       "UserId": "b9d53b71-faac-4ead-bbb6-745412b79bbf",
       "role": "OWNER"

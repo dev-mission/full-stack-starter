@@ -1,8 +1,22 @@
 const _ = require('lodash');
 const { Model } = require('sequelize');
 
+const ROLE_OWNER = 'OWNER';
+const ROLE_VIEWER = 'VIEWER';
+const ROLE_EDITOR = 'EDITOR';
+const ROLES = [ROLE_OWNER, ROLE_VIEWER, ROLE_EDITOR];
+Object.freeze(ROLES);
+
 module.exports = (sequelize, DataTypes) => {
   class Membership extends Model {
+    get isOwner() {
+      return this.role === ROLE_OWNER;
+    }
+
+    get isEditor() {
+      return this.role !== ROLE_VIEWER;
+    }
+
     static associate(models) {
       Membership.belongsTo(models.Team);
       Membership.belongsTo(models.User);
@@ -22,7 +36,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Membership.init(
     {
-      role: DataTypes.ENUM('OWNER', 'VIEWER', 'EDITOR'),
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      role: DataTypes.ENUM(ROLES),
     },
     {
       sequelize,

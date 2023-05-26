@@ -1,0 +1,20 @@
+[
+  {
+    "model": "TourStop",
+    "data": {
+      "id": "c25b67d5-fef6-4b9b-8f54-7ded9d1889b4",
+      "TourId": "495b18a8-ae05-4f44-a06d-c1809add0352",
+      "StopId": "e39b97ad-a5e9-422c-b256-d50fec355285",
+      "position": 1
+    }
+  },
+  {
+    "model": "TourStop",
+    "data": {
+      "id": "473abc1e-c5cb-4148-a2e4-c75a1dfcb3e1",
+      "TourId": "495b18a8-ae05-4f44-a06d-c1809add0352",
+      "StopId": "bba84716-633e-4593-85a0-9da4010eb99b",
+      "position": 2
+    }
+  }
+]

@@ -41,6 +41,7 @@ describe('/api/users', () => {
           pictureURL: null,
           Memberships: [
             {
+              id: '5a313737-e5ff-48fd-ba6b-b82983a7a7bf',
               Team: {
                 id: '1a93d46d-89bf-463b-ab23-8f22f5777907',
                 link: 'regularuser',

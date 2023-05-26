@@ -14,7 +14,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: 'minioadmin'
           AWS_S3_BUCKET: 'app'
           AWS_S3_ENDPOINT: 'http://localhost:9000'
-      - image: cimg/postgres:14.5
+      - image: cimg/postgres:14.5-postgis
         environment:
           POSTGRES_HOST_AUTH_METHOD: trust
       - image: minio/minio:RELEASE.2023-04-20T17-56-55Z

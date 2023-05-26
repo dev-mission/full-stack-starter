@@ -2,26 +2,19 @@ const _ = require('lodash');
 const { Model, Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Tour extends Model {
+  class Stop extends Model {
     static associate(models) {
-      Tour.belongsTo(models.Team);
-      Tour.hasMany(models.TourResource);
-      Tour.hasMany(models.TourStop);
+      Stop.belongsTo(models.Team);
+      Stop.hasMany(models.StopResource);
+      Stop.hasMany(models.TourStop);
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'TeamId', 'link', 'names', 'descriptions', 'variants', 'visibility']);
-      if (this.TourResources) {
-        json.TourResources = this.TourResources.map((tr) => tr.toJSON());
-      }
-      if (this.TourStops) {
-        json.TourStops = this.TourStops.map((ts) => ts.toJSON());
-      }
+      const json = _.pick(this.get(), ['id', 'TeamId', 'link', 'address', 'coordinate', 'radius', 'names', 'descriptions', 'variants']);
       return json;
     }
   }
-
-  Tour.init(
+  Stop.init(
     {
       link: {
         type: DataTypes.CITEXT,
@@ -31,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
           },
           async isUnique(value) {
             if (this.changed('link')) {
-              const record = await Tour.findOne({
+              const record = await Stop.findOne({
                 where: {
                   id: {
                     [Op.ne]: this.id,
@@ -51,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      address: DataTypes.TEXT,
+      coordinate: DataTypes.GEOGRAPHY,
+      radius: DataTypes.DECIMAL,
       name: {
         type: DataTypes.STRING,
         validate: {
@@ -62,18 +58,17 @@ module.exports = (sequelize, DataTypes) => {
       names: DataTypes.JSONB,
       descriptions: DataTypes.JSONB,
       variants: DataTypes.JSONB,
-      visibility: DataTypes.ENUM('PUBLIC', 'UNLISTED', 'PRIVATE'),
     },
     {
       sequelize,
-      modelName: 'Tour',
+      modelName: 'Stop',
     }
   );
 
-  Tour.beforeValidate((record) => {
+  Stop.beforeValidate((record) => {
     const [variant] = record.variants;
     record.name = record.names[variant.code] ?? '';
   });
 
-  return Tour;
+  return Stop;
 };

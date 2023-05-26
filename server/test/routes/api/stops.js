@@ -14,7 +14,7 @@ describe('/api/tours', () => {
       ['512x512.png', 'cdd8007d-dcaf-4163-b497-92d378679668.png'],
       ['00-04.m4a', 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a'],
     ]);
-    await helper.loadFixtures(['users', 'teams', 'memberships', 'tours', 'resources', 'files', 'tourResources']);
+    await helper.loadFixtures(['users', 'teams', 'memberships', 'resources', 'files', 'tours', 'tourResources', 'stops']);
     testSession = session(app);
     await testSession
       .post('/api/auth/login')
@@ -28,50 +28,58 @@ describe('/api/tours', () => {
   });
 
   describe('GET /', () => {
-    it('returns a list of Tours for a specified Team', async () => {
+    it('returns a list of Stops for a specified Team', async () => {
       const response = await testSession
-        .get('/api/tours?TeamId=1a93d46d-89bf-463b-ab23-8f22f5777907')
+        .get('/api/stops?TeamId=1a93d46d-89bf-463b-ab23-8f22f5777907')
         .set('Accept', 'application/json')
         .expect(StatusCodes.OK);
       assert.deepStrictEqual(response.body.length, 2);
-      assert.deepStrictEqual(response.body[0].link, 'tour1');
-      assert.deepStrictEqual(response.body[1].link, 'tour2');
+      assert.deepStrictEqual(response.body[0].link, 'chsa');
+      assert.deepStrictEqual(response.body[1].link, 'kans-restaurant');
     });
   });
 
   describe('POST /', () => {
-    it('creates a new Tour', async () => {
+    it('creates a new Stop', async () => {
       const data = {
         TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
-        link: 'newtour',
-        names: { 'en-us': 'New Tour' },
-        descriptions: { 'en-us': 'New Tour description' },
+        link: 'telephone-exchange',
+        address: '743 Washington St, San Francisco, CA 94108',
+        names: { 'en-us': 'Chinese Telephone Exchange' },
+        descriptions: {
+          'en-us': 'The Bank of Canton at 743 Washington Street was once the original Telephone Exchange in Chinatown in 1887.',
+        },
         variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
-        visibility: 'PRIVATE',
       };
-      const response = await testSession.post('/api/tours').set('Accept', 'application/json').send(data).expect(StatusCodes.CREATED);
+      const response = await testSession.post('/api/stops').set('Accept', 'application/json').send(data).expect(StatusCodes.CREATED);
 
       assert(response.body?.id);
       assert.deepStrictEqual(response.body, {
         ...data,
         id: response.body.id,
+        coordinate: null,
+        radius: null,
       });
 
-      const record = await models.Tour.findByPk(response.body.id);
+      const record = await models.Stop.findByPk(response.body.id);
       assert(record);
-      assert.deepStrictEqual(record.name, 'New Tour');
-      assert.deepStrictEqual(record.link, 'newtour');
+      assert.deepStrictEqual(record.name, 'Chinese Telephone Exchange');
+      assert.deepStrictEqual(record.link, 'telephone-exchange');
+      assert.deepStrictEqual(record.address, '743 Washington St, San Francisco, CA 94108');
     });
 
     it('validates the presence of the Tour name', async () => {
       const response = await testSession
-        .post('/api/tours')
+        .post('/api/stops')
         .set('Accept', 'application/json')
         .send({
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
-          link: 'newtour',
+          link: 'telephone-exchange',
+          address: '743 Washington St, San Francisco, CA 94108',
           names: {},
-          descriptions: { 'en-us': 'New Tour description' },
+          descriptions: {
+            'en-us': 'The Bank of Canton at 743 Washington Street was once the original Telephone Exchange in Chinatown in 1887.',
+          },
           variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
           visibility: 'PRIVATE',
         })
@@ -91,13 +99,16 @@ describe('/api/tours', () => {
 
     it('validates the uniqueness of the Tour link', async () => {
       const response = await testSession
-        .post('/api/tours')
+        .post('/api/stops')
         .set('Accept', 'application/json')
         .send({
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
-          link: 'tour2',
-          names: { 'en-us': 'New Tour' },
-          descriptions: { 'en-us': 'New Tour description' },
+          link: 'chsa',
+          address: '743 Washington St, San Francisco, CA 94108',
+          names: { 'en-us': 'Chinese Telephone Exchange' },
+          descriptions: {
+            'en-us': 'The Bank of Canton at 743 Washington Street was once the original Telephone Exchange in Chinatown in 1887.',
+          },
           variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
           visibility: 'PRIVATE',
         })
@@ -108,7 +119,7 @@ describe('/api/tours', () => {
           {
             message: 'Link already taken',
             path: 'link',
-            value: 'tour2',
+            value: 'chsa',
           },
         ],
         status: 422,
@@ -122,8 +133,11 @@ describe('/api/tours', () => {
         .send({
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
           link: 'invalid link',
-          names: { 'en-us': 'New Tour' },
-          descriptions: { 'en-us': 'New Tour description' },
+          address: '743 Washington St, San Francisco, CA 94108',
+          names: { 'en-us': 'Chinese Telephone Exchange' },
+          descriptions: {
+            'en-us': 'The Bank of Canton at 743 Washington Street was once the original Telephone Exchange in Chinatown in 1887.',
+          },
           variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
           visibility: 'PRIVATE',
         })
@@ -145,19 +159,23 @@ describe('/api/tours', () => {
   describe('GET /:id', () => {
     it('returns a Tour by id', async () => {
       const response = await testSession
-        .get('/api/tours/495b18a8-ae05-4f44-a06d-c1809add0352')
+        .get('/api/stops/e39b97ad-a5e9-422c-b256-d50fec355285')
         .set('Accept', 'application/json')
         .expect(StatusCodes.OK);
 
       const data = { ...response.body };
       assert.deepStrictEqual(data, {
-        id: '495b18a8-ae05-4f44-a06d-c1809add0352',
+        id: 'e39b97ad-a5e9-422c-b256-d50fec355285',
         TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
-        link: 'tour2',
-        names: { 'en-us': 'Tour 2' },
-        descriptions: { 'en-us': 'Tour 2 description' },
+        link: 'chsa',
+        address: '965 Clay St, San Francisco, CA 94108',
+        coordinate: null,
+        radius: null,
+        names: { 'en-us': 'CHSA' },
+        descriptions: {
+          'en-us': 'CHSA is the oldest organization in the country dedicated to the preservation of Chinese American history.',
+        },
         variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
-        visibility: 'PRIVATE',
       });
     });
   });
