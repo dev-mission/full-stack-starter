@@ -1,0 +1,24 @@
+.resources-table {
+  td {
+    vertical-align: middle;
+  }
+}
+
+.resources-table__col-num {
+  width: 4ch;
+}
+
+.resources-table__col-type {
+  width: 10ch;
+}
+
+.resources-table__col-timeline {
+  width: 20ch;
+}
+
+.resources-table__col-actions {
+  width: 9ch;
+  button {
+    width: 4ch;
+  }
+}

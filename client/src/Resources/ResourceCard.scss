@@ -1,4 +1,10 @@
-.resource-card__img {
+.resource-card__audio {
+  padding: 1rem 1rem 0;
+}
+
+.resource-card__image {
   background-color: lightgray;
+  background-position: center;
+  background-size: cover;
   aspect-ratio: 1;
 }

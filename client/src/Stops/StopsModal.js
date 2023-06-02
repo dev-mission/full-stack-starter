@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import inflection from 'inflection';
 
 import './StopsModal.scss';
 import StopsList from './StopsList';
 import StopForm from './StopForm';
 
-function StopsModal({ isShowing, onHide, onSelect }) {
+function StopsModal({ type, isShowing, onHide, onSelect }) {
   const [isEditing, setEditing] = useState(false);
   const [StopId, setStopId] = useState();
 
@@ -26,11 +27,11 @@ function StopsModal({ isShowing, onHide, onSelect }) {
   return (
     <Modal show={isShowing} onHide={onHide} size="xl" dialogClassName="resources-modal">
       <Modal.Header closeButton>
-        <Modal.Title>Stops</Modal.Title>
+        <Modal.Title>{inflection.transform(type, ['pluralize', 'capitalize'])}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {!isEditing && <StopsList onNewStop={onNewStop} onSelect={onSelect} />}
-        {isEditing && <StopForm StopId={StopId} onCancel={() => setEditing(false)} onCreate={onCreate} onUpdate={onUpdate} />}
+        {!isEditing && <StopsList type={type} onNewStop={onNewStop} onSelect={onSelect} />}
+        {isEditing && <StopForm type={type} StopId={StopId} onCancel={() => setEditing(false)} onCreate={onCreate} onUpdate={onUpdate} />}
       </Modal.Body>
     </Modal>
   );

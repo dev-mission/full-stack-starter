@@ -1,0 +1,9 @@
+.time-code__input {
+  display: inline;
+  text-align: center;
+  width: 10ch;
+  &.is-invalid {
+    background-image: none;
+    padding-right: 0.75rem;
+  }
+}

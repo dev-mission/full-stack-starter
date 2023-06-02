@@ -46,6 +46,10 @@ describe('/api/files', () => {
         externalURL: null,
         key: 'b45136f4-54e4-45cd-8851-efc9d733a573.png',
         keyURL: '/api/assets/files/ed2f158a-e44e-432d-971e-e5da1a2e33b4/key/b45136f4-54e4-45cd-8851-efc9d733a573.png',
+        originalName: null,
+        duration: null,
+        width: null,
+        height: null,
         URL: '/api/assets/files/ed2f158a-e44e-432d-971e-e5da1a2e33b4/key/b45136f4-54e4-45cd-8851-efc9d733a573.png',
       });
       await helper.sleep(100);

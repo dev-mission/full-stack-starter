@@ -1,0 +1,19 @@
+.scrubber {
+  align-items: center;
+  color: white;
+  display: flex;
+}
+
+.scrubber__bar {
+  background-color: lightgray;
+  flex-grow: 1;
+  height: 0.5rem;
+  margin: 0 0.5rem;
+  position: relative;
+}
+
+.scrubber__progress {
+  height: 100%;
+  background-color: blue;
+  pointer-events: none;
+}

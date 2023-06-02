@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { StatusCodes } = require('http-status-codes');
+const path = require('path');
 const session = require('supertest-session');
 
 const helper = require('../../helper');
@@ -171,10 +172,44 @@ describe('/api/resources', () => {
             id: '84b62056-05a4-4751-953f-7854ac46bc0f',
             key: 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a',
             keyURL: '/api/assets/files/84b62056-05a4-4751-953f-7854ac46bc0f/key/d2e150be-b277-4f68-96c7-22a477e0022f.m4a',
+            originalName: null,
+            duration: null,
+            width: null,
+            height: null,
             variant: 'en-us',
           },
         ],
       });
+    });
+  });
+
+  describe('DELETE /:id', () => {
+    it('deletes a Resource and its associated files', async () => {
+      await testSession
+        .delete('/api/resources/6ebacda9-8d33-4c3e-beb5-18dffb119046')
+        .set('Accept', 'application/json')
+        .expect(StatusCodes.OK);
+      assert.deepStrictEqual(await models.File.findByPk('84b62056-05a4-4751-953f-7854ac46bc0f'), null);
+      assert.deepStrictEqual(
+        await helper.assetPathExists(
+          path.join('files', '84b62056-05a4-4751-953f-7854ac46bc0f', 'key', 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a')
+        ),
+        false
+      );
+    });
+
+    it('returns an error if the Resource is still referenced', async () => {
+      await helper.loadFixtures(['stops', 'stopResources']);
+      const response = await testSession
+        .delete('/api/resources/6ebacda9-8d33-4c3e-beb5-18dffb119046')
+        .set('Accept', 'application/json')
+        .expect(StatusCodes.UNPROCESSABLE_ENTITY);
+      assert.deepStrictEqual(response.body.message, 'Unable to delete, still being used.');
+      assert(
+        await helper.assetPathExists(
+          path.join('files', '84b62056-05a4-4751-953f-7854ac46bc0f', 'key', 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a')
+        )
+      );
     });
   });
 });

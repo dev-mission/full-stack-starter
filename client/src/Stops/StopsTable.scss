@@ -1,0 +1,21 @@
+.stops-table {
+  td {
+    vertical-align: middle;
+  }
+}
+
+.stops-table__col-num {
+  width: 4ch;
+}
+
+.stops-table__col-name {
+  width: 15ch;
+}
+
+.stops-table__col-actions {
+  width: 5ch;
+  text-align: right;
+  button {
+    width: 4ch;
+  }
+}

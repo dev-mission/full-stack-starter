@@ -1,0 +1,12 @@
+.audio-player {
+  display: flex;
+}
+
+.audio-player__scrubber {
+  flex-grow: 1;
+
+  .scrubber__position,
+  .scrubber__duration {
+    color: black;
+  }
+}

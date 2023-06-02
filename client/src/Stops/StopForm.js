@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { pluralize } from 'inflection';
 import { StatusCodes } from 'http-status-codes';
+import { v4 as uuid } from 'uuid';
 
 import { useAuthContext } from '../AuthContext';
 import Api from '../Api';
@@ -9,7 +10,7 @@ import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 import VariantTabs from '../Components/VariantTabs';
 
-function StopForm({ StopId, onCancel, onCreate, onUpdate }) {
+function StopForm({ StopId, onCancel, onCreate, onUpdate, type }) {
   const { membership } = useAuthContext();
 
   const [stop, setStop] = useState();
@@ -22,7 +23,8 @@ function StopForm({ StopId, onCancel, onCreate, onUpdate }) {
     if (membership && !StopId) {
       setStop({
         TeamId: membership.TeamId,
-        link: '',
+        type,
+        link: type !== 'STOP' ? uuid() : '',
         address: '',
         names: { [membership.Team.variants[0].code]: '' },
         descriptions: { [membership.Team.variants[0].code]: '' },
@@ -38,7 +40,7 @@ function StopForm({ StopId, onCancel, onCreate, onUpdate }) {
       });
     }
     return () => (isCancelled = true);
-  }, [membership, StopId]);
+  }, [membership, StopId, type]);
 
   function onChange(event) {
     const newStop = { ...stop };
@@ -82,8 +84,12 @@ function StopForm({ StopId, onCancel, onCreate, onUpdate }) {
           <form autoComplete="off" onSubmit={onSubmit}>
             {error && error.message && <div className="alert alert-danger">{error.message}</div>}
             <fieldset disabled={isLoading}>
-              <FormGroup name="link" label="Link" onChange={onChange} record={stop} error={error} />
-              <FormGroup name="address" label="Address" onChange={onChange} record={stop} error={error} />
+              {type === 'STOP' && (
+                <>
+                  <FormGroup name="link" label="Link" onChange={onChange} record={stop} error={error} />
+                  <FormGroup name="address" label="Address" onChange={onChange} record={stop} error={error} />
+                </>
+              )}
               <VariantTabs variants={stop.variants} current={variant} setVariant={setVariant} />
               <FormGroup name="name" label="Name" onChange={onChange} value={stop.names[variant?.code]} error={error} />
               <FormGroup

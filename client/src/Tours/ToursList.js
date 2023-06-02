@@ -36,7 +36,7 @@ function ToursList() {
         {tours && (
           <div className="row">
             {tours.map((tour) => (
-              <TourCard key={tour.id} title={tour.names[tour.variants[0].code]} href={tour.id} />
+              <TourCard key={tour.id} tour={tour} href={tour.id} />
             ))}
             <TourCard title="New Tour" href="new" />
           </div>

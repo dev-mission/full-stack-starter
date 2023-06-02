@@ -4,17 +4,13 @@ import classNames from 'classnames';
 import DropzoneUploader from './DropzoneUploader';
 import './PhotoInput.scss';
 
-function PhotoInput({ className, children, disabled, id, name, onChange, onUploading, value, valueUrl }) {
+function PhotoInput({ className, children, disabled, id, name, onChange, value, valueUrl }) {
   function onRemoved() {
-    if (onChange) {
-      onChange({ target: { name, value: '' } });
-    }
+    onChange?.({ target: { name, value: '' } });
   }
 
   function onUploaded(status) {
-    if (onChange) {
-      onChange({ target: { name, value: status.signedId } });
-    }
+    onChange?.({ target: { name, value: status.signedId } });
   }
 
   return (

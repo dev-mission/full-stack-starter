@@ -6,7 +6,7 @@ const helper = require('../../helper');
 const app = require('../../../app');
 const models = require('../../../models');
 
-describe('/api/tours', () => {
+describe('/api/stops', () => {
   let testSession;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('/api/tours', () => {
       ['512x512.png', 'cdd8007d-dcaf-4163-b497-92d378679668.png'],
       ['00-04.m4a', 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a'],
     ]);
-    await helper.loadFixtures(['users', 'teams', 'memberships', 'resources', 'files', 'tours', 'tourResources', 'stops']);
+    await helper.loadFixtures(['users', 'teams', 'memberships', 'resources', 'files', 'tours', 'stops']);
     testSession = session(app);
     await testSession
       .post('/api/auth/login')
@@ -42,6 +42,7 @@ describe('/api/tours', () => {
   describe('POST /', () => {
     it('creates a new Stop', async () => {
       const data = {
+        type: 'STOP',
         TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
         link: 'telephone-exchange',
         address: '743 Washington St, San Francisco, CA 94108',
@@ -73,6 +74,7 @@ describe('/api/tours', () => {
         .post('/api/stops')
         .set('Accept', 'application/json')
         .send({
+          type: 'STOP',
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
           link: 'telephone-exchange',
           address: '743 Washington St, San Francisco, CA 94108',
@@ -102,6 +104,7 @@ describe('/api/tours', () => {
         .post('/api/stops')
         .set('Accept', 'application/json')
         .send({
+          type: 'STOP',
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
           link: 'chsa',
           address: '743 Washington St, San Francisco, CA 94108',
@@ -131,6 +134,7 @@ describe('/api/tours', () => {
         .post('/api/tours')
         .set('Accept', 'application/json')
         .send({
+          type: 'STOP',
           TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
           link: 'invalid link',
           address: '743 Washington St, San Francisco, CA 94108',
@@ -167,6 +171,7 @@ describe('/api/tours', () => {
       assert.deepStrictEqual(data, {
         id: 'e39b97ad-a5e9-422c-b256-d50fec355285',
         TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
+        type: 'STOP',
         link: 'chsa',
         address: '965 Clay St, San Francisco, CA 94108',
         coordinate: null,

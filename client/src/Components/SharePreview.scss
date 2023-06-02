@@ -1,0 +1,25 @@
+.share-preview {
+  border: 1px solid lightgray;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.share-preview__image {
+  background-color: lightgray;
+  background-position: center;
+  background-size: cover;
+  padding-bottom: 52.356%;
+}
+
+.share-preview__metadata {
+  min-height: 3rem;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.share-preview__link,
+.share-preview__description {
+  color: rgb(83, 100, 113);
+}

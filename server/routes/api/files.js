@@ -15,7 +15,7 @@ router.patch('/:id', interceptors.requireLogin, async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED).end();
     } else {
       try {
-        await record.update(_.pick(req.body, ['externalURL', 'key']));
+        await record.update(_.pick(req.body, ['externalURL', 'key', 'originalName', 'duration', 'width', 'height']));
         res.json(record.toJSON());
       } catch (error) {
         if (error.name === 'SequelizeValidationError') {

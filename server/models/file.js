@@ -8,7 +8,19 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'ResourceId', 'variant', 'externalURL', 'key', 'keyURL', 'URL']);
+      const json = _.pick(this.get(), [
+        'id',
+        'ResourceId',
+        'variant',
+        'externalURL',
+        'key',
+        'keyURL',
+        'originalName',
+        'duration',
+        'width',
+        'height',
+        'URL',
+      ]);
       return json;
     }
   }
@@ -30,13 +42,17 @@ module.exports = (sequelize, DataTypes) => {
       externalURL: DataTypes.TEXT,
       key: DataTypes.TEXT,
       keyURL: {
-        type: DataTypes.VIRTUAL(DataTypes.STRING, ['key']),
+        type: DataTypes.VIRTUAL(DataTypes.TEXT, ['key']),
         get() {
           return this.assetUrl('key');
         },
       },
+      originalName: DataTypes.STRING,
+      duration: DataTypes.INTEGER,
+      width: DataTypes.INTEGER,
+      height: DataTypes.INTEGER,
       URL: {
-        type: DataTypes.VIRTUAL(DataTypes.STRING, ['externalURL', 'key']),
+        type: DataTypes.VIRTUAL(DataTypes.TEXT, ['externalURL', 'key']),
         get() {
           return this.externalURL ? this.externalURL : this.keyURL;
         },
@@ -49,6 +65,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   File.afterSave(async (file, options) => {
+    file.handleAssetFile('key', options);
+  });
+
+  File.afterDestroy(async (file, options) => {
+    file.key = null;
     file.handleAssetFile('key', options);
   });
 

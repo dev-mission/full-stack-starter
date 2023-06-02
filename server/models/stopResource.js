@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   StopResource.init(
     {
-      start: DataTypes.STRING,
-      end: DataTypes.STRING,
+      start: DataTypes.INTEGER,
+      end: DataTypes.INTEGER,
     },
     {
       sequelize,

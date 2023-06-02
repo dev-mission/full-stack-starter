@@ -17,6 +17,7 @@ router.get('/', interceptors.requireLogin, async (req, res) => {
     return;
   }
   const options = {
+    include: [{ model: models.Resource, as: 'CoverResource', include: 'Files' }],
     page,
     order: [['name', 'ASC']],
     where: { TeamId },
@@ -50,12 +51,19 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
   }
 });
 
-router.use('/:TourId/resources', require('./tourResources'));
 router.use('/:TourId/stops', require('./tourStops'));
 
 router.get('/:id', interceptors.requireLogin, async (req, res) => {
   const record = await models.Tour.findByPk(req.params.id, {
-    include: ['Team'],
+    include: [
+      'Team',
+      { model: models.Resource, as: 'CoverResource', include: 'Files' },
+      {
+        model: models.Stop,
+        as: 'IntroStop',
+        include: { model: models.StopResource, as: 'Resources', include: { model: models.Resource, include: 'Files' } },
+      },
+    ],
   });
   if (record) {
     const membership = await record.Team.getMembership(req.user);
@@ -77,7 +85,33 @@ router.patch('/:id', interceptors.requireLogin, async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED).end();
     } else {
       try {
-        await record.update(_.pick(req.body, ['link', 'names', 'descriptions', 'variants', 'visibility']));
+        if (req.body.CoverResourceId) {
+          const resource = await models.Resource.findOne({
+            where: {
+              id: req.body.CoverResourceId,
+              TeamId: membership.TeamId,
+            },
+          });
+          if (!resource) {
+            res.status(StatusCodes.NOT_FOUND).end();
+            return;
+          }
+        }
+        if (req.body.IntroStopId) {
+          const stop = await models.Stop.findOne({
+            where: {
+              id: req.body.IntroStopId,
+              TeamId: membership.TeamId,
+            },
+          });
+          if (!stop) {
+            res.status(StatusCodes.NOT_FOUND).end();
+            return;
+          }
+        }
+        await record.update(
+          _.pick(req.body, ['link', 'names', 'descriptions', 'variants', 'visibility', 'CoverResourceId', 'IntroStopId'])
+        );
         res.json(record.toJSON());
       } catch (error) {
         if (error.name === 'SequelizeValidationError') {

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import inflection from 'inflection';
 
 import Api from '../Api';
 import { useAuthContext } from '../AuthContext';
 import StopCard from './StopCard';
 
-function StopsList({ onNewStop, onSelect }) {
+function StopsList({ onNewStop, onSelect, type }) {
   const { membership } = useAuthContext();
 
   const [search, setSearch] = useState('');
@@ -17,13 +18,13 @@ function StopsList({ onNewStop, onSelect }) {
     let isCancelled = false;
     if (membership) {
       setStops(undefined);
-      Api.stops.index(membership.TeamId, searchDebounced).then((response) => {
+      Api.stops.index(membership.TeamId, searchDebounced, type).then((response) => {
         if (isCancelled) return;
         setStops(response.data);
       });
     }
     return () => (isCancelled = true);
-  }, [membership, searchDebounced]);
+  }, [membership, searchDebounced, type]);
 
   function onSearchChange(event) {
     const { value } = event.target;
@@ -45,7 +46,7 @@ function StopsList({ onNewStop, onSelect }) {
         </div>
         <div className="mb-3">
           <button onClick={() => onNewStop()} type="button" className="btn btn-primary">
-            New Stop
+            New {inflection.capitalize(type)}
           </button>
         </div>
       </div>

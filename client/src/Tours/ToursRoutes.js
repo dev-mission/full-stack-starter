@@ -5,9 +5,11 @@ import { useAuthContext } from '../AuthContext';
 
 import Tour from './Tour';
 import TourForm from './TourForm';
+import TourIntro from './TourIntro';
+import TourIntroForm from './TourIntroForm';
 import TourStop from './TourStop';
-import ToursList from './ToursList';
 import TourStopForm from './TourStopForm';
+import ToursList from './ToursList';
 
 function ToursRoutes() {
   const navigate = useNavigate();
@@ -28,6 +30,8 @@ function ToursRoutes() {
   return (
     <Routes>
       <Route path="new" element={<TourForm />} />
+      <Route path=":TourId/intros/:StopId/edit" element={<TourIntroForm />} />
+      <Route path=":TourId/intros/:StopId" element={<TourIntro />} />
       <Route path=":TourId/stops/:TourStopId/edit" element={<TourStopForm />} />
       <Route path=":TourId/stops/:TourStopId" element={<TourStop />} />
       <Route path=":TourId/edit" element={<TourForm />} />

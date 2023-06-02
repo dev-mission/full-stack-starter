@@ -5,17 +5,31 @@ module.exports = (sequelize, DataTypes) => {
   class Stop extends Model {
     static associate(models) {
       Stop.belongsTo(models.Team);
-      Stop.hasMany(models.StopResource);
-      Stop.hasMany(models.TourStop);
+      Stop.hasMany(models.StopResource, { as: 'Resources' });
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'TeamId', 'link', 'address', 'coordinate', 'radius', 'names', 'descriptions', 'variants']);
+      const json = _.pick(this.get(), [
+        'id',
+        'TeamId',
+        'type',
+        'link',
+        'address',
+        'coordinate',
+        'radius',
+        'names',
+        'descriptions',
+        'variants',
+      ]);
+      if (this.Resources) {
+        json.Resources = this.Resources.map((sr) => sr.toJSON());
+      }
       return json;
     }
   }
   Stop.init(
     {
+      type: DataTypes.ENUM('INTRO', 'STOP', 'TRANSITION'),
       link: {
         type: DataTypes.CITEXT,
         validate: {

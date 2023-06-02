@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import inflection from 'inflection';
 
 import Api from '../Api';
-import FormGroup from '../Components/FormGroup';
-import ResourcesModal from '../Resources/ResourcesModal';
-import VariantTabs from '../Components/VariantTabs';
-import StopsModal from '../Stops/StopsModal';
 import { useStaticContext } from '../StaticContext';
-import ResourcesTable from '../Resources/ResourcesTable';
+import FormGroup from '../Components/FormGroup';
+import VariantTabs from '../Components/VariantTabs';
+import ResourcesModal from '../Resources/ResourcesModal';
+import StopsModal from '../Stops/StopsModal';
 import StopsTable from '../Stops/StopsTable';
+import SharePreview from '../Components/SharePreview';
 
 function Tour() {
   const staticContext = useStaticContext();
@@ -17,7 +18,6 @@ function Tour() {
   const { TourId } = useParams();
   const [tour, setTour] = useState();
   const [variant, setVariant] = useState();
-  const [resources, setResources] = useState();
   const [stops, setStops] = useState();
 
   useEffect(() => {
@@ -28,15 +28,11 @@ function Tour() {
         if (isCancelled) return;
         setTour(response.data);
         setVariant(response.data.variants[0]);
-        return Promise.all([Api.tours.resources(TourId).index(), Api.tours.stops(TourId).index()]);
+        return Api.tours.stops(TourId).index();
       })
-      .then((result) => {
-        if (result) {
-          const [resourcesResponse, stopsResponse] = result;
-          if (isCancelled) return;
-          setResources(resourcesResponse.data);
-          setStops(stopsResponse.data);
-        }
+      .then((response) => {
+        if (isCancelled) return;
+        setStops(response.data);
       });
     return () => (isCancelled = true);
   }, [TourId]);
@@ -48,23 +44,14 @@ function Tour() {
   }
 
   async function onSelectResource(resource) {
-    const response = await Api.tours.resources(TourId).create({
-      ResourceId: resource.id,
-      start: '',
-      end: '',
-    });
-    const newResources = [...resources, response.data];
-    newResources.sort((r1, r2) => {
-      let result = r1.start.localeCompare(r2.start);
-      if (result === 0) {
-        result = r1.Resource.name.localeCompare(r2.Resource.name);
-      }
-      return result;
-    });
-    setResources(newResources);
+    await Api.tours.update(tour.id, { CoverResourceId: resource.id });
+    const newTour = { ...tour };
+    newTour.CoverResource = resource;
+    setTour(newTour);
     setShowingResourcesModal(false);
   }
 
+  const [stopType, setStopType] = useState('STOP');
   const [isShowingStopsModal, setShowingStopsModal] = useState(false);
 
   function onHideStopsModal() {
@@ -72,17 +59,39 @@ function Tour() {
   }
 
   async function onSelectStop(stop) {
-    const response = await Api.tours.stops(TourId).create({
-      StopId: stop.id,
-      position: stops.reduce((max, current) => Math.max(max, current), 0) + 1,
-    });
-    const newStops = [...stops, response.data];
-    setStops(newStops);
+    if (stop.type === 'INTRO') {
+      await Api.tours.update(tour.id, { IntroStopId: stop.id });
+      const newTour = { ...tour };
+      newTour.IntroStop = stop;
+      setTour(newTour);
+    } else if (stop.type === 'STOP') {
+      const response = await Api.tours.stops(TourId).create({
+        StopId: stop.id,
+        position: stops.reduce((max, current) => Math.max(max, current), 0) + 1,
+      });
+      const newStops = [...stops, response.data];
+      setStops(newStops);
+    }
     setShowingStopsModal(false);
   }
 
-  function onClickStop(stop) {
-    navigate(`stops/${stop.id}`);
+  function onClickStop(type, stop) {
+    navigate(`${inflection.pluralize(type).toLocaleLowerCase()}/${stop.id}`);
+  }
+
+  async function onRemoveIntro() {
+    await Api.tours.update(tour.id, { IntroStopId: null });
+    const newTour = { ...tour };
+    newTour.IntroStop = null;
+    setTour(newTour);
+  }
+
+  async function onRemoveStop(stop) {
+    await Api.tours.stops(tour.id).remove(stop.id);
+    const newStops = [...stops];
+    const index = newStops.indexOf(stop);
+    newStops.splice(index, 1);
+    setStops(newStops);
   }
 
   return (
@@ -96,10 +105,10 @@ function Tour() {
         {!tour && <div className="spinner-border"></div>}
         {tour && (
           <>
+            <h1 className="mb-3">{tour.names[tour.variants[0].code]}</h1>
             <div className="row">
               <div className="col-md-6">
-                <h1 className="mb-3">{tour.names[tour.variants[0].code]}</h1>
-                <form>
+                <form className="mb-5">
                   <FormGroup plaintext name="link" label="Link" record={tour} />
                   <VariantTabs variants={tour.variants} current={variant} setVariant={setVariant} />
                   <FormGroup plaintext name="name" label="Name" value={tour.names[variant.code]} />
@@ -110,26 +119,65 @@ function Tour() {
                     </Link>
                   </div>
                 </form>
-                <h2>Assets</h2>
-                <ResourcesTable resources={resources} />
-                <div className="mb-3">
-                  <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
-                    Add Asset
+                <div className="row mb-5">
+                  <div className="col-md-6">
+                    <h2>Cover</h2>
+                    {tour.CoverResource && (
+                      <div className="row">
+                        <div className="col-6">
+                          <img
+                            className="img-thumbnail mb-3"
+                            src={tour.CoverResource.Files.find((f) => f.variant === variant.code)?.URL}
+                            alt="Cover"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
+                      Select Cover
+                    </button>
+                  </div>
+                </div>
+                <h2>Intro</h2>
+                <StopsTable
+                  type="INTRO"
+                  stops={tour.IntroStop ? [{ id: tour.IntroStopId, Stop: tour.IntroStop }] : []}
+                  onClick={onClickStop}
+                  onRemove={onRemoveIntro}
+                />
+                <div className="mb-5">
+                  <button
+                    onClick={() => {
+                      setStopType('INTRO');
+                      setShowingStopsModal(true);
+                    }}
+                    type="button"
+                    className="btn btn-primary">
+                    Set Intro
                   </button>
                 </div>
                 <h2>Stops</h2>
-                <StopsTable stops={stops} onClickStop={onClickStop} />
-                <div className="mb-3">
-                  <button onClick={() => setShowingStopsModal(true)} type="button" className="btn btn-primary">
+                <StopsTable stops={stops} onClick={onClickStop} onRemove={onRemoveStop} />
+                <div className="mb-5">
+                  <button
+                    onClick={() => {
+                      setStopType('STOP');
+                      setShowingStopsModal(true);
+                    }}
+                    type="button"
+                    className="btn btn-primary">
                     Add Stop
                   </button>
                 </div>
               </div>
+              <div className="col-md-4 offset-md-1">
+                <SharePreview tour={tour} />
+              </div>
             </div>
           </>
         )}
-        <ResourcesModal isShowing={isShowingResourcesModal} onHide={onHideResourcesModal} onSelect={onSelectResource} />
-        <StopsModal isShowing={isShowingStopsModal} onHide={onHideStopsModal} onSelect={onSelectStop} />
+        <ResourcesModal isShowing={isShowingResourcesModal} onHide={onHideResourcesModal} onSelect={onSelectResource} types={['IMAGE']} />
+        <StopsModal type={stopType} isShowing={isShowingStopsModal} onHide={onHideStopsModal} onSelect={onSelectStop} />
       </main>
     </>
   );

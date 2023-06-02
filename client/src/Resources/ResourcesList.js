@@ -5,10 +5,10 @@ import Api from '../Api';
 import { useAuthContext } from '../AuthContext';
 import ResourceCard from './ResourceCard';
 
-function ResourcesList({ onNewAsset, onSelect }) {
+function ResourcesList({ onNew, onSelect, onEdit, type: initialType = 'IMAGE', types }) {
   const { membership } = useAuthContext();
 
-  const [type, setType] = useState('IMAGE');
+  const [type, setType] = useState(types ? types[0] : initialType);
   const [search, setSearch] = useState('');
   const [searchDebounced, setSearchDebounced] = useState(search);
   const [resources, setResources] = useState();
@@ -49,30 +49,36 @@ function ResourcesList({ onNewAsset, onSelect }) {
     <div className="row">
       <div className="col-md-3">
         <ul className="list-group mb-3">
-          <button
-            type="button"
-            onClick={() => onClickType('IMAGE')}
-            className={classNames('list-group-item list-group-item-action', { active: type === 'IMAGE' })}>
-            Images
-          </button>
-          <button
-            type="button"
-            onClick={() => onClickType('AUDIO')}
-            className={classNames('list-group-item list-group-item-action', { active: type === 'AUDIO' })}>
-            Audio
-          </button>
-          <button
-            type="button"
-            onClick={() => onClickType('AR_LINK')}
-            className={classNames('list-group-item list-group-item-action', { active: type === 'AR_LINK' })}>
-            AR Links
-          </button>
+          {(!types || types.includes('IMAGE')) && (
+            <button
+              type="button"
+              onClick={() => onClickType('IMAGE')}
+              className={classNames('list-group-item list-group-item-action', { active: type === 'IMAGE' })}>
+              Images
+            </button>
+          )}
+          {(!types || types.includes('AUDIO')) && (
+            <button
+              type="button"
+              onClick={() => onClickType('AUDIO')}
+              className={classNames('list-group-item list-group-item-action', { active: type === 'AUDIO' })}>
+              Audio
+            </button>
+          )}
+          {(!types || types.includes('AR_LINK')) && (
+            <button
+              type="button"
+              onClick={() => onClickType('AR_LINK')}
+              className={classNames('list-group-item list-group-item-action', { active: type === 'AR_LINK' })}>
+              AR Links
+            </button>
+          )}
         </ul>
         <div className="mb-3">
           <input onChange={onSearchChange} value={search} type="search" className="form-control" placeholder="Search..." />
         </div>
         <div className="mb-3">
-          <button onClick={() => onNewAsset(type)} type="button" className="btn btn-primary">
+          <button onClick={() => onNew(type)} type="button" className="btn btn-primary">
             New Asset
           </button>
         </div>
@@ -80,10 +86,10 @@ function ResourcesList({ onNewAsset, onSelect }) {
       <div className="col-md-9">
         {!resources && <div className="spinner-border"></div>}
         {resources?.length === 0 && <p>No assets yet.</p>}
-        {resources?.length && (
+        {!!resources?.length && (
           <div className="row">
             {resources?.map((r) => (
-              <ResourceCard key={r.id} resource={r} onSelect={onSelect} />
+              <ResourceCard key={r.id} resource={r} onSelect={onSelect} onEdit={onEdit} />
             ))}
           </div>
         )}

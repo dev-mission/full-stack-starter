@@ -80,10 +80,13 @@ const Api = {
     update(id, data) {
       return instance.patch(`/api/resources/${id}`, data);
     },
+    delete(id) {
+      return instance.delete(`/api/resources/${id}`);
+    },
   },
   stops: {
-    index(TeamId, search) {
-      return instance.get(`/api/stops`, { params: { TeamId, search } });
+    index(TeamId, search, type) {
+      return instance.get(`/api/stops`, { params: { TeamId, search, type } });
     },
     create(data) {
       return instance.post('/api/stops', data);
@@ -101,6 +104,12 @@ const Api = {
         },
         create(data) {
           return instance.post(`/api/stops/${StopId}/resources`, data);
+        },
+        update(id, data) {
+          return instance.patch(`/api/stops/${StopId}/resources/${id}`, data);
+        },
+        remove(id) {
+          return instance.delete(`/api/stops/${StopId}/resources/${id}`);
         },
       };
     },
@@ -129,16 +138,6 @@ const Api = {
     update(id, data) {
       return instance.patch(`/api/tours/${id}`, data);
     },
-    resources(id) {
-      return {
-        index() {
-          return instance.get(`/api/tours/${id}/resources`);
-        },
-        create(data) {
-          return instance.post(`/api/tours/${id}/resources`, data);
-        },
-      };
-    },
     stops(TourId) {
       return {
         index() {
@@ -149,6 +148,9 @@ const Api = {
         },
         get(id) {
           return instance.get(`/api/tours/${TourId}/stops/${id}`);
+        },
+        remove(id) {
+          return instance.delete(`/api/tours/${TourId}/stops/${id}`);
         },
       };
     },
