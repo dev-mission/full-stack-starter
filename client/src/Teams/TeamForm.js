@@ -53,7 +53,7 @@ function TeamForm() {
       }
       user.Memberships.sort((m1, m2) => m1.Team?.name?.localeCompare(m2.Team?.name));
       setUser({ ...user });
-      navigate('/');
+      navigate(`/teams/${Team.id}`);
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));

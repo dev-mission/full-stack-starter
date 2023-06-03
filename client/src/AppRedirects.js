@@ -6,6 +6,7 @@ export const AUTH_PROTECTED_PATHS = ['/account/*', '/teams/*'];
 export const REDIRECTS = [
   ['/admin', '/admin/users'],
   ['/passwords', '/passwords/forgot'],
+  ['/teams/new', '/teams/new'],
   ['/teams/:TeamId/tours/:TourId/stops', '/teams/:TeamId/tours/:TourId'],
   ['/teams/:TeamId', '/teams/:TeamId/tours'],
 ];
@@ -37,15 +38,18 @@ function AppRedirects({ children }) {
     }
   }
   for (const redirect of REDIRECTS) {
-    match = matchPath(redirect[0], location.pathname);
+    let [src, dest] = redirect;
+    match = matchPath(src, location.pathname);
     if (match) {
-      let dest = redirect[1];
       if (match.params) {
         for (const key of Object.keys(match.params)) {
           dest = dest.replace(`:${key}`, match.params[key]);
         }
       }
-      return <Navigate to={dest} />;
+      if (dest !== src) {
+        return <Navigate to={dest} />;
+      }
+      break;
     }
   }
   return children;

@@ -12,8 +12,6 @@ function TeamsList() {
   useEffect(() => {
     if (user.Memberships?.length === 0) {
       navigate('/teams/new');
-    } else if (user.Memberships?.length === 1) {
-      // navigate(`/teams/${user.Memberships[0].TeamId}`)
     }
   }, [user, navigate]);
 
@@ -32,6 +30,9 @@ function TeamsList() {
                   {m.Team.name}
                 </Link>
               ))}
+              <Link to="new" className="list-group-item">
+                New Team
+              </Link>
             </ul>
           </div>
         </div>

@@ -78,10 +78,20 @@ router.get('/*', async (req, res, next) => {
       }
       // eslint-disable-next-line no-restricted-syntax
       for (const redirect of REDIRECTS) {
-        match = matchPath(redirect[0], urlPath);
+        const [src] = redirect;
+        let [, dest] = redirect;
+        match = matchPath(src, urlPath);
         if (match) {
-          res.redirect(redirect[1]);
-          return;
+          if (match.params) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const key of Object.keys(match.params)) {
+              dest = dest.replace(`:${key}`, match.params[key]);
+            }
+          }
+          if (dest !== src) {
+            res.redirect(dest);
+          }
+          break;
         }
       }
       const staticContext = { ...defaultStaticContext, authContext: { user: req.user?.toJSON() ?? null } };
