@@ -28,5 +28,20 @@
       },
       "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }]
     }
+  },
+  {
+    "model": "Stop",
+    "data": {
+      "id": "cd682130-9b7e-4831-b211-bd74330f0e21",
+      "TeamId": "1a93d46d-89bf-463b-ab23-8f22f5777907",
+      "link": "ccba",
+      "address": "834 Stockton St, San Francisco, CA 94108",
+      "name": "CCBA",
+      "names": { "en-us": "CCBA" },
+      "descriptions": {
+        "en-us": "Here we are standing in front of the headquarters of the Chinese Consolidated Benevolent Association."
+      },
+      "variants": [{ "name": "English (US)", "displayName": "English", "code": "en-us" }]
+    }
   }
 ]

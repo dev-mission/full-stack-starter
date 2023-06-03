@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
         'address',
         'coordinate',
         'radius',
+        'destAddress',
+        'destCoordinate',
+        'destRadius',
         'names',
         'descriptions',
         'variants',
@@ -61,6 +64,9 @@ module.exports = (sequelize, DataTypes) => {
       address: DataTypes.TEXT,
       coordinate: DataTypes.GEOGRAPHY,
       radius: DataTypes.DECIMAL,
+      destAddress: DataTypes.TEXT,
+      destCoordinate: DataTypes.GEOGRAPHY,
+      destRadius: DataTypes.DECIMAL,
       name: {
         type: DataTypes.STRING,
         validate: {

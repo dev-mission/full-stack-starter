@@ -7,7 +7,7 @@ import StopForm from '../Stops/StopForm';
 function TourStopForm() {
   const navigate = useNavigate();
   const { TourId, TourStopId } = useParams();
-  const [stopId, setStopId] = useState();
+  const [StopId, setStopId] = useState();
 
   useEffect(() => {
     let isCancelled = false;
@@ -35,8 +35,8 @@ function TourStopForm() {
     <>
       <main className="container">
         <h1 className="mb-3">Edit Stop</h1>
-        {!stopId && <div className="spinner-border"></div>}
-        {!!stopId && <StopForm StopId={stopId} onCancel={onCancel} onUpdate={onUpdate} />}
+        {!StopId && <div className="spinner-border"></div>}
+        {!!StopId && <StopForm StopId={StopId} onCancel={onCancel} onUpdate={onUpdate} />}
       </main>
     </>
   );

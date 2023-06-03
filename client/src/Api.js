@@ -149,6 +149,9 @@ const Api = {
         get(id) {
           return instance.get(`/api/tours/${TourId}/stops/${id}`);
         },
+        update(id, data) {
+          return instance.patch(`/api/tours/${TourId}/stops/${id}`, data);
+        },
         remove(id) {
           return instance.delete(`/api/tours/${TourId}/stops/${id}`);
         },

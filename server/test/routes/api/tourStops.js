@@ -39,11 +39,15 @@ describe('/api/tours/:TourId/stops', () => {
           id: 'c25b67d5-fef6-4b9b-8f54-7ded9d1889b4',
           TourId: '495b18a8-ae05-4f44-a06d-c1809add0352',
           StopId: 'e39b97ad-a5e9-422c-b256-d50fec355285',
+          TransitionStopId: null,
           position: 1,
           Stop: {
             TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
             address: '965 Clay St, San Francisco, CA 94108',
             coordinate: null,
+            destAddress: null,
+            destCoordinate: null,
+            destRadius: null,
             descriptions: {
               'en-us': 'CHSA is the oldest organization in the country dedicated to the preservation of Chinese American history.',
             },
@@ -67,11 +71,15 @@ describe('/api/tours/:TourId/stops', () => {
           id: '473abc1e-c5cb-4148-a2e4-c75a1dfcb3e1',
           TourId: '495b18a8-ae05-4f44-a06d-c1809add0352',
           StopId: 'bba84716-633e-4593-85a0-9da4010eb99b',
+          TransitionStopId: null,
           position: 2,
           Stop: {
             TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
             address: '708 Grant Ave, San Francisco, CA 94108',
             coordinate: null,
+            destAddress: null,
+            destCoordinate: null,
+            destRadius: null,
             descriptions: {
               'en-us':
                 "Kan's was the first restaurant in Chinatown to win the Holiday (magazine) Award for fine dining; that award was given to Kan's for 14 consecutive years. Its name was frequently on top ten lists of San Francisco restaurants. World-famous celebrities, movie stars, the rich and the powerful came to Kan's, and their appearances were written up by San Francisco columnist Herb Caen.",
@@ -111,6 +119,7 @@ describe('/api/tours/:TourId/stops', () => {
         id: response.body.id,
         TourId: 'ae61f3e7-7de7-40e2-b9a1-c5ad9ff94806',
         StopId: 'bba84716-633e-4593-85a0-9da4010eb99b',
+        TransitionStopId: null,
         position: 1,
         Stop: {
           id: 'bba84716-633e-4593-85a0-9da4010eb99b',
@@ -119,6 +128,9 @@ describe('/api/tours/:TourId/stops', () => {
           address: '708 Grant Ave, San Francisco, CA 94108',
           coordinate: null,
           radius: null,
+          destAddress: null,
+          destCoordinate: null,
+          destRadius: null,
           names: { 'en-us': "Kan's Restaurant" },
           descriptions: {
             'en-us':
@@ -128,6 +140,18 @@ describe('/api/tours/:TourId/stops', () => {
           variants: [{ name: 'English (US)', displayName: 'English', code: 'en-us' }],
         },
       });
+    });
+
+    it('sets position at end if not defined', async () => {
+      const response = await testSession
+        .post('/api/tours/495b18a8-ae05-4f44-a06d-c1809add0352/stops')
+        .set('Accept', 'application/json')
+        .send({
+          StopId: 'cd682130-9b7e-4831-b211-bd74330f0e21',
+        })
+        .expect(StatusCodes.CREATED);
+
+      assert.deepStrictEqual(response.body?.position, 3);
     });
   });
 
@@ -145,6 +169,7 @@ describe('/api/tours/:TourId/stops', () => {
         id: 'c25b67d5-fef6-4b9b-8f54-7ded9d1889b4',
         TourId: '495b18a8-ae05-4f44-a06d-c1809add0352',
         StopId: 'e39b97ad-a5e9-422c-b256-d50fec355285',
+        TransitionStopId: null,
         position: 3,
       });
     });

@@ -43,11 +43,22 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED).end();
     } else {
       try {
-        const newRecord = await models.TourStop.create({
-          TourId,
-          ..._.pick(req.body, ['StopId', 'position']),
+        let newRecord;
+        await models.sequelize.transaction(async (transaction) => {
+          const data = {
+            TourId,
+            ..._.pick(req.body, ['StopId', 'position']),
+          };
+          if (!Number.isInteger(data.position)) {
+            data.position =
+              (await models.TourStop.count({
+                where: { TourId },
+                transaction,
+              })) + 1;
+          }
+          newRecord = await models.TourStop.create(data, { transaction });
+          newRecord.Stop = stop;
         });
-        newRecord.Stop = stop;
         res.status(StatusCodes.CREATED).json(newRecord.toJSON());
       } catch (error) {
         if (error.name === 'SequelizeValidationError') {
@@ -77,7 +88,14 @@ router.get('/:id', interceptors.requireLogin, async (req, res) => {
         transaction,
       });
       tourStop = await models.TourStop.findOne({
-        include: 'Stop',
+        include: [
+          'Stop',
+          {
+            model: models.Stop,
+            as: 'TransitionStop',
+            include: { model: models.StopResource, as: 'Resources', include: { model: models.Resource, include: 'Files' } },
+          },
+        ],
         where: { id, TourId },
         transaction,
       });
@@ -124,7 +142,7 @@ router.patch('/:id', interceptors.requireLogin, async (req, res) => {
       if (record && updatedRecord) {
         membership = await record.Team.getMembership(req.user, { transaction });
         if (membership && membership.isEditor) {
-          await updatedRecord.update(_.pick(req.body, ['position']));
+          await updatedRecord.update(_.pick(req.body, ['TransitionStopId', 'position']));
         } else {
           membership = null;
         }

@@ -8,7 +8,17 @@ function StopCard({ stop, onSelect }) {
         <div className="stop-card__img card-img-top" style={{ backgroundImage: `url(${sr?.Resource?.Files?.[0].URL})` }}></div>
         <div className="card-body">
           <h3 className="card-title h6">{stop.names[stop.variants[0].code]}</h3>
-          <p className="small">{stop.address}</p>
+          {stop.type === 'TRANSITION' && (
+            <>
+              <div className="small">
+                <b>From:</b> {stop.address}
+              </div>
+              <p className="small">
+                <b>To:</b> {stop.destAddress}
+              </p>
+            </>
+          )}
+          {stop.type !== 'TRANSITION' && <p className="small">{stop.address}</p>}
           <button onClick={() => onSelect(stop)} type="button" className="btn btn-sm btn-primary">
             Select
           </button>

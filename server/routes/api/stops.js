@@ -35,7 +35,22 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
     res.status(StatusCodes.UNAUTHORIZED).end();
     return;
   }
-  const record = models.Stop.build(_.pick(req.body, ['TeamId', 'type', 'link', 'address', 'radius', 'names', 'descriptions', 'variants']));
+  const record = models.Stop.build(
+    _.pick(req.body, [
+      'TeamId',
+      'type',
+      'link',
+      'address',
+      'coordinate',
+      'radius',
+      'destAddress',
+      'destCoordinate',
+      'destRadius',
+      'names',
+      'descriptions',
+      'variants',
+    ])
+  );
   try {
     await record.save();
     res.status(StatusCodes.CREATED).json(record.toJSON());
@@ -77,7 +92,21 @@ router.patch('/:id', interceptors.requireLogin, async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED).end();
     } else {
       try {
-        await record.update(_.pick(req.body, ['link', 'address', 'radius', 'names', 'descriptions', 'variants', 'visibility']));
+        await record.update(
+          _.pick(req.body, [
+            'link',
+            'address',
+            'coordinate',
+            'radius',
+            'destAddress',
+            'destCoordinate',
+            'destRadius',
+            'names',
+            'descriptions',
+            'variants',
+            'visibility',
+          ])
+        );
         res.json(record.toJSON());
       } catch (error) {
         if (error.name === 'SequelizeValidationError') {

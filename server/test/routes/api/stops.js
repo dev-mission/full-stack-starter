@@ -33,9 +33,10 @@ describe('/api/stops', () => {
         .get('/api/stops?TeamId=1a93d46d-89bf-463b-ab23-8f22f5777907')
         .set('Accept', 'application/json')
         .expect(StatusCodes.OK);
-      assert.deepStrictEqual(response.body.length, 2);
-      assert.deepStrictEqual(response.body[0].link, 'chsa');
-      assert.deepStrictEqual(response.body[1].link, 'kans-restaurant');
+      assert.deepStrictEqual(response.body.length, 3);
+      assert.deepStrictEqual(response.body[0].link, 'ccba');
+      assert.deepStrictEqual(response.body[1].link, 'chsa');
+      assert.deepStrictEqual(response.body[2].link, 'kans-restaurant');
     });
   });
 
@@ -60,6 +61,9 @@ describe('/api/stops', () => {
         id: response.body.id,
         coordinate: null,
         radius: null,
+        destAddress: null,
+        destCoordinate: null,
+        destRadius: null,
       });
 
       const record = await models.Stop.findByPk(response.body.id);
@@ -161,7 +165,7 @@ describe('/api/stops', () => {
   });
 
   describe('GET /:id', () => {
-    it('returns a Tour by id', async () => {
+    it('returns a Stop by id', async () => {
       const response = await testSession
         .get('/api/stops/e39b97ad-a5e9-422c-b256-d50fec355285')
         .set('Accept', 'application/json')
@@ -176,6 +180,9 @@ describe('/api/stops', () => {
         address: '965 Clay St, San Francisco, CA 94108',
         coordinate: null,
         radius: null,
+        destAddress: null,
+        destCoordinate: null,
+        destRadius: null,
         names: { 'en-us': 'CHSA' },
         descriptions: {
           'en-us': 'CHSA is the oldest organization in the country dedicated to the preservation of Chinese American history.',

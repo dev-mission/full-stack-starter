@@ -6,7 +6,7 @@ import './StopsModal.scss';
 import StopsList from './StopsList';
 import StopForm from './StopForm';
 
-function StopsModal({ type, isShowing, onHide, onSelect }) {
+function StopsModal({ type, isShowing, onHide, onSelect, startingAddress }) {
   const [isEditing, setEditing] = useState(false);
   const [StopId, setStopId] = useState();
 
@@ -31,7 +31,16 @@ function StopsModal({ type, isShowing, onHide, onSelect }) {
       </Modal.Header>
       <Modal.Body>
         {!isEditing && <StopsList type={type} onNewStop={onNewStop} onSelect={onSelect} />}
-        {isEditing && <StopForm type={type} StopId={StopId} onCancel={() => setEditing(false)} onCreate={onCreate} onUpdate={onUpdate} />}
+        {isEditing && (
+          <StopForm
+            type={type}
+            StopId={StopId}
+            onCancel={() => setEditing(false)}
+            onCreate={onCreate}
+            onUpdate={onUpdate}
+            startingAddress={startingAddress}
+          />
+        )}
       </Modal.Body>
     </Modal>
   );

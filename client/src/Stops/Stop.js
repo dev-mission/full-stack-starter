@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
 import Api from '../Api';
@@ -12,22 +12,23 @@ import ResourcesModal from '../Resources/ResourcesModal';
 import ResourcesTable from '../Resources/ResourcesTable';
 import { useStaticContext } from '../StaticContext';
 
-function Stop({ stopId }) {
+function Stop({ StopId, transition, children }) {
   const staticContext = useStaticContext();
+  const { StopId: StopIdParam } = useParams();
   const [stop, setStop] = useState();
   const [variant, setVariant] = useState();
   const [resources, setResources] = useState();
 
   useEffect(() => {
     let isCancelled = false;
-    if (stopId) {
+    if (StopId || StopIdParam) {
       Api.stops
-        .get(stopId)
+        .get(StopId ?? StopIdParam)
         .then((response) => {
           if (isCancelled) return;
           setStop(response.data);
           setVariant(response.data.variants[0]);
-          return Api.stops.resources(stopId).index();
+          return Api.stops.resources(StopId ?? StopIdParam).index();
         })
         .then((response) => {
           if (isCancelled) return;
@@ -35,7 +36,7 @@ function Stop({ stopId }) {
         });
     }
     return () => (isCancelled = true);
-  }, [stopId]);
+  }, [StopId, StopIdParam]);
 
   const [isRecording, setRecording] = useState(false);
   const [position, setPosition] = useState(0);
@@ -124,6 +125,12 @@ function Stop({ stopId }) {
                       <FormGroup plaintext name="address" label="Address" record={stop} />
                     </>
                   )}
+                  {stop.type === 'TRANSITION' && (
+                    <>
+                      <FormGroup plaintext name="address" label="Starting Address" record={stop} />
+                      <FormGroup plaintext name="destAddress" label="Destination Address" record={stop} />
+                    </>
+                  )}
                   <VariantTabs variants={stop.variants} current={variant} setVariant={setVariant} />
                   <FormGroup plaintext name="name" label="Name" value={stop.names[variant.code]} />
                   <FormGroup plaintext type="textarea" name="description" label="Description" value={stop.descriptions[variant.code]} />
@@ -150,17 +157,19 @@ function Stop({ stopId }) {
                   onChange={onChangeResource}
                   onRemove={onRemoveResource}
                 />
-                <div className="mb-3">
+                <div className="mb-5">
                   <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
                     Add Asset
                   </button>
                 </div>
+                {children}
               </div>
               <div className="col-md-6">
                 <PhoneScreen className="mx-auto">
                   <StopViewer
                     position={position}
                     stop={{ ...stop, Resources: resources }}
+                    transition={transition}
                     variant={variant}
                     onTimeUpdate={(newPosition) => setPosition(newPosition)}
                   />

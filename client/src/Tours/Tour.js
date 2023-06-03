@@ -63,6 +63,7 @@ function Tour() {
       await Api.tours.update(tour.id, { IntroStopId: stop.id });
       const newTour = { ...tour };
       newTour.IntroStop = stop;
+      newTour.IntroStopId = stop.id;
       setTour(newTour);
     } else if (stop.type === 'STOP') {
       const response = await Api.tours.stops(TourId).create({

@@ -34,11 +34,7 @@ function StopsTable({ type = 'STOP', stops, onClick, onRemove }) {
                 <th>Address</th>
               </>
             )}
-            {type !== 'STOP' && (
-              <>
-                <th>Name</th>
-              </>
-            )}
+            {type !== 'STOP' && <th>Name</th>}
             <th className="stops-table__col-actions"></th>
           </tr>
         </thead>
@@ -59,7 +55,7 @@ function StopsTable({ type = 'STOP', stops, onClick, onRemove }) {
             <tr key={s.id} onClick={() => onClick(type, s)} className="clickable">
               <td>{i + 1}</td>
               <td>{s.Stop.names[s.Stop.variants[0].code]}</td>
-              <td>{s.Stop.address}</td>
+              {type === 'STOP' && <td>{s.Stop.address}</td>}
               <td className="stops-table__col-actions">
                 <button onClick={(event) => onClickRemove(event, s)} type="button" className="btn btn-sm btn-outline-danger">
                   <FontAwesomeIcon icon={faTrashCan} />
