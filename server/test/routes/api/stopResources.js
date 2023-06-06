@@ -14,7 +14,19 @@ describe('/api/stops/:StopId/resources', () => {
       ['512x512.png', 'cdd8007d-dcaf-4163-b497-92d378679668.png'],
       ['00-04.m4a', 'd2e150be-b277-4f68-96c7-22a477e0022f.m4a'],
     ]);
-    await helper.loadFixtures(['users', 'teams', 'memberships', 'resources', 'files', 'tours', 'stops', 'tourStops', 'stopResources']);
+    await helper.loadFixtures([
+      'users',
+      'invites',
+      'invites',
+      'teams',
+      'memberships',
+      'resources',
+      'files',
+      'tours',
+      'stops',
+      'tourStops',
+      'stopResources',
+    ]);
     testSession = session(app);
     await testSession
       .post('/api/auth/login')

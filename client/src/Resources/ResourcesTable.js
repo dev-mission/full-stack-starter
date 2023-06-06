@@ -7,8 +7,10 @@ import ConfirmModal from '../Components/ConfirmModal';
 import TimeCode from '../Components/TimeCode';
 
 import './ResourcesTable.scss';
+import { useAuthContext } from '../AuthContext';
 
 function ResourcesTable({ variant, resources, onClick, onChange, onRemove }) {
+  const { membership } = useAuthContext();
   const [selectedResource, setSelectedResource] = useState();
   const [selectedResourceClone, setSelectedResourceClone] = useState();
   const [isEditing, setEditing] = useState(false);
@@ -99,29 +101,33 @@ function ResourcesTable({ variant, resources, onClick, onChange, onRemove }) {
                   ))}
               </td>
               <td className="resources-table__col-actions">
-                {isEditing && selectedResource === r && (
+                {membership.role !== 'VIEWER' && (
                   <>
-                    <button onClick={onClickSubmitEdit} className="btn btn-sm btn-outline-success">
-                      <FontAwesomeIcon icon={faCheck} />
-                    </button>
-                    &nbsp;
-                    <button onClick={onClickCancelEdit} className="btn btn-sm btn-outline-secondary">
-                      <FontAwesomeIcon icon={faXmark} />
-                    </button>
-                  </>
-                )}
-                {(!isEditing || selectedResource !== r) && (
-                  <>
-                    <button
-                      onClick={() => onClickEdit(r)}
-                      disabled={isEditing && selectedResource !== r}
-                      className="btn btn-sm btn-outline-secondary">
-                      <FontAwesomeIcon icon={faPen} />
-                    </button>
-                    &nbsp;
-                    <button onClick={() => onClickRemove(r)} className="btn btn-sm btn-outline-danger">
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </button>
+                    {isEditing && selectedResource === r && (
+                      <>
+                        <button onClick={onClickSubmitEdit} className="btn btn-sm btn-outline-success">
+                          <FontAwesomeIcon icon={faCheck} />
+                        </button>
+                        &nbsp;
+                        <button onClick={onClickCancelEdit} className="btn btn-sm btn-outline-secondary">
+                          <FontAwesomeIcon icon={faXmark} />
+                        </button>
+                      </>
+                    )}
+                    {(!isEditing || selectedResource !== r) && (
+                      <>
+                        <button
+                          onClick={() => onClickEdit(r)}
+                          disabled={isEditing && selectedResource !== r}
+                          className="btn btn-sm btn-outline-secondary">
+                          <FontAwesomeIcon icon={faPen} />
+                        </button>
+                        &nbsp;
+                        <button onClick={() => onClickRemove(r)} className="btn btn-sm btn-outline-danger">
+                          <FontAwesomeIcon icon={faTrashCan} />
+                        </button>
+                      </>
+                    )}
                   </>
                 )}
               </td>

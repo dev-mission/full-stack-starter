@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Invite.belongsTo(models.User, { as: 'AcceptedByUser' });
       Invite.belongsTo(models.User, { as: 'RevokedByUser' });
       Invite.belongsTo(models.User, { as: 'CreatedByUser' });
+      Invite.hasMany(models.Membership);
     }
 
     toJSON() {
@@ -47,21 +48,25 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+
+    sendTeamInviteEmail(team) {
+      return mailer.send({
+        template: 'teamInvite',
+        message: {
+          to: this.email,
+        },
+        locals: {
+          teamName: team.name,
+          url: `${process.env.BASE_URL}/invites/${this.id}`,
+        },
+      });
+    }
   }
 
   Invite.init(
     {
       firstName: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'First name cannot be blank',
-          },
-          notEmpty: {
-            msg: 'First name cannot be blank',
-          },
-        },
       },
       lastName: {
         type: DataTypes.STRING,
@@ -81,13 +86,13 @@ module.exports = (sequelize, DataTypes) => {
       fullName: {
         type: DataTypes.VIRTUAL,
         get() {
-          return `${this.firstName} ${this.lastName}`.trim();
+          return `${this.firstName ?? ''} ${this.lastName ?? ''}`.trim();
         },
       },
       fullNameAndEmail: {
         type: DataTypes.VIRTUAL,
         get() {
-          return `${this.fullName} <${this.email}>`;
+          return `${this.fullName} <${this.email}>`.trim();
         },
       },
       message: DataTypes.TEXT,

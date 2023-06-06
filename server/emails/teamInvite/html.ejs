@@ -1,0 +1,9 @@
+<%- include('../layout/_header.html.ejs') %>
+<p>You are invited to join <%= teamName %> on <%= process.env.REACT_APP_SITE_TITLE %>!</p>
+<p>Please click on the following link to create your account:</p>
+<%- include('../layout/_button.html.ejs', {
+  label: 'ACCEPT INVITE',
+  url: url
+}) %>
+<p><a href="<%= url %>"><%= url %></a></p>
+<%- include('../layout/_footer.html.ejs') %>

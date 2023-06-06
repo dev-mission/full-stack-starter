@@ -10,7 +10,7 @@ describe('/api/users', () => {
   let testSession;
 
   beforeEach(async () => {
-    await helper.loadFixtures(['users', 'teams', 'memberships']);
+    await helper.loadFixtures(['users', 'invites', 'teams', 'memberships']);
     testSession = session(app);
   });
 
@@ -56,6 +56,7 @@ describe('/api/users', () => {
               },
               TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
               UserId: 'b9d53b71-faac-4ead-bbb6-745412b79bbf',
+              InviteId: null,
               role: 'OWNER',
             },
           ],
@@ -77,11 +78,12 @@ describe('/api/users', () => {
       it('returns a list of Users ordered by last name, first name, email', async () => {
         /// request user list
         const response = await testSession.get('/api/users').set('Accept', 'application/json').expect(StatusCodes.OK);
-        assert.deepStrictEqual(response.body?.length, 2);
+        assert.deepStrictEqual(response.body?.length, 3);
 
         const users = response.body;
         assert.deepStrictEqual(users[0].firstName, 'Admin');
-        assert.deepStrictEqual(users[1].firstName, 'Regular');
+        assert.deepStrictEqual(users[1].firstName, 'Another');
+        assert.deepStrictEqual(users[2].firstName, 'Regular');
       });
     });
 
@@ -125,6 +127,27 @@ describe('/api/users', () => {
           isAdmin: false,
           picture: null,
           pictureURL: null,
+          Memberships: [
+            {
+              id: '5a313737-e5ff-48fd-ba6b-b82983a7a7bf',
+              Team: {
+                id: '1a93d46d-89bf-463b-ab23-8f22f5777907',
+                link: 'regularuser',
+                name: "Regular's Personal Team",
+                variants: [
+                  {
+                    code: 'en-us',
+                    displayName: 'English',
+                    name: 'English (US)',
+                  },
+                ],
+              },
+              TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
+              UserId: 'b9d53b71-faac-4ead-bbb6-745412b79bbf',
+              InviteId: null,
+              role: 'OWNER',
+            },
+          ],
         });
       });
 

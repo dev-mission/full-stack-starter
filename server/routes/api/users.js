@@ -68,6 +68,10 @@ router.patch('/:id', interceptors.requireLogin, (req, res) => {
         attrs.push('isAdmin');
       }
       await user.update(_.pick(req.body, attrs), { transaction });
+      user.Memberships = await user.getMemberships({
+        include: 'Team',
+        order: [['Team', 'name', 'ASC']],
+      });
       res.json(user.toJSON());
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {

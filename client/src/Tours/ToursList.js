@@ -38,7 +38,8 @@ function ToursList() {
             {tours.map((tour) => (
               <TourCard key={tour.id} tour={tour} href={tour.id} />
             ))}
-            <TourCard title="New Tour" href="new" />
+            {membership?.role !== 'VIEWER' && <TourCard title="New Tour" href="new" />}
+            {membership?.role === 'VIEWER' && tours.length === 0 && <div>No tours to view yet.</div>}
           </div>
         )}
       </main>

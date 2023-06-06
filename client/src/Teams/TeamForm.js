@@ -1,19 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { StatusCodes } from 'http-status-codes';
 
 import Api from '../Api';
 import { useAuthContext } from '../AuthContext';
+import ConfirmModal from '../Components/ConfirmModal';
 import FormGroup from '../Components/FormGroup';
 import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 
+import TeamInviteForm from './TeamInviteForm';
+
 function TeamForm() {
   const navigate = useNavigate();
   const { user, setUser } = useAuthContext();
-  const { teamId } = useParams();
+  const { TeamId } = useParams();
 
-  const isEditing = !!teamId;
+  const isEditing = !!TeamId;
   const isFirstTeam = !user?.Memberships?.length;
 
   const [team, setTeam] = useState({
@@ -22,6 +27,17 @@ function TeamForm() {
   });
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState();
+
+  useEffect(() => {
+    let isCancelled = false;
+    if (TeamId) {
+      Api.teams.get(TeamId).then((response) => {
+        if (isCancelled) return;
+        setTeam(response.data);
+      });
+    }
+    return () => (isCancelled = true);
+  }, [TeamId]);
 
   function onChange(event) {
     const newTeam = { ...team };
@@ -65,6 +81,33 @@ function TeamForm() {
     }
   }
 
+  function onCreateMembership(membership) {
+    team?.Memberships?.push(membership);
+    setTeam({ ...team });
+  }
+
+  async function onChangeRole(membership, newRole) {
+    await Api.memberships.update(membership.id, { role: newRole });
+    membership.role = newRole;
+    setTeam({ ...team });
+  }
+
+  const [isConfirmDeleteShowing, setConfirmDeleteShowing] = useState(false);
+  const [selectedMembership, setSelectedMembership] = useState();
+
+  function onDeleteMembership(membership) {
+    setConfirmDeleteShowing(true);
+    setSelectedMembership(membership);
+  }
+
+  async function onConfirmDeleteMembership() {
+    await Api.memberships.delete(selectedMembership?.id);
+    const index = team?.Memberships?.indexOf(selectedMembership);
+    team?.Memberships?.splice(index, 1);
+    setTeam({ ...team });
+    setConfirmDeleteShowing(false);
+  }
+
   return (
     <main className="container">
       <div className="row justify-content-center">
@@ -98,7 +141,67 @@ function TeamForm() {
             </div>
           </div>
         </div>
+        {TeamId && (
+          <div className="col col-sm-10 col-md-4 col-lg-6 col-xl-5">
+            <div className="card">
+              <div className="card-body">
+                <h2 className="card-title">Manage Members</h2>
+              </div>
+              <ul className="list-group list-group-flush">
+                {team?.Memberships?.map((m) => (
+                  <li key={m.id} className="list-group-item d-flex align-items-center justify-content-between">
+                    {m.User && (
+                      <span>
+                        {m.User.firstName} {m.User.lastName} &lt;{m.User.email}&gt;
+                      </span>
+                    )}
+                    {!m.User && m.Invite && (
+                      <span>
+                        <b>Invited:</b> {m.Invite.email}
+                      </span>
+                    )}
+                    <span className="d-flex" style={{ visibility: m.UserId === user.id ? 'hidden' : 'visible' }}>
+                      <select className="form-select me-2" value={m.role} onChange={(event) => onChangeRole(m, event.target.value)}>
+                        <option value="OWNER">Owner</option>
+                        <option value="EDITOR">Editor</option>
+                        <option value="VIEWER">Viewer</option>
+                      </select>
+                      <button
+                        onClick={() => onDeleteMembership(m)}
+                        type="button"
+                        className="btn btn-icon btn-sm btn-outline-danger flex-shrink-0">
+                        <FontAwesomeIcon icon={faTrashCan} />
+                      </button>
+                    </span>
+                  </li>
+                ))}
+                <li className="list-group-item">
+                  <TeamInviteForm TeamId={TeamId} onCreate={onCreateMembership} />
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
+      <ConfirmModal
+        isShowing={isConfirmDeleteShowing}
+        onCancel={() => setConfirmDeleteShowing(false)}
+        onOK={() => onConfirmDeleteMembership()}>
+        {selectedMembership?.User && (
+          <>
+            Are you sure you wish to remove{' '}
+            <b>
+              {selectedMembership?.User?.firstName} {selectedMembership?.User?.lastName}
+            </b>{' '}
+            from the team?
+          </>
+        )}
+        {selectedMembership?.Invite && (
+          <>
+            Are you sure you wish to revoke the invite to <b>{selectedMembership?.Invite?.email}</b>?
+          </>
+        )}
+      </ConfirmModal>
     </main>
   );
 }

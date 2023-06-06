@@ -3,10 +3,12 @@ import { useAuthContext } from '../AuthContext';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStaticContext } from '../StaticContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function TeamsList() {
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { user, membership } = useAuthContext();
   const staticContext = useStaticContext();
 
   useEffect(() => {
@@ -26,12 +28,24 @@ function TeamsList() {
             <h1 className="mb-3">My Teams</h1>
             <ul className="list-group">
               {user.Memberships?.map((m) => (
-                <Link key={m.TeamId} to={`/teams/${m.TeamId}`} className="list-group-item">
+                <div key={m.TeamId} className="list-group-item d-flex justify-content-between">
                   {m.Team.name}
-                </Link>
+                  <span>
+                    {m.TeamId !== membership?.TeamId && (
+                      <Link to={m.TeamId} className="btn btn-sm btn-primary me-2">
+                        Switch
+                      </Link>
+                    )}
+                    {m.role !== 'VIEWER' && (
+                      <Link to={`${m.TeamId}/manage`} className="btn btn-sm btn-secondary">
+                        Manage
+                      </Link>
+                    )}
+                  </span>
+                </div>
               ))}
               <Link to="new" className="list-group-item">
-                New Team
+                <FontAwesomeIcon icon={faPlus} /> New Team
               </Link>
             </ul>
           </div>

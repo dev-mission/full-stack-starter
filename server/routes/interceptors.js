@@ -62,8 +62,17 @@ passport.use(
       usernameField: 'email',
     },
     (email, password, done) => {
+      let user;
       models.User.findOne({ where: { email } })
-        .then((user) => {
+        .then((result) => {
+          user = result;
+          return user.getMemberships({
+            include: 'Team',
+            order: [['Team', 'name', 'ASC']],
+          });
+        })
+        .then((result) => {
+          user.Memberships = result;
           bcrypt
             .compare(password, user.hashedPassword)
             .then((res) => {

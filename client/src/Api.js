@@ -56,6 +56,17 @@ const Api = {
       return instance.delete(`/api/invites/${id}`);
     },
   },
+  memberships: {
+    create(data) {
+      return instance.post('/api/memberships', data);
+    },
+    update(id, data) {
+      return instance.patch(`/api/memberships/${id}`, data);
+    },
+    delete(id) {
+      return instance.delete(`/api/memberships/${id}`);
+    },
+  },
   passwords: {
     reset(email) {
       return instance.post('/api/passwords', { email });

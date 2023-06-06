@@ -11,8 +11,10 @@ import Recorder from '../Resources/Recorder';
 import ResourcesModal from '../Resources/ResourcesModal';
 import ResourcesTable from '../Resources/ResourcesTable';
 import { useStaticContext } from '../StaticContext';
+import { useAuthContext } from '../AuthContext';
 
 function Stop({ StopId, transition, children }) {
+  const { membership } = useAuthContext();
   const staticContext = useStaticContext();
   const { StopId: StopIdParam } = useParams();
   const [stop, setStop] = useState();
@@ -135,18 +137,22 @@ function Stop({ StopId, transition, children }) {
                   <FormGroup plaintext name="name" label="Name" value={stop.names[variant.code]} />
                   <FormGroup plaintext type="textarea" name="description" label="Description" value={stop.descriptions[variant.code]} />
                   <div className="mb-3">
-                    {!isRecording && (
+                    {membership.role !== 'VIEWER' && (
                       <>
-                        <Link className="btn btn-primary" to="edit">
-                          Edit
-                        </Link>
-                        &nbsp;
-                        <button onClick={() => setRecording(true)} className="btn btn-outline-danger" type="button">
-                          Record
-                        </button>
+                        {!isRecording && (
+                          <>
+                            <Link className="btn btn-primary" to="edit">
+                              Edit
+                            </Link>
+                            &nbsp;
+                            <button onClick={() => setRecording(true)} className="btn btn-outline-danger" type="button">
+                              Record
+                            </button>
+                          </>
+                        )}
+                        {isRecording && <Recorder onSave={onSaveRecording} onCancel={() => setRecording(false)} />}
                       </>
                     )}
-                    {isRecording && <Recorder onSave={onSaveRecording} onCancel={() => setRecording(false)} />}
                   </div>
                 </form>
                 <h2>Assets</h2>
@@ -158,9 +164,11 @@ function Stop({ StopId, transition, children }) {
                   onRemove={onRemoveResource}
                 />
                 <div className="mb-5">
-                  <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
-                    Add Asset
-                  </button>
+                  {membership.role !== 'VIEWER' && (
+                    <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
+                      Add Asset
+                    </button>
+                  )}
                 </div>
                 {children}
               </div>

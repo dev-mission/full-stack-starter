@@ -75,7 +75,7 @@ router.post('/:id/accept', async (req, res, next) => {
     try {
       let user;
       await models.sequelize.transaction(async (transaction) => {
-        const invite = await models.Invite.findByPk(req.params.id, { transaction });
+        const invite = await models.Invite.findByPk(req.params.id, { include: 'Memberships', transaction });
         if (invite) {
           if (invite.acceptedAt || invite.revokedAt) {
             res.status(StatusCodes.FORBIDDEN).end();
@@ -90,6 +90,12 @@ router.post('/:id/accept', async (req, res, next) => {
             },
             { transaction }
           );
+          await Promise.all(invite.Memberships.map((m) => m.update({ UserId: user.id }, { transaction })));
+          user.Memberships = await user.getMemberships({
+            include: 'Team',
+            order: [['Team', 'name', 'ASC']],
+            transaction,
+          });
           await user.sendWelcomeEmail();
         }
       });

@@ -18,12 +18,16 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
+      Membership.belongsTo(models.Invite);
       Membership.belongsTo(models.Team);
       Membership.belongsTo(models.User);
     }
 
     toJSON() {
-      const json = _.pick(this.get(), ['id', 'TeamId', 'UserId', 'role']);
+      const json = _.pick(this.get(), ['id', 'InviteId', 'TeamId', 'UserId', 'role']);
+      if (this.Invite) {
+        json.Invite = this.Invite.toJSON();
+      }
       if (this.Team) {
         json.Team = this.Team.toJSON();
       }

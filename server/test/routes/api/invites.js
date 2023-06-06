@@ -11,7 +11,7 @@ describe('/api/invites', () => {
   let testSession;
 
   beforeEach(async () => {
-    await helper.loadFixtures(['users', 'invites']);
+    await helper.loadFixtures(['users', 'invites', 'teams', 'memberships']);
     testSession = session(app);
     await testSession
       .post('/api/auth/login')
@@ -92,7 +92,7 @@ describe('/api/invites', () => {
   describe('POST /:id/accept', () => {
     it('accepts an Invite by id, creating a new User', async () => {
       const response = await testSession
-        .post('/api/invites/14a500b7-f14c-48cd-b815-3685a8b54370/accept')
+        .post('/api/invites/675ccf53-dcc3-4aac-a279-3e98f2d6e031/accept')
         .set('Accept', 'application/json')
         .send({
           firstName: 'Accepting',
@@ -113,11 +113,35 @@ describe('/api/invites', () => {
         isAdmin: false,
         picture: null,
         pictureURL: null,
+        Memberships: [
+          {
+            InviteId: '675ccf53-dcc3-4aac-a279-3e98f2d6e031',
+            Team: {
+              id: '1a93d46d-89bf-463b-ab23-8f22f5777907',
+              link: 'regularuser',
+              name: "Regular's Personal Team",
+              variants: [
+                {
+                  code: 'en-us',
+                  displayName: 'English',
+                  name: 'English (US)',
+                },
+              ],
+            },
+            TeamId: '1a93d46d-89bf-463b-ab23-8f22f5777907',
+            UserId: id,
+            id: 'a7f434fa-81ae-4d8b-9d3b-d6a73959f1e1',
+            role: 'VIEWER',
+          },
+        ],
       });
 
-      const invite = await models.Invite.findByPk('14a500b7-f14c-48cd-b815-3685a8b54370');
+      const invite = await models.Invite.findByPk('675ccf53-dcc3-4aac-a279-3e98f2d6e031');
       assert(invite.acceptedAt);
       assert.deepStrictEqual(invite.AcceptedByUserId, id);
+
+      const membership = await models.Membership.findByPk('a7f434fa-81ae-4d8b-9d3b-d6a73959f1e1');
+      assert.deepStrictEqual(membership.UserId, id);
     });
   });
 });

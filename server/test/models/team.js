@@ -5,7 +5,7 @@ const models = require('../../models');
 
 describe('models.Team', () => {
   beforeEach(async () => {
-    await helper.loadFixtures(['users', 'teams', 'memberships']);
+    await helper.loadFixtures(['users', 'invites', 'teams', 'memberships']);
   });
 
   describe('.getMembership()', () => {

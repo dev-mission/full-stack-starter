@@ -5,8 +5,10 @@ import Api from '../Api';
 import Stop from '../Stops/Stop';
 import StopsModal from '../Stops/StopsModal';
 import StopsTable from '../Stops/StopsTable';
+import { useAuthContext } from '../AuthContext';
 
 function TourStop() {
+  const { membership } = useAuthContext();
   const { TourId, TourStopId } = useParams();
   const navigate = useNavigate();
   const [TourStop, setTourStop] = useState();
@@ -56,14 +58,16 @@ function TourStop() {
           onRemove={onRemoveTransition}
         />
         <div className="mb-5">
-          <button
-            onClick={() => {
-              setShowingStopsModal(true);
-            }}
-            type="button"
-            className="btn btn-primary">
-            Set Transition
-          </button>
+          {membership.role !== 'VIEWER' && (
+            <button
+              onClick={() => {
+                setShowingStopsModal(true);
+              }}
+              type="button"
+              className="btn btn-primary">
+              Set Transition
+            </button>
+          )}
         </div>
       </Stop>
       <StopsModal

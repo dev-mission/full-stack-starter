@@ -8,6 +8,7 @@ function TeamsRoutes() {
   return (
     <Routes>
       <Route path="new" element={<TeamForm />} />
+      <Route path=":TeamId/manage" element={<TeamForm />} />
       <Route path=":TeamId/tours/*" element={<ToursRoutes />} />
       <Route path="" element={<TeamsList />} />
     </Routes>

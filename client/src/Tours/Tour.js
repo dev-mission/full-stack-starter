@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import inflection from 'inflection';
 
 import Api from '../Api';
+import { useAuthContext } from '../AuthContext';
 import { useStaticContext } from '../StaticContext';
 import FormGroup from '../Components/FormGroup';
 import VariantTabs from '../Components/VariantTabs';
@@ -13,6 +14,7 @@ import StopsTable from '../Stops/StopsTable';
 import SharePreview from '../Components/SharePreview';
 
 function Tour() {
+  const { membership } = useAuthContext();
   const staticContext = useStaticContext();
   const navigate = useNavigate();
   const { TourId } = useParams();
@@ -114,11 +116,13 @@ function Tour() {
                   <VariantTabs variants={tour.variants} current={variant} setVariant={setVariant} />
                   <FormGroup plaintext name="name" label="Name" value={tour.names[variant.code]} />
                   <FormGroup plaintext name="description" label="Description" value={tour.descriptions[variant.code]} />
-                  <div className="mb-3">
-                    <Link className="btn btn-primary" to="edit">
-                      Edit
-                    </Link>
-                  </div>
+                  {membership.role !== 'VIEWER' && (
+                    <div className="mb-3">
+                      <Link className="btn btn-primary" to="edit">
+                        Edit
+                      </Link>
+                    </div>
+                  )}
                 </form>
                 <div className="row mb-5">
                   <div className="col-md-6">
@@ -134,9 +138,11 @@ function Tour() {
                         </div>
                       </div>
                     )}
-                    <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
-                      Select Cover
-                    </button>
+                    {membership.role !== 'VIEWER' && (
+                      <button onClick={() => setShowingResourcesModal(true)} type="button" className="btn btn-primary">
+                        Select Cover
+                      </button>
+                    )}
                   </div>
                 </div>
                 <h2>Intro</h2>
@@ -147,28 +153,32 @@ function Tour() {
                   onRemove={onRemoveIntro}
                 />
                 <div className="mb-5">
-                  <button
-                    onClick={() => {
-                      setStopType('INTRO');
-                      setShowingStopsModal(true);
-                    }}
-                    type="button"
-                    className="btn btn-primary">
-                    Set Intro
-                  </button>
+                  {membership.role !== 'VIEWER' && (
+                    <button
+                      onClick={() => {
+                        setStopType('INTRO');
+                        setShowingStopsModal(true);
+                      }}
+                      type="button"
+                      className="btn btn-primary">
+                      Set Intro
+                    </button>
+                  )}
                 </div>
                 <h2>Stops</h2>
                 <StopsTable stops={stops} onClick={onClickStop} onRemove={onRemoveStop} />
                 <div className="mb-5">
-                  <button
-                    onClick={() => {
-                      setStopType('STOP');
-                      setShowingStopsModal(true);
-                    }}
-                    type="button"
-                    className="btn btn-primary">
-                    Add Stop
-                  </button>
+                  {membership.role !== 'VIEWER' && (
+                    <button
+                      onClick={() => {
+                        setStopType('STOP');
+                        setShowingStopsModal(true);
+                      }}
+                      type="button"
+                      className="btn btn-primary">
+                      Add Stop
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="col-md-4 offset-md-1">

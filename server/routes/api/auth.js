@@ -38,6 +38,10 @@ if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
     const user = models.User.build(_.pick(req.body, ['firstName', 'lastName', 'email', 'password']));
     try {
       await user.save();
+      user.Memberships = await user.getMemberships({
+        include: 'Team',
+        order: [['Team', 'name', 'ASC']],
+      });
       await user.sendWelcomeEmail();
       req.login(user, (err) => {
         if (err) {

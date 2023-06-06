@@ -20,5 +20,16 @@
       "hashedPassword": "$2b$10$s2eQxhoZ2Khb4KrbOaAl/ekpWKiGmyX1HFICIVl3ZX3NnL191fPuS",
       "isAdmin": false
     }
+  },
+  {
+    "model": "User",
+    "data": {
+      "id": "124ea562-938d-44f4-b757-e4906eec2dc3",
+      "firstName": "Another",
+      "lastName": "User",
+      "email": "another.user@test.com",
+      "hashedPassword": "$2b$10$s2eQxhoZ2Khb4KrbOaAl/ekpWKiGmyX1HFICIVl3ZX3NnL191fPuS",
+      "isAdmin": false
+    }
   }
 ]

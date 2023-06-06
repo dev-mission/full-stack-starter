@@ -41,6 +41,7 @@ describe('/api/auth', () => {
         isAdmin: false,
         picture: null,
         pictureURL: null,
+        Memberships: [],
       });
     });
 

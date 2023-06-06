@@ -32,6 +32,14 @@ function Invite() {
     if (inviteId) {
       Api.invites.get(inviteId).then((response) => {
         setInvite(response.data);
+        setUser({
+          firstName: '',
+          lastName: '',
+          username: '',
+          email: response.data.email,
+          password: '',
+          confirmPassword: '',
+        });
         setAuthUser(null);
       });
     }
@@ -50,7 +58,7 @@ function Invite() {
     try {
       const response = await Api.invites.accept(invite.id, user);
       setAuthUser(response.data);
-      navigate(`/account`, { state: { flash: 'Your account has been created!' } });
+      navigate(`/`, { state: { flash: 'Your account has been created!' } });
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));
@@ -72,7 +80,7 @@ function Invite() {
           <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
             <div className="card">
               <div className="card-body">
-                <h2 className="card-title">You're Invited</h2>
+                <h2 className="card-title mb-3">You're Invited</h2>
                 {invite?.acceptedAt && <p>This invite has already been accepted.</p>}
                 {invite?.revokedAt && <p>This invite is no longer available.</p>}
                 {invite && invite.acceptedAt === null && invite.revokedAt === null && (
