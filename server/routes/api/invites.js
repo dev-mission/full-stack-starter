@@ -1,5 +1,5 @@
 const express = require('express');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const _ = require('lodash');
 
 const helpers = require('../helpers');
@@ -28,15 +28,15 @@ router.post('/', interceptors.requireAdmin, async (req, res) => {
   try {
     await invite.save();
     await invite.sendInviteEmail();
-    res.status(HttpStatus.CREATED).json(invite.toJSON());
+    res.status(StatusCodes.CREATED).json(invite.toJSON());
   } catch (error) {
     if (error.name === 'SequelizeValidationError') {
-      res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
+      res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+        status: StatusCodes.UNPROCESSABLE_ENTITY,
         errors: error.errors,
       });
     } else {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   }
 });
@@ -50,7 +50,7 @@ router.post('/:id/resend', interceptors.requireAdmin, async (req, res) => {
       await invite.sendInviteEmail();
       res.json(invite.toJSON());
     } else {
-      res.status(HttpStatus.NOT_FOUND).end();
+      res.status(StatusCodes.NOT_FOUND).end();
     }
   });
 });
@@ -60,12 +60,12 @@ router.delete('/:id', interceptors.requireAdmin, async (req, res) => {
     const invite = await models.Invite.findByPk(req.params.id, { transaction });
     if (invite) {
       if (invite.acceptedAt) {
-        res.status(HttpStatus.FORBIDDEN).end();
+        res.status(StatusCodes.FORBIDDEN).end();
       }
       await invite.update({ revokedAt: new Date(), RevokedByUserId: req.user.id });
-      res.status(HttpStatus.OK).end();
+      res.status(StatusCodes.OK).end();
     } else {
-      res.status(HttpStatus.NOT_FOUND).end();
+      res.status(StatusCodes.NOT_FOUND).end();
     }
   });
 });
@@ -78,7 +78,7 @@ router.post('/:id/accept', async (req, res, next) => {
         const invite = await models.Invite.findByPk(req.params.id, { transaction });
         if (invite) {
           if (invite.acceptedAt || invite.revokedAt) {
-            res.status(HttpStatus.FORBIDDEN).end();
+            res.status(StatusCodes.FORBIDDEN).end();
             return;
           }
           user = models.User.build(_.pick(req.body, ['firstName', 'lastName', 'username', 'email', 'password', 'confirmPassword']));
@@ -99,19 +99,19 @@ router.post('/:id/accept', async (req, res, next) => {
             next(err);
             return;
           }
-          res.status(HttpStatus.CREATED).json(user);
+          res.status(StatusCodes.CREATED).json(user);
         });
       } else {
-        res.status(HttpStatus.NOT_FOUND).end();
+        res.status(StatusCodes.NOT_FOUND).end();
       }
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
-        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
+        res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+          status: StatusCodes.UNPROCESSABLE_ENTITY,
           errors: error.errors || [],
         });
       } else {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
       }
     }
   });
@@ -123,7 +123,7 @@ router.get('/:id', async (req, res) => {
     if (invite) {
       res.json(invite.toJSON());
     } else {
-      res.status(HttpStatus.NOT_FOUND).end();
+      res.status(StatusCodes.NOT_FOUND).end();
     }
   });
 });

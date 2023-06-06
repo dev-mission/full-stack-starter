@@ -1,5 +1,5 @@
 const express = require('express');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 const models = require('../../models');
 
@@ -10,9 +10,9 @@ router.post('/', async (req, res) => {
   const user = await models.User.findOne({ where: { email: req.body.email } });
   if (user) {
     await user.sendPasswordResetEmail();
-    res.status(HttpStatus.OK).end();
+    res.status(StatusCodes.OK).end();
   } else {
-    res.status(HttpStatus.NOT_FOUND).end();
+    res.status(StatusCodes.NOT_FOUND).end();
   }
 });
 
@@ -21,12 +21,12 @@ router.get('/:token', async (req, res) => {
   const user = await models.User.findOne({ where: { passwordResetToken: req.params.token } });
   if (user) {
     if (user.passwordResetTokenExpiresAt.getTime() < Date.now()) {
-      res.status(HttpStatus.GONE).end();
+      res.status(StatusCodes.GONE).end();
     } else {
-      res.status(HttpStatus.OK).end();
+      res.status(StatusCodes.OK).end();
     }
   } else {
-    res.status(HttpStatus.NOT_FOUND).end();
+    res.status(StatusCodes.NOT_FOUND).end();
   }
 });
 
@@ -36,12 +36,12 @@ router.patch('/:token', async (req, res) => {
   if (user) {
     if (models.User.isValidPassword(req.body.password)) {
       await user.hashPassword(req.body.password);
-      res.status(HttpStatus.OK).end();
+      res.status(StatusCodes.OK).end();
     } else {
-      res.status(HttpStatus.UNPROCESSABLE_ENTITY).end();
+      res.status(StatusCodes.UNPROCESSABLE_ENTITY).end();
     }
   } else {
-    res.status(HttpStatus.NOT_FOUND).end();
+    res.status(StatusCodes.NOT_FOUND).end();
   }
 });
 

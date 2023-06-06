@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { StatusCodes } from 'http-status-codes';
 
@@ -7,9 +8,11 @@ import { useAuthContext } from './AuthContext';
 import RegistrationForm from './RegistrationForm';
 import UnexpectedError from './UnexpectedError';
 import ValidationError from './ValidationError';
+import { useStaticContext } from './StaticContext';
 
 function Register() {
   const authContext = useAuthContext();
+  const staticContext = useStaticContext();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -43,21 +46,26 @@ function Register() {
   }
 
   return (
-    <main className="container">
-      <div className="row justify-content-center">
-        <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="card-title">Register</h2>
-              <RegistrationForm onChange={onChange} onSubmit={onSubmit} error={error} user={user} />
-              <div className="mb-3 text-center">
-                <Link to="/login">Already have an account?</Link>
+    <>
+      <Helmet>
+        <title>Register - {staticContext.env.REACT_APP_SITE_TITLE}</title>
+      </Helmet>
+      <main className="container">
+        <div className="row justify-content-center">
+          <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <div className="card">
+              <div className="card-body">
+                <h2 className="card-title">Register</h2>
+                <RegistrationForm onChange={onChange} onSubmit={onSubmit} error={error} user={user} />
+                <div className="mb-3 text-center">
+                  <Link to="/login">Already have an account?</Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 

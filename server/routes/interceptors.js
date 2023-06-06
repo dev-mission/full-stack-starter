@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const passportLocal = require('passport-local');
-const HttpStatus = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 const models = require('../models');
 
@@ -83,20 +83,25 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  models.User.findByPk(id).then((user) => {
-    done(null, user);
-  });
+passport.deserializeUser((req, id, done) => {
+  models.User.findByPk(id)
+    .then((user) => {
+      done(null, user);
+    })
+    .catch((error) => {
+      req.session = null;
+      done(error);
+    });
 });
 
 module.exports.passport = passport;
 
 function sendErrorUnauthorized(req, res) {
-  res.sendStatus(HttpStatus.UNAUTHORIZED);
+  res.sendStatus(StatusCodes.UNAUTHORIZED);
 }
 
 function sendErrorForbidden(req, res) {
-  res.sendStatus(HttpStatus.FORBIDDEN);
+  res.sendStatus(StatusCodes.FORBIDDEN);
 }
 
 function requireLoginInternal(req, res, next, requireAdmin) {
