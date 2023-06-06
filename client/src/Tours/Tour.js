@@ -97,6 +97,13 @@ function Tour() {
     setStops(newStops);
   }
 
+  async function onReorderStops(newStops) {
+    if (JSON.stringify(stops) !== JSON.stringify(newStops)) {
+      setStops(newStops);
+      await Api.tours.stops(tour.id).reorder({ TourStops: newStops.map((ts, i) => ({ id: ts.id, position: i + 1 })) });
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -166,7 +173,7 @@ function Tour() {
                   )}
                 </div>
                 <h2>Stops</h2>
-                <StopsTable stops={stops} onClick={onClickStop} onRemove={onRemoveStop} />
+                <StopsTable stops={stops} onClick={onClickStop} onRemove={onRemoveStop} onReorderStops={onReorderStops} />
                 <div className="mb-5">
                   {membership.role !== 'VIEWER' && (
                     <button

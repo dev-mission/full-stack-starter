@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useAuthContext } from '../AuthContext';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { useStaticContext } from '../StaticContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
+import { useAuthContext } from '../AuthContext';
+import { useStaticContext } from '../StaticContext';
 
 function TeamsList() {
   const navigate = useNavigate();

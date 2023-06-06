@@ -155,6 +155,33 @@ describe('/api/tours/:TourId/stops', () => {
     });
   });
 
+  describe('PATCH /reorder', () => {
+    it('reorders the TourStops in a Tour', async () => {
+      await testSession
+        .patch('/api/tours/495b18a8-ae05-4f44-a06d-c1809add0352/stops/reorder')
+        .set('Accept', 'application/json')
+        .send({
+          TourStops: [
+            {
+              id: '473abc1e-c5cb-4148-a2e4-c75a1dfcb3e1',
+              position: 1,
+            },
+            {
+              id: 'c25b67d5-fef6-4b9b-8f54-7ded9d1889b4',
+              position: 2,
+            },
+          ],
+        })
+        .expect(StatusCodes.OK);
+
+      let ts = await models.TourStop.findByPk('473abc1e-c5cb-4148-a2e4-c75a1dfcb3e1');
+      assert.deepStrictEqual(ts.position, 1);
+
+      ts = await models.TourStop.findByPk('c25b67d5-fef6-4b9b-8f54-7ded9d1889b4');
+      assert.deepStrictEqual(ts.position, 2);
+    });
+  });
+
   describe('PATCH /:id', () => {
     it('updates a TourStop association', async () => {
       const response = await testSession

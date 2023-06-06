@@ -157,6 +157,9 @@ const Api = {
         create(data) {
           return instance.post(`/api/tours/${TourId}/stops`, data);
         },
+        reorder(data) {
+          return instance.patch(`/api/tours/${TourId}/stops/reorder`, data);
+        },
         get(id) {
           return instance.get(`/api/tours/${TourId}/stops/${id}`);
         },

@@ -76,6 +76,36 @@ router.post('/', interceptors.requireLogin, async (req, res) => {
   }
 });
 
+router.patch('/reorder', interceptors.requireLogin, async (req, res) => {
+  const { TourId } = req.params;
+  const record = await models.Tour.findByPk(TourId, {
+    include: ['Team'],
+  });
+  if (record) {
+    const membership = await record.Team.getMembership(req.user);
+    if (!membership || !membership.isEditor) {
+      res.status(StatusCodes.UNAUTHORIZED).end();
+    } else {
+      await models.sequelize.transaction(async (transaction) => {
+        await Promise.all(
+          req.body.TourStops.map((ts) =>
+            models.TourStop.findOne({
+              where: {
+                id: ts.id,
+                TourId,
+              },
+              transaction,
+            }).then((result) => result.update({ position: ts.position }, { transaction }))
+          )
+        );
+      });
+      res.status(StatusCodes.OK).end();
+    }
+  } else {
+    res.status(StatusCodes.NOT_FOUND).end();
+  }
+});
+
 router.get('/:id', interceptors.requireLogin, async (req, res) => {
   const { id, TourId } = req.params;
   let tour;
