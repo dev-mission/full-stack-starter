@@ -15,6 +15,7 @@
    that credentials will be saved outside of the container in your own home directory.
    Run `docker compose up` to start your containers, then
    `docker compose exec server bash -l` to "log in" to your running server container.
+
 4. Configure awscli with your account credentials by running: `aws configure`
 
    Make sure to save your access key id, secret access key, and region you
@@ -24,6 +25,10 @@
    You can edit the `setup` script files or pass arguments to customize the
    application name.
 
+   ```
+   # ./setup fss
+   ```
+
    This initial setup script creates a CloudFormation stack with an Elastic
    Beanstalk (EB) Application and an Elastic Container Registry (ECR) repository.
    The EB "Application" acts as a top level container for as many different
@@ -31,4 +36,22 @@
    "staging", and "production" environments. The ECR repository will hold
    the built Docker images for the application.
 
-6.
+6. Push the built Docker images for the version you wish to deploy to the new
+   ECR repository using the push script (`./push`).
+
+   ```
+   # ./push fss 4.1.2
+   ```
+
+7. Create a new EB version from the pushed image using the release script (`./release`).
+
+   ```
+   # ./release fss 4.1.2
+   ```
+
+8. Now you can create any number of separate environments from that version using
+   the create script (`./create`).
+
+   ```
+   # ./create fss test 4.1.12
+   ```

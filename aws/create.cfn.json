@@ -46,6 +46,11 @@
       "Type": "String",
       "Default": ""
     },
+    "EmailAddress": {
+      "Description": "The email address used to send transactional email from the web app",
+      "Type": "String",
+      "Default": ""
+    },
     "FeatureRegistration": {
       "Description": "A feature flag to enable/disable user registration",
       "Type": "String",
@@ -454,6 +459,21 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_REGION",
+            "Value": { "Ref": "AWS::Region" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_ACCESS_KEY_ID",
+            "Value": { "Ref": "SESUserAccessKey" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_SECRET_ACCESS_KEY",
+            "Value": { "Fn::GetAtt": ["SESUserAccessKey", "SecretAccessKey"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "DATABASE_URL",
             "Value": {
               "Fn::Join": [
@@ -486,6 +506,22 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_ALL_DOMAINS",
+            "Value": {
+              "Fn::If": [
+                "DomainNameIsEmpty",
+                { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                {
+                  "Fn::Join": [
+                    ",",
+                    [{ "Ref": "DomainName" }, { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" }]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "LETSENCRYPT_EMAIL",
             "Value": { "Ref": "LetsEncryptEmail" }
           },
@@ -508,8 +544,41 @@
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "SESSION_SECRET",
             "Value": { "Ref": "SessionSecret" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SMTP_FROM_EMAIL_ADDRESS",
+            "Value": { "Ref": "EmailAddress" }
           }
         ]
+      }
+    },
+    "SESUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ses-policy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "ses:SendRawEmail",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "UserName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ses-user" }
+      }
+    },
+    "SESUserAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "Status": "Active",
+        "UserName": { "Ref": "SESUser" }
       }
     }
   }
