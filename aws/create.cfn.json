@@ -547,6 +547,11 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SMTP_ENABLED",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "SMTP_FROM_EMAIL_ADDRESS",
             "Value": { "Ref": "EmailAddress" }
           }
