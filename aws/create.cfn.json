@@ -1,0 +1,619 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Template to create a new Elastic Beanstalk environment with supporting services",
+  "Parameters": {
+    "ApplicationName": {
+      "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
+      "Type": "String",
+      "Default": "fss"
+    },
+    "EnvironmentName": {
+      "Description": "The unique environment name for this instantiation- will be appended as a suffix, i.e. staging -> fss-staging",
+      "Type": "String"
+    },
+    "InstanceType": {
+      "Description": "The application server instance type",
+      "Type": "String",
+      "Default": "t4g.micro",
+      "AllowedValues": ["t4g.nano", "t4g.micro", "t4g.small", "t4g.medium", "t4g.large"]
+    },
+    "DBInstanceType": {
+      "Description": "The DB instance type",
+      "Type": "String",
+      "Default": "db.t4g.micro",
+      "AllowedValues": ["db.t4g.micro", "db.t4g.small", "db.t4g.medium", "db.t4g.large"]
+    },
+    "DBUsername": {
+      "Description": "The DB master username",
+      "Type": "String",
+      "Default": "dbuser"
+    },
+    "DBPassword": {
+      "Description": "The DB master password",
+      "Type": "String",
+      "Default": "dbpassword"
+    },
+    "CDNSigningPrivateKey": {
+      "Description": "The private key used for signing requests to CloudFront",
+      "Type": "String"
+    },
+    "CDNSigningPublicKey": {
+      "Description": "The public key used for signing requests to CloudFront",
+      "Type": "String"
+    },
+    "DomainName": {
+      "Description": "The domain name for accessing this application, to be used in requesting an SSL cert",
+      "Type": "String",
+      "Default": ""
+    },
+    "EmailAddress": {
+      "Description": "The email address used to send transactional email from the web app",
+      "Type": "String",
+      "Default": ""
+    },
+    "FeatureRegistration": {
+      "Description": "A feature flag to enable/disable user registration",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": ["true", "false"]
+    },
+    "LetsEncryptOpts": {
+      "Description": "Option flags to pass to certbot for Let's Encrypt certs",
+      "Type": "String",
+      "Default": "--test-cert"
+    },
+    "LetsEncryptEmail": {
+      "Description": "The email address used to request an SSL certificate from Let's Encrypt",
+      "Type": "String"
+    },
+    "SessionSecret": {
+      "Description": "A secret key for encrypting cookie sessions",
+      "Type": "String"
+    },
+    "SiteTitle": {
+      "Description": "The name of the app to be displayed in the browser title, email footers, etc",
+      "Type": "String"
+    },
+    "Version": {
+      "Type": "String",
+      "Description": "The version of the app to deploy"
+    }
+  },
+  "Conditions": {
+    "DomainNameIsEmpty": { "Fn::Equals": [{ "Ref": "DomainName" }, ""] }
+  },
+  "Resources": {
+    "InstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-role" },
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["ec2.amazonaws.com"]
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier",
+          "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+        ]
+      }
+    },
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "InstanceProfileName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-profile" },
+        "Roles": [{ "Ref": "InstanceRole" }]
+      }
+    },
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ec2-sg" },
+        "GroupDescription": "Allow http/https/ssh traffic",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22
+          }
+        ]
+      }
+    },
+    "KeyPair": {
+      "Type": "AWS::EC2::KeyPair",
+      "Properties": {
+        "KeyName": { "Fn::Join": ["-", [{ "Ref": "ApplicationName" }, { "Ref": "EnvironmentName" }, "key-pair"]] }
+      }
+    },
+    "BucketUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-bucket-policy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "VisualEditor0",
+                  "Effect": "Allow",
+                  "Action": ["s3:PutObject", "s3:GetObject", "s3:ListBucket", "s3:DeleteObject"],
+                  "Resource": [
+                    { "Fn::Join": ["", ["arn:aws:s3:::", { "Ref": "Bucket" }, "/*"]] },
+                    { "Fn::Join": ["", ["arn:aws:s3:::", { "Ref": "Bucket" }]] }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "UserName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-bucket-user" }
+      }
+    },
+    "BucketUserAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "Status": "Active",
+        "UserName": { "Ref": "BucketUser" }
+      }
+    },
+    "Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "CorsConfiguration": {
+          "CorsRules": [
+            {
+              "AllowedHeaders": ["*"],
+              "AllowedMethods": ["GET", "PUT"],
+              "AllowedOrigins": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "https://",
+                      {
+                        "Fn::If": [
+                          "DomainNameIsEmpty",
+                          { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                          { "Ref": "DomainName" }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Id": "DeleteOrphanUploadsRule",
+              "Prefix": "uploads/",
+              "Status": "Enabled",
+              "ExpirationInDays": 1
+            }
+          ]
+        },
+        "OwnershipControls": {
+          "Rules": [
+            {
+              "ObjectOwnership": "BucketOwnerEnforced"
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": "TRUE",
+          "BlockPublicPolicy": "TRUE",
+          "IgnorePublicAcls": "TRUE",
+          "RestrictPublicBuckets": "TRUE"
+        }
+      },
+      "DeletionPolicy": "Delete"
+    },
+    "BucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": { "Ref": "Bucket" },
+        "PolicyDocument": {
+          "Version": "2008-10-17",
+          "Id": "PolicyForCloudFrontPrivateContent",
+          "Statement": [
+            {
+              "Sid": "AllowCloudFrontServicePrincipal",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudfront.amazonaws.com"
+              },
+              "Action": "s3:GetObject",
+              "Resource": { "Fn::Join": ["", [{ "Fn::GetAtt": ["Bucket", "Arn"] }, "/*"]] },
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceArn": {
+                    "Fn::Join": ["", ["arn:aws:cloudfront::", { "Ref": "AWS::AccountId" }, ":distribution/", { "Ref": "CDN" }]]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "CDN": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "AllowedMethods": ["GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"],
+            "CachedMethods": ["GET", "HEAD"],
+            "CachePolicyId": { "Ref": "CDNCachePolicy" },
+            "Compress": "true",
+            "TargetOriginId": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin" },
+            "TrustedKeyGroups": [{ "Ref": "CDNKeyGroup" }],
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "Enabled": "true",
+          "HttpVersion": "http2",
+          "IPV6Enabled": "true",
+          "Origins": [
+            {
+              "DomainName": { "Fn::GetAtt": ["Bucket", "RegionalDomainName"] },
+              "Id": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin" },
+              "OriginAccessControlId": { "Fn::GetAtt": ["CDNOriginAccessControl", "Id"] },
+              "S3OriginConfig": {
+                "OriginAccessIdentity": ""
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_All"
+        }
+      }
+    },
+    "CDNCachePolicy": {
+      "Type": "AWS::CloudFront::CachePolicy",
+      "Properties": {
+        "CachePolicyConfig": {
+          "Comment": "Policy with caching enabled. Supports Gzip and Brotli compression.",
+          "DefaultTTL": 86400,
+          "MaxTTL": 31536000,
+          "MinTTL": 1,
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-cache-policy" },
+          "ParametersInCacheKeyAndForwardedToOrigin": {
+            "CookiesConfig": {
+              "CookieBehavior": "none"
+            },
+            "EnableAcceptEncodingBrotli": "true",
+            "EnableAcceptEncodingGzip": "true",
+            "HeadersConfig": {
+              "HeaderBehavior": "none"
+            },
+            "QueryStringsConfig": {
+              "QueryStringBehavior": "none"
+            }
+          }
+        }
+      }
+    },
+    "CDNKeyGroup": {
+      "Type": "AWS::CloudFront::KeyGroup",
+      "Properties": {
+        "KeyGroupConfig": {
+          "Items": [{ "Ref": "CDNPublicKey" }],
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-key-group" }
+        }
+      }
+    },
+    "CDNOriginAccessControl": {
+      "Type": "AWS::CloudFront::OriginAccessControl",
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-bucket-origin-access-control" },
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4"
+        }
+      }
+    },
+    "CDNPublicKey": {
+      "Type": "AWS::CloudFront::PublicKey",
+      "Properties": {
+        "PublicKeyConfig": {
+          "CallerReference": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-public-key-caller-reference" },
+          "EncodedKey": { "Ref": "CDNSigningPublicKey" },
+          "Name": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-cf-public-key" }
+        }
+      }
+    },
+    "DatabaseSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-db-sg" },
+        "GroupDescription": "Allow postgres inbound traffic",
+        "SecurityGroupIngress": [
+          {
+            "SourceSecurityGroupId": { "Fn::GetAtt": ["InstanceSecurityGroup", "GroupId"] },
+            "IpProtocol": "tcp",
+            "FromPort": 5432,
+            "ToPort": 5432
+          }
+        ]
+      }
+    },
+    "Database": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": 20,
+        "DBInstanceClass": { "Ref": "DBInstanceType" },
+        "DBInstanceIdentifier": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-db" },
+        "DBName": { "Ref": "ApplicationName" },
+        "Engine": "postgres",
+        "EngineVersion": "14.6",
+        "MasterUsername": { "Ref": "DBUsername" },
+        "MasterUserPassword": { "Ref": "DBPassword" },
+        "MaxAllocatedStorage": 40,
+        "StorageEncrypted": true,
+        "VPCSecurityGroups": [{ "Fn::GetAtt": ["DatabaseSecurityGroup", "GroupId"] }]
+      },
+      "UpdateReplacePolicy": "Snapshot",
+      "DeletionPolicy": "Snapshot"
+    },
+    "Environment": {
+      "Type": "AWS::ElasticBeanstalk::Environment",
+      "Properties": {
+        "ApplicationName": { "Fn::ImportValue": { "Fn::Sub": "${ApplicationName}-eb-app-name" } },
+        "CNAMEPrefix": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
+        "EnvironmentName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
+        "VersionLabel": { "Ref": "Version" },
+        "SolutionStackName": "64bit Amazon Linux 2 v3.2.7 running ECS",
+        "Tier": {
+          "Name": "WebServer",
+          "Type": "Standard"
+        },
+        "OptionSettings": [
+          {
+            "Namespace": "aws:elasticbeanstalk:environment",
+            "OptionName": "EnvironmentType",
+            "Value": "SingleInstance"
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "IamInstanceProfile",
+            "Value": { "Ref": "InstanceProfile" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "InstanceType",
+            "Value": { "Ref": "InstanceType" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "EC2KeyName",
+            "Value": { "Ref": "KeyPair" }
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "RootVolumeSize",
+            "Value": 16
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "SecurityGroups",
+            "Value": { "Ref": "InstanceSecurityGroup" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_DOMAIN",
+            "Value": { "Fn::GetAtt": ["CDN", "DomainName"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_KEYPAIR_ID",
+            "Value": { "Fn::GetAtt": ["CDNPublicKey", "Id"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_CLOUDFRONT_PRIVATE_KEY",
+            "Value": { "Ref": "CDNSigningPrivateKey" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_ACCESS_KEY_ID",
+            "Value": { "Ref": "BucketUserAccessKey" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_SECRET_ACCESS_KEY",
+            "Value": { "Fn::GetAtt": ["BucketUserAccessKey", "SecretAccessKey"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_BUCKET",
+            "Value": { "Ref": "Bucket" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_ENDPOINT",
+            "Value": { "Fn::Sub": "https://s3.${AWS::Region}.amazonaws.com" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_S3_REGION",
+            "Value": { "Ref": "AWS::Region" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_REGION",
+            "Value": { "Ref": "AWS::Region" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_ACCESS_KEY_ID",
+            "Value": { "Ref": "SESUserAccessKey" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "AWS_SES_SECRET_ACCESS_KEY",
+            "Value": { "Fn::GetAtt": ["SESUserAccessKey", "SecretAccessKey"] }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "BASE_URL",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Fn::If": [
+                      "DomainNameIsEmpty",
+                      { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                      { "Ref": "DomainName" }
+                    ]
+                  }
+                ]
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "DATABASE_URL",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "postgres://",
+                  { "Ref": "DBUsername" },
+                  ":",
+                  { "Ref": "DBPassword" },
+                  "@",
+                  { "Fn::GetAtt": ["Database", "Endpoint.Address"] },
+                  ":",
+                  { "Fn::GetAtt": ["Database", "Endpoint.Port"] },
+                  "/",
+                  { "Ref": "ApplicationName" }
+                ]
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_DOMAIN",
+            "Value": {
+              "Fn::If": [
+                "DomainNameIsEmpty",
+                { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                { "Ref": "DomainName" }
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_ALL_DOMAINS",
+            "Value": {
+              "Fn::If": [
+                "DomainNameIsEmpty",
+                { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                {
+                  "Fn::Join": [
+                    ",",
+                    [{ "Ref": "DomainName" }, { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" }]
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_EMAIL",
+            "Value": { "Ref": "LetsEncryptEmail" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_OPTS",
+            "Value": { "Ref": "LetsEncryptOpts" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "NODE_ENV",
+            "Value": "production"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "REACT_APP_SITE_TITLE",
+            "Value": { "Ref": "SiteTitle" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "REACT_APP_FEATURE_REGISTRATION",
+            "Value": { "Ref": "FeatureRegistration" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SESSION_SECRET",
+            "Value": { "Ref": "SessionSecret" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SMTP_ENABLED",
+            "Value": "true"
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "SMTP_FROM_EMAIL_ADDRESS",
+            "Value": { "Ref": "EmailAddress" }
+          }
+        ]
+      }
+    },
+    "SESUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ses-policy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "ses:SendRawEmail",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ],
+        "UserName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}-ses-user" }
+      }
+    },
+    "SESUserAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "Status": "Active",
+        "UserName": { "Ref": "SESUser" }
+      }
+    }
+  }
+}

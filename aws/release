@@ -1,0 +1,35 @@
+#!/bin/bash
+
+APP_NAME=$1
+VERSION=$2
+
+# get account id
+IDENTITY=`aws sts get-caller-identity --output text`
+if [[ $IDENTITY =~ ([^[:space:]]*) ]]; then
+  IDENTITY=${BASH_REMATCH[1]}
+fi
+
+# get region
+REGION=`aws configure get region`
+
+# generate repo url
+REPO=${IDENTITY}.dkr.ecr.${REGION}.amazonaws.com
+
+# update the images and version in the Dockerrun.aws.json
+sed -i "s/\"image\": \"\"/\"image\": \"$REPO\/$APP_NAME:$VERSION\"/g" Dockerrun.aws.json
+sed -i "s/\"value\": \"\"/\"value\": \"$VERSION\"/g" Dockerrun.aws.json
+
+# zip and upload to the s3 bucket for the app
+rm -f artifact.zip
+zip -r artifact.zip .ebextensions nginx Dockerrun.aws.json
+BUCKET_NAME=elasticbeanstalk-$REGION-$IDENTITY
+BUCKET_KEY=$APP_NAME/$VERSION.zip
+aws s3 cp artifact.zip s3://$BUCKET_NAME/$BUCKET_KEY
+
+# create the new version
+aws elasticbeanstalk create-application-version --application-name $APP_NAME --version-label $VERSION --source-bundle S3Bucket="${BUCKET_NAME}",S3Key="${BUCKET_KEY}"
+
+# clean up the local changes
+git checkout -- Dockerrun.aws.json
+
+echo "Done!!!"

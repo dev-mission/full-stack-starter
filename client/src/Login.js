@@ -45,7 +45,7 @@ function Login() {
   return (
     <>
       <Helmet>
-        <title>Log in - {staticContext.env.REACT_APP_SITE_TITLE}</title>
+        <title>Log in - {staticContext?.env?.REACT_APP_SITE_TITLE}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">
@@ -89,7 +89,7 @@ function Login() {
                   </div>
                   <div className="mb-3 text-center">
                     <Link to="/passwords/forgot">Forgot your password?</Link>
-                    {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
+                    {staticContext?.env?.REACT_APP_FEATURE_REGISTRATION === 'true' && (
                       <>
                         <br />
                         <Link to="/register">Need an account?</Link>

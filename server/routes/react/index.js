@@ -22,13 +22,12 @@ require('@babel/register')({
 });
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
-const { matchPath } = require('react-router-dom');
 const { StaticRouter } = require('react-router-dom/server');
 const { HelmetProvider } = require('react-helmet-async');
 
 const { defaultValue: defaultStaticContext, StaticContextProvider } = require('../../../client/src/StaticContext');
 const App = require('../../../client/src/App').default;
-const { ADMIN_AUTH_PROTECTED_PATHS, AUTH_PROTECTED_PATHS, REDIRECTS } = require('../../../client/src/AppRedirects');
+const { handleRedirects } = require('../../../client/src/AppRedirects');
 
 const router = express.Router();
 
@@ -46,44 +45,15 @@ router.get('/*', async (req, res, next) => {
   if (req.accepts('html')) {
     try {
       const { path: urlPath, url: location } = req;
-      // check for and perform server-side redirects
-      let match;
-      // eslint-disable-next-line no-restricted-syntax
-      for (const pattern of ADMIN_AUTH_PROTECTED_PATHS) {
-        match = matchPath(pattern, urlPath);
-        if (match) {
-          if (!req.user) {
-            res.redirect(`/login?${new URLSearchParams({ from: location }).toString()}`);
-            return;
-          }
-          if (!req.user.isAdmin) {
-            res.redirect('/');
-            return;
-          }
-          break;
+      const isRedirected = handleRedirects(req, location, urlPath, (to, state) => {
+        if (state) {
+          res.redirect(`${to}?${new URLSearchParams({ from: location }).toString()}`);
+        } else {
+          res.redirect(to);
         }
-      }
-      if (!match) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const pattern of AUTH_PROTECTED_PATHS) {
-          match = matchPath(pattern, urlPath);
-          if (match) {
-            if (!req.user) {
-              res.redirect(`/login?${new URLSearchParams({ from: location }).toString()}`);
-              return;
-            }
-            break;
-          }
-        }
-      }
-      // eslint-disable-next-line no-restricted-syntax
-      for (const redirect of REDIRECTS) {
-        match = matchPath(redirect[0], urlPath);
-        if (match) {
-          res.redirect(redirect[1]);
-          return;
-        }
-      }
+        return true;
+      });
+      if (isRedirected) return;
       const staticContext = { ...defaultStaticContext, authContext: { user: req.user?.toJSON() ?? null } };
       const helmetContext = {};
       const reactApp = ReactDOMServer.renderToString(
