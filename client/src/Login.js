@@ -89,7 +89,7 @@ function Login() {
                   </div>
                   <div className="mb-3 text-center">
                     <Link to="/passwords/forgot">Forgot your password?</Link>
-                    {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
+                    {staticContext.env.REACT_APP_FEATURE_REGISTRATION === 'true' && (
                       <>
                         <br />
                         <Link to="/register">Need an account?</Link>
