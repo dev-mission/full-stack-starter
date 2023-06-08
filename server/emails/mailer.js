@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const Email = require('email-templates');
+const path = require('path');
 
 let transport;
 
@@ -56,6 +57,7 @@ const email = new Email({
   send: true,
   transport,
   views: {
+    root: path.resolve(__dirname),
     options: {
       extension: 'ejs',
     },
