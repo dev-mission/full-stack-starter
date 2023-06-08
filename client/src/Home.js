@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Home - {staticContext.env.REACT_APP_SITE_TITLE}</title>
+        <title>Home - {staticContext?.env?.REACT_APP_SITE_TITLE}</title>
       </Helmet>
       <main className="container">
         <h1>Home</h1>
