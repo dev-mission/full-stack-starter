@@ -89,7 +89,6 @@ describe('/api/users', () => {
 
     describe('GET /:id', () => {
       it('returns a User by its id', async () => {
-        /// request user list
         const response = await testSession
           .get('/api/users/b9d53b71-faac-4ead-bbb6-745412b79bbf')
           .set('Accept', 'application/json')

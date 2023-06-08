@@ -1,0 +1,40 @@
+#!/bin/bash
+
+APP_NAME=$1
+ENV_NAME=$2
+VERSION=$3
+
+read -p "Custom domain (optional) for the instance: " DOMAIN
+read -p "Email address to send transactional email from: " FROM_EMAIL
+read -p "Contact email to use for LetsEncrypt SSL registration: " LETSENCRYPT_EMAIL
+read -p "Human readable name of app (browser title, footers, etc): " SITE_TITLE
+read -p "Enable user registration? [y/n]: " FEATURE_REGISTRATION
+read -p "Dry run (staging SSL certs)? [y/n]: " DRY_RUN
+[[ $FEATURE_REGISTRATION = "y" ]] && FEATURE_REGISTRATION="true" || FEATURE_REGISTRATION="false"
+[[ $DRY_RUN = "n" ]] && LETSENCRYPT_OPTS="--test-cert" || LETSENCRYPT_OPTS=""
+
+DB_PASSWORD=`echo $RANDOM | md5sum | head -c 20`
+SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32`
+
+# create the key pair for CDN signing
+openssl genrsa -out private_key.pem 2048
+openssl rsa -pubout -in private_key.pem -out public_key.pem
+PUBLIC_KEY=`cat public_key.pem`
+PRIVATE_KEY=`cat private_key.pem`
+PRIVATE_KEY=${PRIVATE_KEY//
+/"\\n"}
+
+aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name ${APP_NAME}-${ENV_NAME} --template-body file://./create.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME ParameterKey=EnvironmentName,ParameterValue=$ENV_NAME ParameterKey=Version,ParameterValue=$VERSION ParameterKey=DBPassword,ParameterValue=$DB_PASSWORD ParameterKey=LetsEncryptEmail,ParameterValue=$LETSENCRYPT_EMAIL ParameterKey=SessionSecret,ParameterValue=$SESSION_SECRET ParameterKey=SiteTitle,ParameterValue="$SITE_TITLE" ParameterKey=FeatureRegistration,ParameterValue=$FEATURE_REGISTRATION ParameterKey=CDNSigningPrivateKey,ParameterValue="$PRIVATE_KEY" ParameterKey=CDNSigningPublicKey,ParameterValue="$PUBLIC_KEY" ParameterKey=DomainName,ParameterValue="$DOMAIN" ParameterKey=EmailAddress,ParameterValue="$FROM_EMAIL" ParameterKey=LetsEncryptOpts,ParameterValue="$LETSENCRYPT_OPTS"
+
+# wait for key pair to become available
+while : ; do
+  KEY_NAME=`aws ec2 describe-key-pairs --filters Name=key-name,Values=${APP_NAME}-${ENV_NAME}-key-pair --query KeyPairs[*].KeyPairId --output text`
+  if [ "$KEY_NAME" != "" ]; then
+    break
+  fi
+  sleep 1
+done
+
+# download into a pem file in ~/.ssh
+aws ssm get-parameter --name /ec2/keypair/${KEY_NAME} --with-decryption --query Parameter.Value --output text > ~/.ssh/${APP_NAME}-${ENV_NAME}-key-pair.pem
+chmod 600 ~/.ssh/${APP_NAME}-${ENV_NAME}-key-pair.pem

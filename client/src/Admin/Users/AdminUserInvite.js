@@ -48,7 +48,7 @@ function AdminUserInvite() {
   return (
     <>
       <Helmet>
-        <title>Invite a new User - {staticContext.env.REACT_APP_SITE_TITLE}</title>
+        <title>Invite a new User - {staticContext?.env?.REACT_APP_SITE_TITLE}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">

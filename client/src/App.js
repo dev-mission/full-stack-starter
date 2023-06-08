@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.scss';
 
 import { AuthContextProvider } from './AuthContext';
+import { useStaticContext } from './StaticContext';
 import AppRedirects from './AppRedirects';
 import Header from './Header';
 import Home from './Home';
@@ -15,6 +16,8 @@ import TeamsRoutes from './Teams/TeamsRoutes';
 import UsersRoutes from './Users/UsersRoutes';
 
 function App() {
+  const { staticContext } = useStaticContext();
+
   return (
     <AuthContextProvider>
       <Header />
@@ -28,7 +31,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/passwords/*" element={<PasswordsRoutes />} />
                 <Route path="/invites/*" element={<InvitesRoutes />} />
-                {process.env.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
+                {staticContext?.env?.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
                 <Route path="/teams/*" element={<TeamsRoutes />} />
                 <Route path="/account/*" element={<UsersRoutes />} />
                 <Route path="/admin/*" element={<AdminRoutes />} />

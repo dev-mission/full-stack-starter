@@ -20,11 +20,11 @@ let signerClient;
 if (process.env.AWS_S3_ENDPOINT) {
   const options = {
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
     },
     endpoint: process.env.AWS_S3_ENDPOINT,
-    region: 'us-east-1', // placeholder region, parameter is required but will be unused if endpoint is fully qualified with region embedded
+    region: process.env.AWS_S3_REGION,
     forcePathStyle: true,
   };
   client = new S3Client(options);

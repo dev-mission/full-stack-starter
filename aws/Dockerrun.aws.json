@@ -1,0 +1,72 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "nginx-conf",
+      "host": {
+        "sourcePath": "/var/app/current/nginx/conf.d"
+      }
+    },
+    {
+      "name": "nginx-webroot",
+      "host": {
+        "sourcePath": "/var/app/current/nginx/webroot"
+      }
+    },
+    {
+      "name": "nginx-certs",
+      "host": {
+        "sourcePath": "/etc/letsencrypt"
+      }
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "server",
+      "image": "",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 3000,
+          "containerPort": 3000
+        }
+      ]
+    },
+    {
+      "name": "nginx",
+      "image": "nginx",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        },
+        {
+          "hostPort": 443,
+          "containerPort": 443
+        }
+      ],
+      "links": ["server"],
+      "mountPoints": [
+        {
+          "sourceVolume": "nginx-conf",
+          "containerPath": "/etc/nginx/conf.d"
+        },
+        {
+          "sourceVolume": "nginx-webroot",
+          "containerPath": "/usr/share/nginx/html"
+        },
+        {
+          "sourceVolume": "nginx-certs",
+          "containerPath": "/etc/letsencrypt"
+        },
+        {
+          "sourceVolume": "awseb-logs-nginx",
+          "containerPath": "/var/log/nginx"
+        }
+      ]
+    }
+  ]
+}
