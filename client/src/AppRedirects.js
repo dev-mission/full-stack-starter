@@ -33,9 +33,18 @@ export function handleRedirects(authContext, location, pathname, callback) {
     }
   }
   for (const redirect of REDIRECTS) {
-    match = matchPath(redirect[0], pathname);
+    let [src, dest] = redirect;
+    match = matchPath(src, pathname);
     if (match) {
-      return callback(redirect[1]);
+      if (match.params) {
+        for (const key of Object.keys(match.params)) {
+          dest = dest.replace(`:${key}`, match.params[key]);
+        }
+      }
+      if (dest !== src) {
+        return callback(dest);
+      }
+      break;
     }
   }
   return false;
