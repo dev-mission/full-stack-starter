@@ -37,10 +37,6 @@ ADD . $APP_HOME
 # Set workdir
 WORKDIR $APP_HOME
 
-# Defaults for env variables compiled by webpack, override in build command line
-ARG REACT_APP_SITE_TITLE="Full Stack Starter"
-ARG REACT_APP_FEATURE_REGISTRATION=false
-
 # Install dependencies, build client app
 RUN npm install && \
     npm run build -w client
