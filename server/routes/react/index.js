@@ -22,7 +22,6 @@ require('@babel/register')({
 });
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
-const { matchPath } = require('react-router-dom');
 const { StaticRouter } = require('react-router-dom/server');
 const { HelmetProvider } = require('react-helmet-async');
 
