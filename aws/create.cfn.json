@@ -479,6 +479,25 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "BASE_URL",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Fn::If": [
+                      "DomainNameIsEmpty",
+                      { "Fn::Sub": "${ApplicationName}-${EnvironmentName}.${AWS::Region}.elasticbeanstalk.com" },
+                      { "Ref": "DomainName" }
+                    ]
+                  }
+                ]
+              ]
+            }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "DATABASE_URL",
             "Value": {
               "Fn::Join": [
