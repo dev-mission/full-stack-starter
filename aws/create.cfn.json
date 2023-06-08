@@ -57,6 +57,11 @@
       "Default": "false",
       "AllowedValues": ["true", "false"]
     },
+    "LetsEncryptOpts": {
+      "Description": "Option flags to pass to certbot for Let's Encrypt certs",
+      "Type": "String",
+      "Default": "--test-cert"
+    },
     "LetsEncryptEmail": {
       "Description": "The email address used to request an SSL certificate from Let's Encrypt",
       "Type": "String"
@@ -524,6 +529,11 @@
             "Namespace": "aws:elasticbeanstalk:application:environment",
             "OptionName": "LETSENCRYPT_EMAIL",
             "Value": { "Ref": "LetsEncryptEmail" }
+          },
+          {
+            "Namespace": "aws:elasticbeanstalk:application:environment",
+            "OptionName": "LETSENCRYPT_OPTS",
+            "Value": { "Ref": "LetsEncryptOpts" }
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
