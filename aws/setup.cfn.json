@@ -1,16 +1,16 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Full Stack Starter Setup",
+  "Description": "XR Tour Setup",
   "Parameters": {
     "ApplicationName": {
       "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
       "Type": "String",
-      "Default": "fss"
+      "Default": "xrtour"
     },
     "ApplicationDescription": {
       "Description": "Description of the application",
       "Type": "String",
-      "Default": "Full Stack Starter"
+      "Default": "XR Tour"
     }
   },
   "Resources": {

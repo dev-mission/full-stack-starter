@@ -19,5 +19,5 @@ REPO=$IDENTITY.dkr.ecr.$REGION.amazonaws.com
 aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
 
 # tag the locally built image with the repo url and name
-docker tag devmission/full-stack-starter:$VERSION $REPO/$APP_NAME:$VERSION
+docker tag francisli/xrtour:$VERSION $REPO/$APP_NAME:$VERSION
 docker push $REPO/$APP_NAME:$VERSION

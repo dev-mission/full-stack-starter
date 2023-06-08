@@ -26,7 +26,7 @@
    application name.
 
    ```
-   # ./setup fss
+   # ./setup xrtour
    ```
 
    This initial setup script creates a CloudFormation stack with an Elastic
@@ -40,18 +40,18 @@
    ECR repository using the push script (`./push`).
 
    ```
-   # ./push fss 4.1.2
+   # ./push xrtour 4.1.2
    ```
 
 7. Create a new EB version from the pushed image using the release script (`./release`).
 
    ```
-   # ./release fss 4.1.2
+   # ./release xrtour 4.1.2
    ```
 
 8. Now you can create any number of separate environments from that version using
    the create script (`./create`).
 
    ```
-   # ./create fss test 4.1.12
+   # ./create xrtour test 4.1.12
    ```

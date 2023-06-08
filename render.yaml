@@ -24,6 +24,6 @@ services:
 
 databases:
   - name: db
-    databaseName: fss # optional (Render may add a suffix)
+    databaseName: xrtour # optional (Render may add a suffix)
     plan: free
     postgresMajorVersion: 14
