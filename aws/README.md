@@ -22,11 +22,11 @@
    wish to deploy/operate in.
 
 5. Change into the `aws` directory (`cd aws`) and run the setup script (`./setup`).
-   You can edit the `setup` script files or pass arguments to customize the
-   application name.
+   When prompted for an App name, choose something all lowercase, letters, numbers,
+   and hyphen only, as this will be used to generate ids in the scripts.
 
    ```
-   # ./setup xrtour
+   # ./setup
    ```
 
    This initial setup script creates a CloudFormation stack with an Elastic
@@ -36,22 +36,22 @@
    "staging", and "production" environments. The ECR repository will hold
    the built Docker images for the application.
 
-6. Push the built Docker images for the version you wish to deploy to the new
-   ECR repository using the push script (`./push`).
+6. Tag your repository with a version number (i.e. 1.0.0) and run the push script
+   to build a multi-architecture image and push it to the ECR repository.
 
    ```
-   # ./push xrtour 4.1.2
+   # ./push
    ```
 
 7. Create a new EB version from the pushed image using the release script (`./release`).
 
    ```
-   # ./release xrtour 4.1.2
+   # ./release
    ```
 
 8. Now you can create any number of separate environments from that version using
    the create script (`./create`).
 
    ```
-   # ./create xrtour test 4.1.12
+   # ./create
    ```

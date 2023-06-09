@@ -5,10 +5,10 @@
     "ApplicationName": {
       "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
       "Type": "String",
-      "Default": "xrtour"
+      "Default": "app"
     },
     "EnvironmentName": {
-      "Description": "The unique environment name for this instantiation- will be appended as a suffix, i.e. staging -> xrtour-staging",
+      "Description": "The unique environment name for this instantiation- will be appended as a suffix, i.e. staging -> app-staging",
       "Type": "String"
     },
     "InstanceType": {

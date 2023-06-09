@@ -1,16 +1,16 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "XR Tour Setup",
+  "Description": "Setup Stack",
   "Parameters": {
     "ApplicationName": {
       "Description": "Name of the application (snake-case, will be prepended to make internal reference names)",
       "Type": "String",
-      "Default": "xrtour"
+      "Default": "app"
     },
     "ApplicationDescription": {
       "Description": "Description of the application",
       "Type": "String",
-      "Default": "XR Tour"
+      "Default": ""
     }
   },
   "Resources": {
