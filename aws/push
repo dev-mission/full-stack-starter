@@ -1,7 +1,6 @@
 #!/bin/bash
 
-APP_NAME=$1
-VERSION=$2
+read -p "App name (lowercase, letters, numbers, hyphen only): " $APP_NAME
 
 # get account id
 IDENTITY=`aws sts get-caller-identity --output text`
@@ -18,6 +17,13 @@ REPO=$IDENTITY.dkr.ecr.$REGION.amazonaws.com
 # log in to the repository
 aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
 
-# tag the locally built image with the repo url and name
-docker tag devmission/full-stack-starter:$VERSION $REPO/$APP_NAME:$VERSION
-docker push $REPO/$APP_NAME:$VERSION
+# build a new version based on the latest tag
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+if [[ $BRANCH == 'main' ]]; then
+  TAG=`git describe --tags`
+  if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[^-]+)?$ ]]; then
+    SCRIPT_DIR=`dirname $BASH_SOURCE`
+    BUILD_PATH=`readlink -f $SCRIPT_DIR/..`
+    docker buildx build --push --platform linux/arm64,linux/amd64 --tag $REPO/$APP_NAME:$TAG $BUILD_PATH
+  fi
+fi
