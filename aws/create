@@ -1,9 +1,8 @@
 #!/bin/bash
 
-APP_NAME=$1
-ENV_NAME=$2
-VERSION=$3
-
+read -p "App name (lowercase, letters, numbers, hyphen only): " $APP_NAME
+read -p "Env name: " $ENV_NAME
+read -p "Version: " $VERSION
 read -p "Custom domain (optional) for the instance: " DOMAIN
 read -p "Email address to send transactional email from: " FROM_EMAIL
 read -p "Contact email to use for LetsEncrypt SSL registration: " LETSENCRYPT_EMAIL
@@ -11,7 +10,7 @@ read -p "Human readable name of app (browser title, footers, etc): " SITE_TITLE
 read -p "Enable user registration? [y/n]: " FEATURE_REGISTRATION
 read -p "Dry run (staging SSL certs)? [y/n]: " DRY_RUN
 [[ $FEATURE_REGISTRATION = "y" ]] && FEATURE_REGISTRATION="true" || FEATURE_REGISTRATION="false"
-[[ $DRY_RUN = "n" ]] && LETSENCRYPT_OPTS="--test-cert" || LETSENCRYPT_OPTS=""
+[[ $DRY_RUN = "n" ]] && LETSENCRYPT_OPTS="" || LETSENCRYPT_OPTS="--test-cert"
 
 DB_PASSWORD=`echo $RANDOM | md5sum | head -c 20`
 SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32`
