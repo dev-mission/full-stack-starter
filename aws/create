@@ -1,8 +1,8 @@
 #!/bin/bash
 
-read -p "App name (lowercase, letters, numbers, hyphen only): " $APP_NAME
-read -p "Env name: " $ENV_NAME
-read -p "Version: " $VERSION
+read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
+read -p "Env name: " ENV_NAME
+read -p "Version: " VERSION
 read -p "Custom domain (optional) for the instance: " DOMAIN
 read -p "Email address to send transactional email from: " FROM_EMAIL
 read -p "Contact email to use for LetsEncrypt SSL registration: " LETSENCRYPT_EMAIL

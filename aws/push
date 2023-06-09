@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "App name (lowercase, letters, numbers, hyphen only): " $APP_NAME
+read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
 
 # get account id
 IDENTITY=`aws sts get-caller-identity --output text`

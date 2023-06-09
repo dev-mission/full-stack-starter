@@ -1,7 +1,7 @@
 #!/bin/bash
 
-APP_NAME=$1
-VERSION=$2
+read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
+read -p "Version: " VERSION
 
 # get account id
 IDENTITY=`aws sts get-caller-identity --output text`
