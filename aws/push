@@ -1,7 +1,6 @@
 #!/bin/bash
 
 APP_NAME=$1
-VERSION=$2
 
 # get account id
 IDENTITY=`aws sts get-caller-identity --output text`
@@ -18,6 +17,10 @@ REPO=$IDENTITY.dkr.ecr.$REGION.amazonaws.com
 # log in to the repository
 aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
 
-# tag the locally built image with the repo url and name
-docker tag francisli/xrtour:$VERSION $REPO/$APP_NAME:$VERSION
-docker push $REPO/$APP_NAME:$VERSION
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+if [[ $BRANCH == 'main' ]]; then
+  TAG=`git describe --tags`
+  if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[^-]+)?$ ]]; then
+    docker buildx build --push --platform linux/arm64,linux/amd64 --tag $REPO/$APP_NAME:$TAG .
+  fi
+fi
