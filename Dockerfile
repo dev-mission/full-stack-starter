@@ -17,7 +17,7 @@ RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key ad
     chmod a+r /etc/apt/keyrings/docker.gpg && \
     echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update -y && \
-    apt-get install -y docker-ce-cli docker-buildx-plugin less postgresql-client-14 zip && \
+    apt-get install -y docker-ce-cli docker-buildx-plugin jq less postgresql-client-14 zip && \
     apt-get clean && \
     curl https://dl.min.io/client/mc/release/linux-$TARGETARCH/mc --create-dirs -o ~/minio-binaries/mc && \
     chmod +x ~/minio-binaries/mc
