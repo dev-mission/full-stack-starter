@@ -1,0 +1,22 @@
+#!/bin/bash
+
+read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
+read -p "Env name: " ENV_NAME
+read -p "Version: " VERSION
+
+response=$(aws cloudformation describe-stacks --stack-name ${APP_NAME}-${ENV_NAME})
+params=$(echo $response | jq .Stacks[0].Parameters[].ParameterKey)
+PREV_IFS=$IFS;IFS=$'\n';params=($params);IFS=$PREV_IFS
+VALUES=""
+for param in "${params[@]}"
+do
+  if [[ $param == '"Version"' ]]; then
+    VALUES="$VALUES ParameterKey=$param,ParameterValue=\"$VERSION\""
+  else
+    VALUES="$VALUES ParameterKey=$param,UsePreviousValue=true"
+  fi
+done
+
+STACK_NAME=${APP_NAME}-${ENV_NAME}
+
+aws cloudformation update-stack --capabilities CAPABILITY_NAMED_IAM --stack-name $STACK_NAME --use-previous-template --parameters $VALUES
