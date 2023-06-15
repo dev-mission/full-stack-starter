@@ -43,10 +43,22 @@
    # ./push
    ```
 
+   Then follow the prompts. Or, specify all the prompts on the command line:
+
+   ```
+   # ./push app
+   ```
+
 7. Create a new EB version from the pushed image using the release script (`./release`).
 
    ```
    # ./release
+   ```
+
+   Then follow the prompts. Or, specify all the prompts on the command line:
+
+   ```
+   # ./release app 1.2.0
    ```
 
 8. Now you can create any number of separate environments from that version using
@@ -54,4 +66,19 @@
 
    ```
    # ./create
+   ```
+
+   Then follow the prompts.
+
+9. To deploy a new version, push and release a new version following steps 6 and 7,
+   then run the update script (`./update`).
+
+   ```
+   # ./update
+   ```
+
+   Then follow the prompts. Or, specify all the prompts on the command line:
+
+   ```
+   # ./update app staging 1.2.0
    ```

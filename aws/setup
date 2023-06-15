@@ -4,4 +4,4 @@ read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
 read -p "App description: " APP_DESC
 
 # create the stack
-aws cloudformation create-stack --stack-name $APP_NAME --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue="$APP_NAME" ParameterKey=ApplicationDescription,ParameterValue=$APP_DESC
+aws cloudformation create-stack --stack-name $APP_NAME --template-body file://./setup.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue="$APP_NAME" ParameterKey=ApplicationDescription,ParameterValue="$APP_DESC"

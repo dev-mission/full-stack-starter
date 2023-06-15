@@ -386,7 +386,7 @@
         "CNAMEPrefix": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
         "EnvironmentName": { "Fn::Sub": "${ApplicationName}-${EnvironmentName}" },
         "VersionLabel": { "Ref": "Version" },
-        "SolutionStackName": "64bit Amazon Linux 2 v3.2.7 running ECS",
+        "SolutionStackName": "64bit Amazon Linux 2 v3.2.8 running ECS",
         "Tier": {
           "Name": "WebServer",
           "Type": "Standard"

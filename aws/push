@@ -1,27 +1,40 @@
 #!/bin/bash
 
-read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
-
-# get account id
-IDENTITY=`aws sts get-caller-identity --output text`
-if [[ $IDENTITY =~ ([^[:space:]]*) ]]; then
-  IDENTITY=${BASH_REMATCH[1]}
+if [[ $# > 0 ]]; then
+  APP_NAME=$1
+else
+  read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
 fi
-
-# get region
-REGION=`aws configure get region`
-
-# generate repo url
-REPO=$IDENTITY.dkr.ecr.$REGION.amazonaws.com
-
-# log in to the repository
-aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
 
 # build a new version based on the latest tag
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 if [[ $BRANCH == 'main' ]]; then
   TAG=`git describe --tags`
   if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[^-]+)?$ ]]; then
+    echo "Building and pushing: $APP_NAME $TAG"
+    if [[ $# < 1 ]]; then
+      read -p "Continue? [y/n]: " CONTINUE
+      if [[ $CONTINUE != 'y' ]]; then
+        exit 1
+      fi
+    fi
+
+    # get account id
+    IDENTITY=`aws sts get-caller-identity --output text`
+    if [[ $IDENTITY =~ ([^[:space:]]*) ]]; then
+      IDENTITY=${BASH_REMATCH[1]}
+    fi
+
+    # get region
+    REGION=`aws configure get region`
+
+    # generate repo url
+    REPO=$IDENTITY.dkr.ecr.$REGION.amazonaws.com
+
+    # log in to the repository
+    aws ecr get-login-password | docker login --username AWS --password-stdin $REPO
+
+    # build and push
     SCRIPT_DIR=`dirname $BASH_SOURCE`
     BUILD_PATH=`readlink -f $SCRIPT_DIR/..`
     docker buildx build --push --platform linux/arm64,linux/amd64 --tag $REPO/$APP_NAME:$TAG $BUILD_PATH

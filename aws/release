@@ -1,7 +1,23 @@
 #!/bin/bash
 
-read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
-read -p "Version: " VERSION
+if [[ $# > 0 ]]; then
+  APP_NAME=$1
+else
+  read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
+fi
+if [[ $# > 1 ]]; then
+  VERSION=$2
+else
+  read -p "Version: " VERSION
+fi
+
+echo "Releasing: $APP_NAME $VERSION"
+if [[ $# < 2 ]]; then
+  read -p "Continue? [y/n]: " CONTINUE
+  if [[ $CONTINUE != 'y' ]]; then
+    exit 1
+  fi
+fi
 
 # get account id
 IDENTITY=`aws sts get-caller-identity --output text`
