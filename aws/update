@@ -1,8 +1,27 @@
 #!/bin/bash
 
-read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
-read -p "Env name: " ENV_NAME
-read -p "Version: " VERSION
+if [[ $# > 0 ]]; then
+  APP_NAME=$1
+else
+  read -p "App name (lowercase, letters, numbers, hyphen only): " APP_NAME
+fi
+if [[ $# > 1 ]]; then
+  ENV_NAME=$2
+else
+  read -p "Env name: " ENV_NAME
+fi
+if [[ $# > 2 ]]; then
+  VERSION=$3
+else
+  read -p "Version: " VERSION
+fi
+echo "Updating: $APP_NAME-$ENV_NAME to $VERSION"
+if [[ $# < 3 ]]; then
+  read -p "Continue? [y/n]: " CONTINUE
+  if [[ $CONTINUE != 'y' ]]; then
+    exit 1
+  fi
+fi
 
 response=$(aws cloudformation describe-stacks --stack-name ${APP_NAME}-${ENV_NAME})
 params=$(echo $response | jq .Stacks[0].Parameters[].ParameterKey)
