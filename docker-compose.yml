@@ -28,6 +28,7 @@ services:
       - .:/opt/node/app
       - /opt/node/app/server/node_modules
       - /opt/node/app/client/node_modules
+      - /opt/node/app/viteclient/node_modules
       - /opt/node/app/node_modules
     environment:
       - SMTP_HOST=mailcatcher
