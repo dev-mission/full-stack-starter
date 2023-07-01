@@ -1,2 +1,3 @@
 server: cp .env server/.env && cd server && PORT=3100 npm start
 client: cp .env client/.env && cd client && PORT=3000 npm start
+viteclient: cp .env viteclient/.env && cd viteclient && PORT=3001 npm run dev
