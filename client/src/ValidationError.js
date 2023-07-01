@@ -1,4 +1,4 @@
-import inflection from 'inflection';
+import { capitalize } from 'inflection';
 
 class ValidationError extends Error {
   constructor(data) {
@@ -14,9 +14,7 @@ class ValidationError extends Error {
   errorMessagesHTMLFor(name) {
     const errors = this.errorsFor(name);
     if (errors) {
-      return (
-        <div className="invalid-feedback d-block">{inflection.capitalize([...new Set(errors.map((e) => e.message))].join(', '))}.</div>
-      );
+      return <div className="invalid-feedback d-block">{capitalize([...new Set(errors.map((e) => e.message))].join(', '))}.</div>;
     }
   }
 }
