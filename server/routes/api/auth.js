@@ -1,9 +1,9 @@
-const express = require('express');
-const { StatusCodes } = require('http-status-codes');
-const _ = require('lodash');
+import express from 'express';
+import { StatusCodes } from 'http-status-codes';
+import _ from 'lodash';
 
-const interceptors = require('../interceptors');
-const models = require('../../models');
+import interceptors from '../interceptors.js';
+import models from '../../models/index.js';
 
 const router = express.Router();
 
@@ -59,4 +59,4 @@ if (process.env.REACT_APP_FEATURE_REGISTRATION === 'true') {
   });
 }
 
-module.exports = router;
+export default router;

@@ -1,10 +1,10 @@
-const express = require('express');
-const { StatusCodes } = require('http-status-codes');
-const _ = require('lodash');
+import express from 'express';
+import { StatusCodes } from 'http-status-codes';
+import _ from 'lodash';
 
-const helpers = require('../helpers');
-const models = require('../../models');
-const interceptors = require('../interceptors');
+import helpers from '../helpers.js';
+import models from '../../models/index.js';
+import interceptors from '../interceptors.js';
 
 const router = express.Router();
 
@@ -128,4 +128,4 @@ router.get('/:id', async (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

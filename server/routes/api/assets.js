@@ -1,12 +1,12 @@
-const express = require('express');
-const fs = require('fs-extra');
-const { StatusCodes } = require('http-status-codes');
-const mime = require('mime-types');
-const path = require('path');
-const { v4: uuid } = require('uuid');
+import express from 'express';
+import fs from 'fs-extra';
+import { StatusCodes } from 'http-status-codes';
+import mime from 'mime-types';
+import path from 'path';
+import { v4 as uuid } from 'uuid';
 
-const interceptors = require('../interceptors');
-const s3 = require('../../lib/s3');
+import interceptors from '../interceptors.js';
+import s3 from '../../lib/s3.js';
 
 const router = express.Router();
 
@@ -67,4 +67,4 @@ router.get('/:path([^?]+)', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

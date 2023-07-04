@@ -1,7 +1,11 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+
+import apiRoutes from './api/index.js';
+// import clientRoutes from './react/index.js';
 
 const router = express.Router();
+const __dirname = '.';
 
 // configure serving up a built client app assets
 router.use(express.static(path.join(__dirname, '../../client/build'), { index: false }));
@@ -10,9 +14,9 @@ router.use(express.static(path.join(__dirname, '../../client/build'), { index: f
 router.use(express.static(path.join(__dirname, '../public')));
 
 // serve some paths from other nested routers
-router.use('/api', require('./api'));
+router.use('/api', apiRoutes);
 
 // serve up the client app for all other routes, per SPA client-side routing
-router.get('/*', require('./react'));
+// router.get('/*', clientRoutes);
 
-module.exports = router;
+export default router;

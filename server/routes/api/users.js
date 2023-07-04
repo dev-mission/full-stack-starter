@@ -1,10 +1,10 @@
-const express = require('express');
-const { StatusCodes } = require('http-status-codes');
-const _ = require('lodash');
+import express from 'express';
+import { StatusCodes } from 'http-status-codes';
+import _ from 'lodash';
 
-const models = require('../../models');
-const interceptors = require('../interceptors');
-const helpers = require('../helpers');
+import models from '../../models/index.js';
+import interceptors from '../interceptors.js';
+import helpers from '../helpers.js';
 
 const router = express.Router();
 
@@ -78,4 +78,4 @@ router.patch('/:id', interceptors.requireLogin, (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

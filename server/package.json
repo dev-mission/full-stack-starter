@@ -2,12 +2,13 @@
   "name": "full-stack-starter-server",
   "version": "4.1.3",
   "private": true,
+  "type": "module",
   "scripts": {
     "pp": "prettier --write --ignore-unknown .",
     "pp:changed": "prettier --write --ignore-unknown $(git diff --name-only --relative .; git ls-files -o --exclude-standard)",
     "lint": "eslint .",
     "lint:changed": "eslint $(git diff --name-only --relative .; git ls-files -o --exclude-standard)",
-    "start": "nodemon -V --ignore ./client --ignore ./migrations --ignore ./public --ignore ./test ./bin/www",
+    "start": "nodemon -V --ignore ./client --ignore ./migrations --ignore ./public --ignore ./test ./bin/www.js",
     "test": "mocha --recursive"
   },
   "dependencies": {
