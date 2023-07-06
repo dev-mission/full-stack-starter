@@ -37,7 +37,7 @@ jobs:
       - run:
           command: cd server && npx sequelize db:migrate --env test
       - run:
-          command: eval $(cat example.env | grep -v -E "DATABASE_URL|AWS_[^=]+" | sed 's/^/export /'); cd server; bin/create-bucket app; cd ..; npm run test
+          command: eval $(cat example.env | grep -v -E "DATABASE_URL|AWS_[^=]+" | sed 's/^/export /'); cd server; bin/create-bucket.js app; cd ..; npm run test
 
 workflows:
   test:
