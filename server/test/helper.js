@@ -1,20 +1,18 @@
 /* eslint-disable mocha/no-top-level-hooks, mocha/no-hooks-for-single-case, mocha/no-exports */
 
-// MUST BE FIRST! set the NODE_ENV to test to disable logging, switch to test db
-process.env.NODE_ENV = 'test';
-process.env.ASSET_PATH_PREFIX = 'test';
-process.env.REACT_APP_FEATURE_REGISTRATION = 'true';
-
+import './vars.js';
 // Load .env config after above overrides
-require('dotenv').config();
+import 'dotenv/config';
+import fixtures from 'sequelize-fixtures';
+import path from 'path';
+import fs from 'fs-extra';
+import nodemailerMock from 'nodemailer-mock';
+import { fileURLToPath } from 'url';
 
-const fixtures = require('sequelize-fixtures');
-const path = require('path');
-const fs = require('fs-extra');
-const nodemailerMock = require('nodemailer-mock');
+import models from '../models/index.js';
+import s3 from '../lib/s3.js';
 
-const models = require('../models');
-const s3 = require('../lib/s3');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function loadFixtures(files) {
   const filePaths = files.map((f) => path.resolve(__dirname, `fixtures/${f}.json`));
@@ -76,7 +74,7 @@ after(async () => {
   await models.sequelize.close();
 });
 
-module.exports = {
+export default {
   assetPathExists,
   cleanAssets,
   loadFixtures,

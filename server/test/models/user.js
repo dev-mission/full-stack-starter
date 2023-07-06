@@ -1,10 +1,10 @@
-const assert = require('assert');
-const _ = require('lodash');
-const path = require('path');
-const { v4: uuid } = require('uuid');
+import assert from 'assert';
+import _ from 'lodash';
+import path from 'path';
+import { v4 as uuid } from 'uuid';
 
-const helper = require('../helper');
-const models = require('../../models');
+import helper from '../helper.js';
+import models from '../../models/index.js';
 
 describe('models.User', () => {
   beforeEach(async () => {

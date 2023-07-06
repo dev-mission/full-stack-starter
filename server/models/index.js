@@ -19,7 +19,7 @@ if (config.use_env_variable) {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-Promise.all(
+await Promise.all(
   fs
     .readdirSync(__dirname)
     .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')

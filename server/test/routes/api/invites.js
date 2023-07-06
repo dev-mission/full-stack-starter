@@ -1,11 +1,11 @@
-const assert = require('assert');
-const { StatusCodes } = require('http-status-codes');
-const nodemailerMock = require('nodemailer-mock');
-const session = require('supertest-session');
+import assert from 'assert';
+import { StatusCodes } from 'http-status-codes';
+import nodemailerMock from 'nodemailer-mock';
+import session from 'supertest-session';
 
-const helper = require('../../helper');
-const app = require('../../../app');
-const models = require('../../../models');
+import helper from '../../helper.js';
+import app from '../../../app.js';
+import models from '../../../models/index.js';
 
 describe('/api/invites', () => {
   let testSession;

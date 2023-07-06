@@ -53,7 +53,6 @@
   "devDependencies": {
     "cross-env": "~7.0.3",
     "del-cli": "^5.0.0",
-    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-mocha": "^10.1.0",
@@ -65,13 +64,19 @@
     "supertest-session": "^4.1.0"
   },
   "eslintConfig": {
+    "env": {
+      "node": true,
+      "es6": true
+    },
     "extends": [
-      "airbnb-base",
+      "eslint:recommended",
+      "plugin:import/recommended",
       "plugin:mocha/recommended",
       "prettier"
     ],
     "parserOptions": {
-      "ecmaVersion": 2020
+      "ecmaVersion": "latest",
+      "sourceType": "module"
     },
     "plugins": [
       "import",
@@ -84,6 +89,9 @@
       "no-underscore-dangle": [
         "error",
         {
+          "allow": [
+            "__dirname"
+          ],
           "allowAfterThis": true
         }
       ],

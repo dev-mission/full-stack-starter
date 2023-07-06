@@ -50,7 +50,7 @@ if (process.env.SMTP_ENABLED === 'true') {
 
 if (process.env.NODE_ENV === 'test') {
   // eslint-disable-next-line global-require, import/no-extraneous-dependencies
-  transport = require('nodemailer-mock').createTransport(transport);
+  transport = (await import('nodemailer-mock')).default.createTransport(transport);
 }
 
 const email = new Email({
