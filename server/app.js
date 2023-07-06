@@ -10,10 +10,11 @@ import passport from 'passport';
 import fileUpload from 'express-fileupload';
 import i18n from 'i18n';
 import { StatusCodes } from 'http-status-codes';
+import { fileURLToPath } from 'url';
 
 import routes from './routes/index.js';
 
-const __dirname = '.';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 /// router logging output

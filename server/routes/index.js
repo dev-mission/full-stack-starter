@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import apiRoutes from './api/index.js';
 // import clientRoutes from './react/index.js';
 
 const router = express.Router();
-const __dirname = '.';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // configure serving up a built client app assets
 router.use(express.static(path.join(__dirname, '../../client/build'), { index: false }));

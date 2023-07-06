@@ -1,6 +1,9 @@
-const crypto = require('crypto');
-const Email = require('email-templates');
-const path = require('path');
+import crypto from 'crypto';
+import Email from 'email-templates';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let transport;
 
@@ -71,4 +74,4 @@ const email = new Email({
   },
 });
 
-module.exports = email;
+export default email;

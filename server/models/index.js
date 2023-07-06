@@ -2,8 +2,9 @@ import fs from 'fs-extra';
 import inflection from 'inflection';
 import path from 'path';
 import Sequelize from 'sequelize';
-import s3 from '../lib/s3.js';
+import { fileURLToPath } from 'url';
 
+import s3 from '../lib/s3.js';
 import configs from '../config/config.js';
 
 const env = process.env.NODE_ENV || 'development';
@@ -17,7 +18,7 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-const __dirname = '.';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 fs.readdirSync(__dirname)
   .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')
   .forEach((file) => {

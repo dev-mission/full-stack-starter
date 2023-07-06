@@ -14,6 +14,9 @@ import { getSignedUrl as getSignedCloudFrontUrl } from '@aws-sdk/cloudfront-sign
 import fs from 'fs';
 import { DateTime } from 'luxon';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let client;
 let signerClient;

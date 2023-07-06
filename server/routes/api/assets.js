@@ -4,10 +4,12 @@ import { StatusCodes } from 'http-status-codes';
 import mime from 'mime-types';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
+import { fileURLToPath } from 'url';
 
 import interceptors from '../interceptors.js';
 import s3 from '../../lib/s3.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
 
 router.post('/', interceptors.requireLogin, async (req, res) => {
