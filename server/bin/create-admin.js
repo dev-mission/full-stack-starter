@@ -17,7 +17,7 @@ bcrypt.hash(process.argv[5], 10).then((hashedPassword) => {
     email: process.argv[4],
     hashedPassword: hashedPassword,
     isAdmin: true,
-  }).then((user) => {
+  }).then(() => {
     console.log('Admin user created!');
     models.sequelize.close();
   });
