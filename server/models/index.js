@@ -19,18 +19,21 @@ if (config.use_env_variable) {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-fs.readdirSync(__dirname)
-  .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')
-  .forEach((file) => {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    // const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    // db[model.name] = model;
+Promise.all(
+  fs
+    .readdirSync(__dirname)
+    .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')
+    .map((file) =>
+      import(path.join(__dirname, file))
+        .then(({ default: init }) => init(sequelize, Sequelize.DataTypes))
+        .then((model) => (db[model.name] = model))
+    )
+).then(() => {
+  Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
   });
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
 });
 
 db.sequelize = sequelize;
