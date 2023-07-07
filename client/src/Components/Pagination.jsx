@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 function Pagination({ page, lastPage, url }) {
@@ -88,4 +89,11 @@ function Pagination({ page, lastPage, url }) {
     </nav>
   );
 }
+
+Pagination.propTypes = {
+  lastPage: PropTypes.number,
+  page: PropTypes.number,
+  url: PropTypes.string,
+};
+
 export default Pagination;

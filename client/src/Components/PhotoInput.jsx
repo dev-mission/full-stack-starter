@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import DropzoneUploader from './DropzoneUploader';
 import './PhotoInput.scss';
@@ -57,4 +58,15 @@ function PhotoInput({ className, children, id, name, onChange, value, valueUrl }
     </DropzoneUploader>
   );
 }
+
+PhotoInput.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  onChange: PropTypes.func,
+  value: PropTypes.string,
+  valueUrl: PropTypes.string,
+};
+
 export default PhotoInput;
