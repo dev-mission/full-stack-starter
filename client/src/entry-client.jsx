@@ -3,7 +3,8 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { defaultValue, StaticContextProvider } from './StaticContext';
+import { defaultValue } from './StaticContext';
+import StaticContextProvider from './StaticContextProvider';
 
 const container = document.getElementById('root');
 const app = (

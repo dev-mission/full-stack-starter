@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import './App.scss';
 
-import { AuthContextProvider } from './AuthContext';
+import AuthContextProvider from './AuthContextProvider';
 import { useStaticContext } from './StaticContext';
 import AppRedirects from './AppRedirects';
 import Header from './Header';

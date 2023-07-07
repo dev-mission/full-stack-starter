@@ -2,8 +2,9 @@ import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { HelmetProvider } from 'react-helmet-async';
 
-import { defaultValue, StaticContextProvider } from './StaticContext';
-import { handleRedirects } from './AppRedirects';
+import { defaultValue } from './StaticContext';
+import StaticContextProvider from './StaticContextProvider';
+import { handleRedirects } from './AppRedirectsConfig';
 import App from './App';
 
 export function render(req, res, helmetContext, staticContext) {
