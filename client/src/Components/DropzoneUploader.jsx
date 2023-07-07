@@ -108,7 +108,7 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
 }
 
 DropzoneUploader.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.func,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   id: PropTypes.string,

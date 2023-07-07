@@ -22,7 +22,7 @@ function PhotoInput({ className, children, id, name, onChange, value, valueUrl }
       id={id}
       className={classNames('photo-input', className)}
       multiple={false}
-      disabled={value && value !== ''}
+      disabled={!!value && value !== ''}
       onRemoved={onRemoved}
       onUploaded={onUploaded}>
       {({ statuses, onRemove }) => {
