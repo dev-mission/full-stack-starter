@@ -44,7 +44,6 @@ services:
       - AWS_S3_SIGNER_ENDPOINT=http://localhost:9000
     ports:
       - 3000:3000
-      - 3001:3001
       - 3100:3100
     depends_on:
       - db
