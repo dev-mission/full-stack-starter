@@ -29,7 +29,6 @@ router.get('/*', async (req, res, next) => {
         }
       });
       const app = render(req, res, helmetContext, staticContext);
-      console.log(staticContext);
       if (app) {
         const { helmet } = helmetContext;
         res.send(
@@ -39,7 +38,6 @@ router.get('/*', async (req, res, next) => {
         );
       }
     } catch (error) {
-      console.log(error);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   } else {
