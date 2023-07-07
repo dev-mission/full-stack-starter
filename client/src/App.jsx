@@ -15,7 +15,7 @@ import Register from './Register';
 import UsersRoutes from './Users/UsersRoutes';
 
 function App() {
-  const { staticContext } = useStaticContext();
+  const staticContext = useStaticContext();
 
   return (
     <AuthContextProvider>

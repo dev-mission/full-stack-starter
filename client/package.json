@@ -9,6 +9,7 @@
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.jsx --outDir dist/server",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:changed": "eslint $(git diff --name-only --relative .; git ls-files -o --exclude-standard) --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {

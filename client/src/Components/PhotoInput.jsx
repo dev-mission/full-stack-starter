@@ -1,10 +1,9 @@
-import React from 'react';
 import classNames from 'classnames';
 
 import DropzoneUploader from './DropzoneUploader';
 import './PhotoInput.scss';
 
-function PhotoInput({ className, children, id, name, onChange, onUploading, value, valueUrl }) {
+function PhotoInput({ className, children, id, name, onChange, value, valueUrl }) {
   function onRemoved() {
     if (onChange) {
       onChange({ target: { name, value: '' } });

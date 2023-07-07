@@ -65,14 +65,14 @@ function Invite() {
   return (
     <>
       <Helmet>
-        <title>You're Invited - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
+        <title>You&apos;re Invited - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">
           <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
             <div className="card">
               <div className="card-body">
-                <h2 className="card-title">You're Invited</h2>
+                <h2 className="card-title">You&apos;re Invited</h2>
                 {invite?.acceptedAt && <p>This invite has already been accepted.</p>}
                 {invite?.revokedAt && <p>This invite is no longer available.</p>}
                 {invite && invite.acceptedAt === null && invite.revokedAt === null && (

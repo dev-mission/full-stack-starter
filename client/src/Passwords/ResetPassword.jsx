@@ -21,8 +21,8 @@ function ResetPassword() {
     setShowInvalid(false);
     Api.passwords
       .update(token, password)
-      .then((response) => navigate('/login', { state: { flash: 'Your new password has been saved.' } }))
-      .catch((error) => setShowError(true));
+      .then(() => navigate('/login', { state: { flash: 'Your new password has been saved.' } }))
+      .catch(() => setShowError(true));
   }
 
   useEffect(
@@ -30,7 +30,7 @@ function ResetPassword() {
       if (token) {
         Api.passwords
           .get(token)
-          .then((response) => {})
+          .then(() => {})
           .catch((error) => {
             if (error && error.response && error.response.status === 404) {
               setShowInvalid(true);

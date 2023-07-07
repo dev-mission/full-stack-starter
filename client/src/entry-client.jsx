@@ -15,8 +15,8 @@ const app = (
     </HelmetProvider>
   </StaticContextProvider>
 );
-if (process.env.NODE_ENV === 'development') {
-  createRoot(container).render(<React.StrictMode>{app}</React.StrictMode>);
-} else {
+if (import.meta.env.NODE_ENV === 'production') {
   hydrateRoot(container, app);
+} else {
+  createRoot(container).render(<React.StrictMode>{app}</React.StrictMode>);
 }

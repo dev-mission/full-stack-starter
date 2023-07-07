@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 
