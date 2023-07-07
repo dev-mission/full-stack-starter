@@ -1,16 +1,16 @@
-const assert = require('assert');
-const { StatusCodes } = require('http-status-codes');
-const _ = require('lodash');
-const session = require('supertest-session');
+import assert from 'assert';
+import { StatusCodes } from 'http-status-codes';
+import _ from 'lodash';
+import session from 'supertest-session';
 
-const helper = require('../../helper');
-const app = require('../../../app');
+import helper from '../../helper.js';
+import app from '../../../app.js';
 
 describe('/api/auth', () => {
   let testSession;
 
   before(() => {
-    process.env.REACT_APP_FEATURE_REGISTRATION = 'true';
+    process.env.VITE_FEATURE_REGISTRATION = 'true';
   });
 
   beforeEach(async () => {

@@ -1,8 +1,8 @@
-const { Model } = require('sequelize');
-const _ = require('lodash');
-const mailer = require('../emails/mailer');
+import { Model } from 'sequelize';
+import _ from 'lodash';
+import mailer from '../emails/mailer.js';
 
-module.exports = (sequelize, DataTypes) => {
+export default function (sequelize, DataTypes) {
   class Invite extends Model {
     /**
      * Helper method for defining associations.
@@ -100,4 +100,4 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   return Invite;
-};
+}

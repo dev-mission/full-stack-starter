@@ -1,23 +1,17 @@
 import { createContext, useContext } from 'react';
 
-const staticContext = createContext();
+export const staticContext = createContext();
 
-const defaultValue = {
+export const defaultValue = {
   authContext: {
     user: null,
   },
   env: {
-    REACT_APP_SITE_TITLE: process.env.REACT_APP_SITE_TITLE,
-    REACT_APP_FEATURE_REGISTRATION: process.env.REACT_APP_FEATURE_REGISTRATION,
+    VITE_SITE_TITLE: import.meta.env.VITE_SITE_TITLE,
+    VITE_FEATURE_REGISTRATION: import.meta.env.VITE_FEATURE_REGISTRATION,
   },
 };
 
-function useStaticContext() {
+export function useStaticContext() {
   return useContext(staticContext);
 }
-
-function StaticContextProvider({ value, children }) {
-  return <staticContext.Provider value={value}>{children}</staticContext.Provider>;
-}
-
-export { defaultValue, useStaticContext, StaticContextProvider };

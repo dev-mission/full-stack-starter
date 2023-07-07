@@ -1,13 +1,14 @@
-const fs = require('fs-extra');
-const inflection = require('inflection');
-const path = require('path');
-const Sequelize = require('sequelize');
-const s3 = require('../lib/s3');
+import fs from 'fs-extra';
+import inflection from 'inflection';
+import path from 'path';
+import Sequelize from 'sequelize';
+import { fileURLToPath } from 'url';
 
-const basename = path.basename(__filename);
+import s3 from '../lib/s3.js';
+import configs from '../config/config.js';
+
 const env = process.env.NODE_ENV || 'development';
-// eslint-disable-next-line import/no-dynamic-require
-const config = require(`${__dirname}/../config/config.js`)[env];
+const config = configs[env];
 const db = {};
 
 let sequelize;
@@ -17,18 +18,22 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs.readdirSync(__dirname)
-  .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
-  .forEach((file) => {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+await Promise.all(
+  fs
+    .readdirSync(__dirname)
+    .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js' && file.slice(-3) === '.js')
+    .map((file) =>
+      import(path.join(__dirname, file))
+        .then(({ default: init }) => init(sequelize, Sequelize.DataTypes))
+        .then((model) => (db[model.name] = model))
+    )
+).then(() => {
+  Object.keys(db).forEach((modelName) => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
   });
-
-Object.keys(db).forEach((modelName) => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
 });
 
 db.sequelize = sequelize;
@@ -118,4 +123,4 @@ Sequelize.Model.paginate = async function paginate(options) {
   return { records: rows, pages: Math.ceil(count / perPage), total: count };
 };
 
-module.exports = db;
+export default db;

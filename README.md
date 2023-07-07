@@ -151,7 +151,7 @@ This repository contains a "starter" project for web application development in 
 
 4. Enter a name for your deployment, and optionally the branch you wish to deploy (if not main).
 
-5. Set values for REACT_APP_FEATURE_REGISTRATION (true/false to enable/disable user registration), REACT_APP_SITE_TITLE (the name you wish to appear in the browser title bar), and SMTP_ENABLED (true/false to enable/disable mail, recommend false to start until mail server is set up).
+5. Set values for VITE_FEATURE_REGISTRATION (true/false to enable/disable user registration), VITE_SITE_TITLE (the name you wish to appear in the browser title bar), and SMTP_ENABLED (true/false to enable/disable mail, recommend false to start until mail server is set up).
 
 6. Click on Apply and wait, this can take quite a few minutes. You can click on the web service server link to follow the deployment event and watch the logs if you like.
 

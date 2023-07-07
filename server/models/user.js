@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt');
-const { Model, Op } = require('sequelize');
-const _ = require('lodash');
-const { v4: uuid } = require('uuid');
-const mailer = require('../emails/mailer');
+import bcrypt from 'bcrypt';
+import { Model, Op } from 'sequelize';
+import _ from 'lodash';
+import { v4 as uuid } from 'uuid';
+import mailer from '../emails/mailer.js';
 
-module.exports = (sequelize, DataTypes) => {
+export default function (sequelize, DataTypes) {
   class User extends Model {
     /**
      * Helper method for defining associations.
@@ -180,4 +180,4 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   return User;
-};
+}

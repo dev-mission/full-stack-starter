@@ -1,7 +1,7 @@
-const _ = require('lodash');
-const querystring = require('querystring');
+import _ from 'lodash';
+import querystring from 'querystring';
 
-module.exports.setPaginationHeaders = function setPaginationHeaders(req, res, page, pages, total) {
+function setPaginationHeaders(req, res, page, pages, total) {
   const baseURL = `${process.env.BASE_URL}${req.baseUrl}${req.path}?`;
   const query = _.clone(req.query);
   let link = '';
@@ -36,4 +36,8 @@ module.exports.setPaginationHeaders = function setPaginationHeaders(req, res, pa
     Link: link,
   };
   res.set(headers);
+}
+
+export default {
+  setPaginationHeaders,
 };

@@ -1,11 +1,16 @@
-const express = require('express');
+import express from 'express';
+import assetsRoutes from './assets.js';
+import authRoutes from './auth.js';
+import invitesRoutes from './invites.js';
+import passwordsRoutes from './passwords.js';
+import usersRoutes from './users.js';
 
 const router = express.Router();
 
-router.use('/assets', require('./assets'));
-router.use('/auth', require('./auth'));
-router.use('/invites', require('./invites'));
-router.use('/passwords', require('./passwords'));
-router.use('/users', require('./users'));
+router.use('/assets', assetsRoutes);
+router.use('/auth', authRoutes);
+router.use('/invites', invitesRoutes);
+router.use('/passwords', passwordsRoutes);
+router.use('/users', usersRoutes);
 
-module.exports = router;
+export default router;

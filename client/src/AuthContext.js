@@ -1,15 +1,14 @@
 import { createContext, useContext, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
 
 import { useStaticContext } from './StaticContext';
 
-const authContext = createContext();
+export const authContext = createContext();
 
-function useAuthContext() {
+export function useAuthContext() {
   return useContext(authContext);
 }
 
-function AuthContextValue() {
+export function AuthContextValue() {
   const staticContext = useStaticContext();
   const [user, setUser] = useState(staticContext.authContext?.user);
   return {
@@ -17,20 +16,3 @@ function AuthContextValue() {
     setUser,
   };
 }
-
-function AuthContextProvider({ children }) {
-  const value = AuthContextValue();
-  return <authContext.Provider value={value}>{children}</authContext.Provider>;
-}
-
-function AuthProtected({ isAdminRequired, children }) {
-  const location = useLocation();
-  const authContext = useAuthContext();
-  return authContext.user && (!isAdminRequired || authContext.user.isAdmin) ? (
-    children
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
-}
-
-export { useAuthContext, AuthContextProvider, AuthProtected };

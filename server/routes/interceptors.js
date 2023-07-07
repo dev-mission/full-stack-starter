@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt');
-const passport = require('passport');
-const passportLocal = require('passport-local');
-const { StatusCodes } = require('http-status-codes');
+import bcrypt from 'bcrypt';
+import passport from 'passport';
+import passportLocal from 'passport-local';
+import { StatusCodes } from 'http-status-codes';
 
-const models = require('../models');
+import models from '../models/index.js';
 
 /* eslint-disable no-param-reassign, no-underscore-dangle */
 function SessionManager(options, serializeUser) {
@@ -94,8 +94,6 @@ passport.deserializeUser((req, id, done) => {
     });
 });
 
-module.exports.passport = passport;
-
 function sendErrorUnauthorized(req, res) {
   res.sendStatus(StatusCodes.UNAUTHORIZED);
 }
@@ -120,10 +118,16 @@ function requireLoginInternal(req, res, next, requireAdmin) {
   }
 }
 
-module.exports.requireLogin = function requireLogin(req, res, next) {
+function requireLogin(req, res, next) {
   requireLoginInternal(req, res, next, false);
-};
+}
 
-module.exports.requireAdmin = function requireAdmin(req, res, next) {
+function requireAdmin(req, res, next) {
   requireLoginInternal(req, res, next, true);
+}
+
+export default {
+  passport,
+  requireLogin,
+  requireAdmin,
 };

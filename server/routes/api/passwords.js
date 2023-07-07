@@ -1,7 +1,7 @@
-const express = require('express');
-const { StatusCodes } = require('http-status-codes');
+import express from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-const models = require('../../models');
+import models from '../../models/index.js';
 
 const router = express.Router();
 
@@ -45,4 +45,4 @@ router.patch('/:token', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

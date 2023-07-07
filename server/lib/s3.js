@@ -1,4 +1,4 @@
-const {
+import {
   S3Client,
   CopyObjectCommand,
   CreateBucketCommand,
@@ -8,12 +8,15 @@ const {
   HeadObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
-} = require('@aws-sdk/client-s3');
-const { getSignedUrl: getSignedS3Url } = require('@aws-sdk/s3-request-presigner');
-const { getSignedUrl: getSignedCloudFrontUrl } = require('@aws-sdk/cloudfront-signer');
-const fs = require('fs');
-const { DateTime } = require('luxon');
-const path = require('path');
+} from '@aws-sdk/client-s3';
+import { getSignedUrl as getSignedS3Url } from '@aws-sdk/s3-request-presigner';
+import { getSignedUrl as getSignedCloudFrontUrl } from '@aws-sdk/cloudfront-signer';
+import fs from 'fs';
+import { DateTime } from 'luxon';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let client;
 let signerClient;
@@ -149,7 +152,7 @@ function putObject(Key, filePath) {
   );
 }
 
-module.exports = {
+export default {
   copyObject,
   createBucket,
   deleteObject,

@@ -1,2 +1,2 @@
 server: cp .env server/.env && cd server && PORT=3100 npm start
-client: cp .env client/.env && cd client && PORT=3000 npm start
+client: cp .env client/.env && cd client && PORT=3000 npm run dev

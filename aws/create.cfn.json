@@ -561,12 +561,12 @@
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "REACT_APP_SITE_TITLE",
+            "OptionName": "VITE_SITE_TITLE",
             "Value": { "Ref": "SiteTitle" }
           },
           {
             "Namespace": "aws:elasticbeanstalk:application:environment",
-            "OptionName": "REACT_APP_FEATURE_REGISTRATION",
+            "OptionName": "VITE_FEATURE_REGISTRATION",
             "Value": { "Ref": "FeatureRegistration" }
           },
           {
