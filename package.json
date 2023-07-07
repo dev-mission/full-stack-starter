@@ -4,8 +4,7 @@
   "private": true,
   "workspaces": [
     "client",
-    "server",
-    "viteclient"
+    "server"
   ],
   "scripts": {
     "heroku-postbuild": "npm run build -w client",

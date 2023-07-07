@@ -9,7 +9,7 @@ const router = express.Router();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // configure serving up a built client app assets
-router.use(express.static(path.join(__dirname, '../../viteclient/dist/client'), { index: false }));
+router.use(express.static(path.join(__dirname, '../../client/dist/client'), { index: false }));
 
 // configure serving any static file in public folder
 router.use(express.static(path.join(__dirname, '../public')));

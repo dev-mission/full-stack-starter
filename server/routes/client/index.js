@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const router = express.Router();
 
 function readIndexFile() {
-  const filePath = path.join(__dirname, '../../../viteclient/dist/client', 'index.html');
+  const filePath = path.join(__dirname, '../../../client/dist/client', 'index.html');
   if (fs.existsSync(filePath)) {
     return fs.readFileSync(filePath, { encoding: 'utf8' });
   }
@@ -20,7 +20,7 @@ const HTML = readIndexFile();
 router.get('/*', async (req, res, next) => {
   if (req.accepts('html')) {
     try {
-      const { render } = await import('../../../viteclient/dist/server/entry-server.js');
+      const { render } = await import('../../../client/dist/server/entry-server.js');
       const helmetContext = {};
       const staticContext = { context: { env: {} } };
       Object.keys(process.env).forEach((key) => {
