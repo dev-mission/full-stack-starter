@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Dropzone from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
@@ -87,23 +87,22 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
     }
   }
 
+  const { getRootProps, getInputProps } = useDropzone({
+    id,
+    multiple,
+    maxFiles: maxFiles ?? 0,
+    onDropAccepted,
+    onDropRejected,
+    disabled: disabled || files.length > 0,
+  });
+
   return (
-    <Dropzone
-      id={id}
-      multiple={multiple}
-      maxFiles={maxFiles ?? 0}
-      onDropAccepted={onDropAccepted}
-      onDropRejected={onDropRejected}
-      disabled={disabled || files.length > 0}>
-      {({ getRootProps, getInputProps }) => (
-        <div className={className}>
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            {children({ statuses, onRemove, rejectedFiles })}
-          </div>
-        </div>
-      )}
-    </Dropzone>
+    <div className={className}>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {children({ statuses, onRemove, rejectedFiles })}
+      </div>
+    </div>
   );
 }
 
