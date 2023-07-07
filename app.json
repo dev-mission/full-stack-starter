@@ -8,11 +8,11 @@
     "postdeploy": "cd server; node_modules/.bin/sequelize db:migrate; if [ -d seeders ]; then node_modules/.bin/sequelize db:seed:all; fi"
   },
   "env": {
-    "REACT_APP_FEATURE_REGISTRATION": {
+    "VITE_FEATURE_REGISTRATION": {
       "description": "To enable user registration, enter the value: true",
       "value": "false"
     },
-    "REACT_APP_SITE_TITLE": {
+    "VITE_SITE_TITLE": {
       "description": "The title of the website that will appear in the browser tab",
       "value": "Full Stack Starter"
     },

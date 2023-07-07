@@ -26,7 +26,7 @@ function ForgotPassword() {
   return (
     <>
       <Helmet>
-        <title>Forgot your password? - {staticContext?.env?.REACT_APP_SITE_TITLE ?? ''}</title>
+        <title>Forgot your password? - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">

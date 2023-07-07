@@ -13,9 +13,9 @@ services:
         fromDatabase:
           name: db
           property: connectionString
-      - key: REACT_APP_FEATURE_REGISTRATION
+      - key: VITE_FEATURE_REGISTRATION
         sync: false
-      - key: REACT_APP_SITE_TITLE
+      - key: VITE_SITE_TITLE
         sync: false
       - key: SESSION_SECRET
         generateValue: true

@@ -30,7 +30,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/passwords/*" element={<PasswordsRoutes />} />
                 <Route path="/invites/*" element={<InvitesRoutes />} />
-                {staticContext?.env?.REACT_APP_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
+                {staticContext?.env?.VITE_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
                 <Route path="/account/*" element={<UsersRoutes />} />
                 <Route path="/admin/*" element={<AdminRoutes />} />
               </Routes>

@@ -22,13 +22,19 @@ router.get('/*', async (req, res, next) => {
     try {
       const { render } = await import('../../../viteclient/dist/server/entry-server.js');
       const helmetContext = {};
-      const staticContext = {};
+      const staticContext = { context: { env: {} } };
+      Object.keys(process.env).forEach((key) => {
+        if (key.startsWith('VITE_')) {
+          staticContext.context.env[key] = process.env[key];
+        }
+      });
       const app = render(req, res, helmetContext, staticContext);
+      console.log(staticContext);
       if (app) {
         const { helmet } = helmetContext;
         res.send(
           HTML.replace(/<title\b[^>]*>(.*?)<\/title>/i, helmet.title.toString())
-            .replace('window.STATIC_CONTEXT={}', `window.STATIC_CONTEXT=${JSON.stringify(staticContext.context)}`)
+            .replace('window.STATIC_CONTEXT = {}', `window.STATIC_CONTEXT=${JSON.stringify(staticContext.context)}`)
             .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
         );
       }

@@ -17,7 +17,12 @@ export function render(req, res, helmetContext, staticContext) {
     return true;
   });
   if (isRedirected) return undefined;
-  staticContext.context = { ...defaultValue, authContext: { user: req.user?.toJSON() ?? null } };
+  staticContext.context = {
+    ...defaultValue,
+    ...staticContext.context,
+    env: { ...defaultValue.env, ...staticContext.context.env },
+    authContext: { user: req.user?.toJSON() ?? null },
+  };
   return ReactDOMServer.renderToString(
     <StaticContextProvider value={staticContext.context}>
       <HelmetProvider context={helmetContext}>

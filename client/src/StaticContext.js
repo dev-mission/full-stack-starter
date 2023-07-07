@@ -7,8 +7,8 @@ const defaultValue = {
     user: null,
   },
   env: {
-    REACT_APP_SITE_TITLE: process.env.REACT_APP_SITE_TITLE,
-    REACT_APP_FEATURE_REGISTRATION: process.env.REACT_APP_FEATURE_REGISTRATION,
+    VITE_SITE_TITLE: process.env.VITE_SITE_TITLE,
+    VITE_FEATURE_REGISTRATION: process.env.VITE_FEATURE_REGISTRATION,
   },
 };
 

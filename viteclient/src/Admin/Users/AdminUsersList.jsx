@@ -47,7 +47,7 @@ function AdminUsersList() {
   return (
     <>
       <Helmet>
-        <title>Manage Users - {staticContext?.env?.REACT_APP_SITE_TITLE ?? ''}</title>
+        <title>Manage Users - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
       <main className="users container">
         <h1>Manage Users</h1>

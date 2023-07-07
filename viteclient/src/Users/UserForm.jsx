@@ -75,7 +75,7 @@ function UserForm() {
   return (
     <>
       <Helmet>
-        <title>My Account - {staticContext?.env?.REACT_APP_SITE_TITLE ?? ''}</title>
+        <title>My Account - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">

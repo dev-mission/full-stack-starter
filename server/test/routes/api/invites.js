@@ -48,7 +48,7 @@ describe('/api/invites', () => {
 
       const emails = nodemailerMock.mock.getSentMail();
       assert.deepStrictEqual(emails.length, 1);
-      assert.deepStrictEqual(emails[0].subject, `Your invitation to ${process.env.REACT_APP_SITE_TITLE}`);
+      assert.deepStrictEqual(emails[0].subject, `Your invitation to ${process.env.VITE_SITE_TITLE}`);
       assert.deepStrictEqual(emails[0].to, 'Invitee Name <invitee.name@test.com>');
     });
   });

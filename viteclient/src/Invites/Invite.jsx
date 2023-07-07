@@ -65,7 +65,7 @@ function Invite() {
   return (
     <>
       <Helmet>
-        <title>You're Invited - {staticContext?.env?.REACT_APP_SITE_TITLE ?? ''}</title>
+        <title>You're Invited - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
       <main className="container">
         <div className="row justify-content-center">
