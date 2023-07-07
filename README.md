@@ -3,11 +3,11 @@
 This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
 
 - React 18.2.0
-- React Router 6.10.0
-- Bootstrap 5.2.3
+- React Router 6.14.1
+- Bootstrap 5.3.0
 - Node.js 18.16.0
 - Express 4.18.2
-- Sequelize 6.31.0
+- Sequelize 6.32.1
 - Postgres 14
 
 ## One-time Setup
@@ -41,14 +41,11 @@ This repository contains a "starter" project for web application development in 
    like this, the server is running:
 
    ```
-   server_1       | 4:13:08 AM webpack.1 |  You can now view full-stack-starter in the browser.
-   server_1       | 4:13:08 AM webpack.1 |    Local:            http://localhost:3000
+   full-stack-starter-server-1       | 5:31:23 PM client.1 |    VITE v4.3.9  ready in 327 ms
+   full-stack-starter-server-1       | 5:31:23 PM client.1 |    ➜  Local:   http://localhost:3000/
    ```
 
 5. Now you should be able to open the web app in your browser at: http://localhost:3000/
-
-   1. If you had to install Docker Toolbox, then replace "localhost" with the IP
-      address of the Docker Virtual Machine.
 
 6. Open a new tab or window of your shell, change into your repo directory as needed, and execute this command:
 
@@ -60,10 +57,10 @@ This repository contains a "starter" project for web application development in 
    Once you're logged in, you will be in a new shell for the container where you can run the following command:
 
    ```
-   bin/create-admin Firstname Lastname email password
+   bin/create-admin.js Firstname Lastname email password
    ```
 
-   Put in your name and email address and a password. This will create a first user in the database.
+   Put in your name and email address and a password. This will create a first admin user in the database.
 
 7. To stop the server, press CONTROL-C in the window with the running server.
    If it is successful, you will see something like this:
@@ -136,7 +133,7 @@ This repository contains a "starter" project for web application development in 
 5. Once linked, you can execute Heroku CLI commands. For example, to run the user creation script on the server:
 
    ```
-   heroku run "cd server && bin/create-admin Firstname Lastname email password"
+   heroku run "cd server && bin/create-admin.js Firstname Lastname email password"
    ```
 
 ## Render Deployment Setup
@@ -157,7 +154,7 @@ This repository contains a "starter" project for web application development in 
 
 7. Once completed, you can see the site at the provided generated URL.
 
-8. Go to the web service server Settings, and edit the Build Command. Remove the command to run seeders and to create a first admin user so it doesn't re-run on subsequent builds (`if [ -d seeders ]; then ../node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin Site Admin admin@test.com changeme123;`). You can log in to the site with this email and temporary password (change it immediately after logging in!).
+8. Go to the web service server Settings, and edit the Build Command. Remove the command to run seeders and to create a first admin user so it doesn't re-run on subsequent builds (`if [ -d seeders ]; then ../node_modules/.bin/sequelize db:seed:all; fi; bin/create-admin.js Site Admin admin@test.com changeme123;`). You can log in to the site with this email and temporary password (change it immediately after logging in!).
 
 ## Shell Command Quick Reference
 

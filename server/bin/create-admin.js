@@ -3,7 +3,7 @@
 'use strict';
 
 if (process.argv.length != 6) {
-  console.log('Usage: bin/create-admin First Last email@address.com password');
+  console.log('Usage: bin/create-admin.js First Last email@address.com password');
   process.exit(1);
 }
 
