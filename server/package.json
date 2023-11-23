@@ -45,16 +45,16 @@
   },
   "devDependencies": {
     "cross-env": "~7.0.3",
-    "del-cli": "^5.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-mocha": "^10.1.0",
+    "del-cli": "^5.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-mocha": "^10.2.0",
     "foreman": "^3.0.1",
     "mocha": "^10.2.0",
-    "nodemailer-mock": "^2.0.1",
+    "nodemailer-mock": "^2.0.2",
     "sequelize-fixtures": "^1.2.0",
     "supertest": "^6.3.3",
-    "supertest-session": "^4.1.0"
+    "supertest-session": "^5.0.1"
   },
   "eslintConfig": {
     "env": {
