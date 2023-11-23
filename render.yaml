@@ -26,4 +26,4 @@ databases:
   - name: db
     databaseName: fss # optional (Render may add a suffix)
     plan: free
-    postgresMajorVersion: 14
+    postgresMajorVersion: 15
