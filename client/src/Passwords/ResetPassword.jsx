@@ -40,7 +40,7 @@ function ResetPassword() {
           });
       }
     },
-    [token]
+    [token],
   );
 
   return (

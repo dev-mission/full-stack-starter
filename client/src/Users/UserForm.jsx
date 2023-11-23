@@ -36,7 +36,7 @@ function UserForm() {
         setUser({
           ...response.data,
           password: '',
-        })
+        }),
       );
     }
   }, [userId]);

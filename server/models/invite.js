@@ -97,7 +97,7 @@ export default function (sequelize, DataTypes) {
     {
       sequelize,
       modelName: 'Invite',
-    }
+    },
   );
   return Invite;
 }

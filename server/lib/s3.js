@@ -45,7 +45,7 @@ function copyObject(CopySource, Key) {
       Bucket: process.env.AWS_S3_BUCKET,
       CopySource,
       Key,
-    })
+    }),
   );
 }
 
@@ -53,7 +53,7 @@ function createBucket(Bucket) {
   return client.send(
     new CreateBucketCommand({
       Bucket,
-    })
+    }),
   );
 }
 
@@ -62,7 +62,7 @@ function deleteObject(Key) {
     new DeleteObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
-    })
+    }),
   );
 }
 
@@ -71,7 +71,7 @@ async function deleteObjects(Prefix) {
     new ListObjectsV2Command({
       Bucket: process.env.AWS_S3_BUCKET,
       Prefix,
-    })
+    }),
   );
   if (response.Contents) {
     return client.send(
@@ -80,7 +80,7 @@ async function deleteObjects(Prefix) {
         Delete: {
           Objects: response.Contents.map((obj) => ({ Key: obj.Key })),
         },
-      })
+      }),
     );
   }
   return Promise.resolve();
@@ -91,7 +91,7 @@ async function getObject(Key) {
     new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
-    })
+    }),
   );
   const filePath = path.resolve(__dirname, '../tmp/downloads', Key);
   const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -113,7 +113,7 @@ function getSignedAssetUrl(Key, expiresIn = 60) {
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
     }),
-    { expiresIn }
+    { expiresIn },
   );
 }
 
@@ -124,7 +124,7 @@ function getSignedUploadUrl(ContentType, Key) {
       Bucket: process.env.AWS_S3_BUCKET,
       ContentType,
       Key,
-    })
+    }),
   );
 }
 
@@ -134,7 +134,7 @@ async function objectExists(Key) {
       new HeadObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET,
         Key,
-      })
+      }),
     );
     return response !== null;
   } catch (err) {
@@ -148,7 +148,7 @@ function putObject(Key, filePath) {
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
       Body: fs.createReadStream(filePath),
-    })
+    }),
   );
 }
 

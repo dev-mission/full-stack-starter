@@ -15,7 +15,7 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
       // Make sure to revoke the data uris to avoid memory leaks
       files.forEach((file) => URL.revokeObjectURL(file.preview));
     },
-    [files]
+    [files],
   );
 
   useEffect(() => {
@@ -59,8 +59,8 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
       acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
-        })
-      )
+        }),
+      ),
     );
     const statuses = [];
     for (const file of acceptedFiles) {

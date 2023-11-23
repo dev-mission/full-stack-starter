@@ -21,7 +21,7 @@ function Header() {
         }
       });
     },
-    [setUser]
+    [setUser],
   );
 
   async function onLogout(event) {

@@ -47,7 +47,7 @@ export default function (sequelize, DataTypes) {
           locals: {
             url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`,
           },
-        })
+        }),
       );
     }
 
@@ -163,7 +163,7 @@ export default function (sequelize, DataTypes) {
     {
       sequelize,
       modelName: 'User',
-    }
+    },
   );
 
   User.beforeSave(async (user) => {
