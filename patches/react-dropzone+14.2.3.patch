@@ -49,22 +49,3 @@ index 8e5abd5..f155743 100644
  
  export var FILE_INVALID_TYPE = "file-invalid-type";
  export var FILE_TOO_LARGE = "file-too-large";
-diff --git a/node_modules/react-dropzone/package.json b/node_modules/react-dropzone/package.json
-index 9409558..97b8175 100644
---- a/node_modules/react-dropzone/package.json
-+++ b/node_modules/react-dropzone/package.json
-@@ -2,7 +2,13 @@
-   "name": "react-dropzone",
-   "description": "Simple HTML5 drag-drop zone with React.js",
-   "main": "dist/index.js",
--  "module": "dist/es/index.js",
-+  "module": "dist/es/index.mjs",
-+  "exports": {
-+    ".": {
-+      "import": "./dist/es/index.mjs",
-+      "require": "./dist/index.js"
-+    }
-+  },
-   "sideEffects": false,
-   "scripts": {
-     "cz": "git-cz",
