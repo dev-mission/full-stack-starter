@@ -16,8 +16,8 @@
     "test": "prettier --check . && npm run lint && CI=true npm test -w server"
   },
   "devDependencies": {
-    "patch-package": "^7.0.0",
-    "prettier": "^2.7.1"
+    "patch-package": "^8.0.0",
+    "prettier": "^3.1.0"
   },
   "engines": {
     "node": "18.16.0"
