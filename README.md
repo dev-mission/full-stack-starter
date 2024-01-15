@@ -5,7 +5,7 @@ This repository contains a "starter" project for web application development in 
 - React 18.2.0
 - React Router 6.20.0
 - Bootstrap 5.3.2
-- Node.js 18.18.2
+- Node.js 20.11.0
 - Express 4.18.2
 - Sequelize 6.35.1
 - Postgres 15.5
