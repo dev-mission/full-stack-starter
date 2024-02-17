@@ -75,8 +75,8 @@ passport.use(
             .catch(() => done(null, false, { message: 'Invalid password' }));
         })
         .catch(() => done(null, false, { message: 'Invalid login' }));
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser((user, done) => {

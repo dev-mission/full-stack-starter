@@ -94,25 +94,25 @@ describe('/api/users', () => {
           _.find(error.errors, {
             path: 'firstName',
             message: 'First name cannot be blank',
-          })
+          }),
         );
         assert(
           _.find(error.errors, {
             path: 'lastName',
             message: 'Last name cannot be blank',
-          })
+          }),
         );
         assert(
           _.find(error.errors, {
             path: 'email',
             message: 'Email cannot be blank',
-          })
+          }),
         );
         assert(
           _.find(error.errors, {
             path: 'password',
             message: 'Minimum eight characters, at least one letter and one number',
-          })
+          }),
         );
       });
 
@@ -132,7 +132,7 @@ describe('/api/users', () => {
           _.find(error.errors, {
             path: 'email',
             message: 'Email already registered',
-          })
+          }),
         );
       });
     });

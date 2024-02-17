@@ -24,7 +24,7 @@ async function loadFixtures(files) {
 async function loadUploads(uploads) {
   if (process.env.AWS_S3_BUCKET) {
     await Promise.all(
-      uploads.map((upload) => s3.putObject(path.join('uploads', upload[1]), path.resolve(__dirname, `fixtures/files/${upload[0]}`)))
+      uploads.map((upload) => s3.putObject(path.join('uploads', upload[1]), path.resolve(__dirname, `fixtures/files/${upload[0]}`))),
     );
   } else {
     fs.ensureDirSync(path.resolve(__dirname, '../tmp/uploads'));

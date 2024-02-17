@@ -26,8 +26,8 @@ await Promise.all(
     .map((file) =>
       import(path.join(__dirname, file))
         .then(({ default: init }) => init(sequelize, Sequelize.DataTypes))
-        .then((model) => (db[model.name] = model))
-    )
+        .then((model) => (db[model.name] = model)),
+    ),
 ).then(() => {
   Object.keys(db).forEach((modelName) => {
     if (db[modelName].associate) {

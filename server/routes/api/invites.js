@@ -88,7 +88,7 @@ router.post('/:id/accept', async (req, res, next) => {
               AcceptedByUserId: user.id,
               acceptedAt: new Date(),
             },
-            { transaction }
+            { transaction },
           );
           await user.sendWelcomeEmail();
         }

@@ -34,7 +34,7 @@ router.get('/*', async (req, res, next) => {
         res.send(
           HTML.replace(/<title\b[^>]*>(.*?)<\/title>/i, helmet.title.toString())
             .replace('window.STATIC_CONTEXT = {}', `window.STATIC_CONTEXT=${JSON.stringify(staticContext.context)}`)
-            .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
+            .replace('<div id="root"></div>', `<div id="root">${app}</div>`),
         );
       }
     } catch (error) {

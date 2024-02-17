@@ -31,6 +31,6 @@ export function render(req, res, helmetContext, staticContext) {
           <App />
         </StaticRouter>
       </HelmetProvider>
-    </StaticContextProvider>
+    </StaticContextProvider>,
   );
 }

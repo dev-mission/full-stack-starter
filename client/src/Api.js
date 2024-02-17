@@ -13,7 +13,7 @@ instance.interceptors.response.use(
       window.location = '/login';
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 const Api = {

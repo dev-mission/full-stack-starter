@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(
   fileUpload({
     useTempFiles: !process.env.AWS_S3_BUCKET,
-  })
+  }),
 );
 /// configure allowed file upload types and max file size
 app.use(express.raw({ type: ['image/*'], limit: '10mb' }));
@@ -38,7 +38,7 @@ app.use(
   cookieSession({
     secret: process.env.SESSION_SECRET,
     secure: process.env.NODE_ENV === 'production',
-  })
+  }),
 );
 /// use passport for authentication
 app.use(passport.initialize());
