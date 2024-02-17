@@ -1,5 +1,5 @@
 # Start with the latest Node.js LTS release
-FROM node:20.11.0-bookworm
+FROM node:20.11.1-bookworm
 
 # Support for multi-architecture builds
 ARG TARGETARCH
