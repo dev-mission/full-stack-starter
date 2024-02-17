@@ -10,7 +10,7 @@ services:
       - 1080:1080
       - 1025:1025
   minio:
-    image: minio/minio:RELEASE.2024-01-13T07-53-03Z
+    image: minio/minio:RELEASE.2024-02-14T21-36-02Z
     command: minio server --console-address ":9001" /data
     ports:
       - 9000:9000
