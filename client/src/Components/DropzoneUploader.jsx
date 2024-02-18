@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone-esm';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
