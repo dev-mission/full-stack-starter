@@ -15,6 +15,8 @@ read -p "Dry run (staging SSL certs)? [y/n]: " DRY_RUN
 DB_PASSWORD=`echo $RANDOM | md5sum | head -c 20`
 SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32`
 
+SOLUTION_STACK_NAME=`aws elasticbeanstalk list-available-solution-stacks --output text | grep -m 1 -oP "SOLUTIONSTACKS\t\K64bit Amazon Linux 2023 v4\.[^ ]+ running ECS"`
+
 # create the key pair for CDN signing
 openssl genrsa -out private_key.pem 2048
 openssl rsa -pubout -in private_key.pem -out public_key.pem
@@ -23,7 +25,7 @@ PRIVATE_KEY=`cat private_key.pem`
 PRIVATE_KEY=${PRIVATE_KEY//
 /"\\n"}
 
-aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name ${APP_NAME}-${ENV_NAME} --template-body file://./create.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME ParameterKey=EnvironmentName,ParameterValue=$ENV_NAME ParameterKey=Version,ParameterValue=$VERSION ParameterKey=DBPassword,ParameterValue=$DB_PASSWORD ParameterKey=LetsEncryptEmail,ParameterValue=$LETSENCRYPT_EMAIL ParameterKey=SessionSecret,ParameterValue=$SESSION_SECRET ParameterKey=SiteTitle,ParameterValue="$SITE_TITLE" ParameterKey=FeatureRegistration,ParameterValue=$FEATURE_REGISTRATION ParameterKey=CDNSigningPrivateKey,ParameterValue="$PRIVATE_KEY" ParameterKey=CDNSigningPublicKey,ParameterValue="$PUBLIC_KEY" ParameterKey=DomainName,ParameterValue="$DOMAIN" ParameterKey=EmailAddress,ParameterValue="$FROM_EMAIL" ParameterKey=LetsEncryptOpts,ParameterValue="$LETSENCRYPT_OPTS"
+aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name ${APP_NAME}-${ENV_NAME} --template-body file://./create.cfn.json --parameters ParameterKey=ApplicationName,ParameterValue=$APP_NAME ParameterKey=EnvironmentName,ParameterValue=$ENV_NAME ParameterKey=Version,ParameterValue=$VERSION ParameterKey=DBPassword,ParameterValue=$DB_PASSWORD ParameterKey=LetsEncryptEmail,ParameterValue=$LETSENCRYPT_EMAIL ParameterKey=SessionSecret,ParameterValue=$SESSION_SECRET ParameterKey=SiteTitle,ParameterValue="$SITE_TITLE" ParameterKey=FeatureRegistration,ParameterValue=$FEATURE_REGISTRATION ParameterKey=CDNSigningPrivateKey,ParameterValue="$PRIVATE_KEY" ParameterKey=CDNSigningPublicKey,ParameterValue="$PUBLIC_KEY" ParameterKey=DomainName,ParameterValue="$DOMAIN" ParameterKey=EmailAddress,ParameterValue="$FROM_EMAIL" ParameterKey=LetsEncryptOpts,ParameterValue="$LETSENCRYPT_OPTS" ParameterKey=SolutionStackName,ParameterValue="$SOLUTION_STACK_NAME"
 
 # wait for key pair to become available
 while : ; do

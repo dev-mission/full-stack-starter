@@ -49,6 +49,28 @@
    # ./push app
    ```
 
+   You may need to configure a new Docker build driver to support multi-architecture
+   images (i.e. x86 and ARM). To create a new build driver:
+
+   ```
+   # docker buildx create --use
+   ```
+
+   Docker running _inside_ the container will communicate with Docker running _outside_
+   your container on your host OS. If you have completed this step before and need
+   to re-connect to the driver on your host OS, find the name of the driver on the
+   **HOST OS**:
+
+   ```
+   # docker buildx ls
+   ```
+
+   Then, connect to the existing driver _inside the container_ by using the same name:
+
+   ```
+   # docker buildx create --name=name_from_prev_command
+   ```
+
 7. Create a new EB version from the pushed image using the release script (`./release`).
 
    ```
