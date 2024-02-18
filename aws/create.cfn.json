@@ -18,8 +18,8 @@
     "InstanceType": {
       "Description": "The application server instance type",
       "Type": "String",
-      "Default": "t4g.micro",
-      "AllowedValues": ["t4g.nano", "t4g.micro", "t4g.small", "t4g.medium", "t4g.large"]
+      "Default": "t2.micro",
+      "AllowedValues": ["t2.micro", "t3.micro", "t4g.nano", "t4g.micro", "t4g.small", "t4g.medium", "t4g.large"]
     },
     "DBInstanceType": {
       "Description": "The DB instance type",
