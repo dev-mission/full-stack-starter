@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-function Pagination({ page, lastPage, url }) {
+function Pagination({ page, lastPage, otherParams = {} }) {
   function onClick() {
     window.scrollTo(0, 0);
   }
@@ -11,12 +11,12 @@ function Pagination({ page, lastPage, url }) {
       <ul className="pagination justify-content-center">
         <li className={classNames('page-item', { disabled: page === 1 })}>
           {page > 2 && (
-            <Link to={`${url}?page=${page - 1}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: page - 1 })}`} onClick={onClick} className="page-link">
               Prev
             </Link>
           )}
           {page === 2 && (
-            <Link to={url} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams(otherParams)}`} onClick={onClick} className="page-link">
               Prev
             </Link>
           )}
@@ -24,7 +24,7 @@ function Pagination({ page, lastPage, url }) {
         </li>
         {page > 1 && (
           <li className="page-item">
-            <Link to={url} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams(otherParams)}`} onClick={onClick} className="page-link">
               1
             </Link>
           </li>
@@ -36,14 +36,14 @@ function Pagination({ page, lastPage, url }) {
         )}
         {page === 4 && (
           <li className="page-item">
-            <Link to={`${url}?page=2`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: 2 })}`} onClick={onClick} className="page-link">
               2
             </Link>
           </li>
         )}
         {page > 2 && (
           <li className="page-item">
-            <Link to={`${url}?page=${page - 1}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: page - 1 })}`} onClick={onClick} className="page-link">
               {page - 1}
             </Link>
           </li>
@@ -53,14 +53,14 @@ function Pagination({ page, lastPage, url }) {
         </li>
         {page < lastPage && (
           <li className="page-item">
-            <Link to={`${url}?page=${page + 1}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: page + 1 })}`} onClick={onClick} className="page-link">
               {page + 1}
             </Link>
           </li>
         )}
         {page + 2 === lastPage - 1 && (
           <li className="page-item">
-            <Link to={`${url}?page=${page + 2}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: page + 2 })}`} onClick={onClick} className="page-link">
               {page + 2}
             </Link>
           </li>
@@ -72,14 +72,14 @@ function Pagination({ page, lastPage, url }) {
         )}
         {page < lastPage - 1 && (
           <li className="page-item">
-            <Link to={`${url}?page=${lastPage}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: lastPage })}`} onClick={onClick} className="page-link">
               {lastPage}
             </Link>
           </li>
         )}
         <li className={classNames('page-item', { disabled: page === lastPage })}>
           {page < lastPage && (
-            <Link to={`${url}?page=${page + 1}`} onClick={onClick} className="page-link">
+            <Link to={`?${new URLSearchParams({ ...otherParams, page: page + 1 })}`} onClick={onClick} className="page-link">
               Next
             </Link>
           )}
@@ -94,6 +94,7 @@ Pagination.propTypes = {
   lastPage: PropTypes.number,
   page: PropTypes.number,
   url: PropTypes.string,
+  otherParams: PropTypes.object,
 };
 
 export default Pagination;

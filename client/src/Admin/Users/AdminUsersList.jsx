@@ -1,20 +1,37 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import Api from '../../Api';
 import { useStaticContext } from '../../StaticContext';
+import Pagination from '../../Components/Pagination';
 
 function AdminUsersList() {
   const staticContext = useStaticContext();
   const [users, setUsers] = useState([]);
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const page = parseInt(params.get('page') ?? '1', 10);
+  const [lastPage, setLastPage] = useState(1);
+
   const [invites, setInvites] = useState([]);
 
   useEffect(() => {
-    Api.users.index().then((response) => setUsers(response.data));
+    Api.users.index(page).then((response) => {
+      setUsers(response.data);
+      const linkHeader = Api.parseLinkHeader(response);
+      let newLastPage = page;
+      if (linkHeader?.last) {
+        const match = linkHeader.last.match(/page=(\d+)/);
+        newLastPage = parseInt(match[1], 10);
+      } else if (linkHeader?.next) {
+        newLastPage = page + 1;
+      }
+      setLastPage(newLastPage);
+    });
     Api.invites.index().then((response) => setInvites(response.data));
-  }, []);
+  }, [page]);
 
   async function revoke(invite) {
     let name = `${invite.firstName} ${invite.lastName}`.trim();
@@ -123,6 +140,7 @@ function AdminUsersList() {
               ))}
             </tbody>
           </table>
+          <Pagination page={page} lastPage={lastPage} />
         </div>
       </main>
     </>
