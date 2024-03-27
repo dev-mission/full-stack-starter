@@ -9,7 +9,7 @@ import helpers from '../helpers.js';
 const router = express.Router();
 
 router.get('/', interceptors.requireAdmin, async (req, res) => {
-  const page = req.query.page || 1;
+  const page = req.query.page || '1';
   const { records, pages, total } = await models.User.paginate({
     page,
     order: [

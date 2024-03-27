@@ -16,7 +16,23 @@ instance.interceptors.response.use(
   },
 );
 
+function parseLinkHeader(response) {
+  const link = response.headers?.link;
+  if (link) {
+    const linkRe = /<([^>]+)>; rel="([^"]+)"/g;
+    const urls = {};
+    let m;
+    while ((m = linkRe.exec(link)) !== null) {
+      let url = m[1];
+      urls[m[2]] = url;
+    }
+    return urls;
+  }
+  return null;
+}
+
 const Api = {
+  parseLinkHeader,
   assets: {
     create(data) {
       return instance.post('/api/assets', data);
@@ -68,8 +84,8 @@ const Api = {
     },
   },
   users: {
-    index() {
-      return instance.get(`/api/users`);
+    index(page = 1) {
+      return instance.get(`/api/users`, { params: { page } });
     },
     me() {
       return instance.get('/api/users/me');
