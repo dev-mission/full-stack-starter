@@ -50,7 +50,6 @@ test('/api/passwords', async (t) => {
       assert.deepStrictEqual(response.statusCode, StatusCodes.NOT_FOUND);
 
       response = await app.inject().get('/api/passwords/invalid');
-      console.log(response.body);
       assert.deepStrictEqual(response.statusCode, StatusCodes.NOT_FOUND);
     });
 

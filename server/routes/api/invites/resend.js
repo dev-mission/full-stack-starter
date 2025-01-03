@@ -23,7 +23,6 @@ export default async function (fastify, opts) {
       let data = await fastify.prisma.invite.findUnique({
         where: { id },
       });
-      console.log(id, data);
       if (!data) {
         return reply.code(StatusCodes.NOT_FOUND).send();
       }

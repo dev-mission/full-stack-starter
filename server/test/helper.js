@@ -75,6 +75,10 @@ async function build (t) {
     storageContainer = storageContainer.withNetworkMode('app');
   }
   const startedStorageContainer = await storageContainer.start();
+  process.env.AWS_S3_ACCESS_KEY_ID='minioadmin';
+  process.env.AWS_S3_SECRET_ACCESS_KEY='minioadmin';
+  process.env.AWS_S3_BUCKET='app';
+  process.env.AWS_S3_REGION='us-east-1';
   process.env.AWS_S3_ENDPOINT = `http://${startedStorageContainer.getHost()}:${startedStorageContainer.getMappedPort(9000)}`;
   await s3.createBucket(process.env.AWS_S3_BUCKET);
 
