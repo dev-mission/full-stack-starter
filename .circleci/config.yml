@@ -1,0 +1,8 @@
+jobs:
+  noop:
+    type: no-op
+
+workflows:
+  noop:
+    jobs:
+      - noop
