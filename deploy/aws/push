@@ -34,7 +34,7 @@ if [[ $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[^-]+)?$ ]]; then
 
   # build and push
   SCRIPT_DIR=`dirname $BASH_SOURCE`
-  BUILD_PATH=`readlink -f $SCRIPT_DIR/..`
+  BUILD_PATH=`readlink -f $SCRIPT_DIR/../..`
   docker buildx build --push --platform linux/arm64,linux/amd64 --tag $REPO/$APP_NAME:$TAG $BUILD_PATH
 else
   echo "No tag on the current head commit"
