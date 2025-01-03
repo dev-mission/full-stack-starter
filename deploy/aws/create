@@ -13,7 +13,7 @@ read -p "Dry run (staging SSL certs)? [y/n]: " DRY_RUN
 [[ $DRY_RUN = "n" ]] && LETSENCRYPT_OPTS="" || LETSENCRYPT_OPTS="--test-cert"
 
 DB_PASSWORD=`echo $RANDOM | md5sum | head -c 20`
-SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32`
+SESSION_SECRET=`echo $RANDOM | md5sum | head -c 32``echo $RANDOM | md5sum | head -c 32`
 
 SOLUTION_STACK_NAME=`aws elasticbeanstalk list-available-solution-stacks --output text | grep -m 1 -oP "SOLUTIONSTACKS\t\K64bit Amazon Linux 2023 v4\.[^ ]+ running ECS"`
 
