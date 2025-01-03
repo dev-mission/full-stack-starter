@@ -50,7 +50,7 @@ const Api = {
       return instance.post(`/api/invites/${id}/accept`, data);
     },
     resend(id) {
-      return instance.post(`/api/invites/${id}/resend`);
+      return instance.patch(`/api/invites/${id}/resend`);
     },
     revoke(id) {
       return instance.delete(`/api/invites/${id}`);

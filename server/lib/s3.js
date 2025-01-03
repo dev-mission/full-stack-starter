@@ -20,58 +20,65 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let client;
 let signerClient;
-if (process.env.AWS_S3_ENDPOINT) {
-  const options = {
-    credentials: {
-      accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-    },
-    endpoint: process.env.AWS_S3_ENDPOINT,
-    region: process.env.AWS_S3_REGION,
-    forcePathStyle: true,
-  };
-  client = new S3Client(options);
-  if (process.env.AWS_S3_SIGNER_ENDPOINT) {
-    signerClient = new S3Client({
-      ...options,
-      endpoint: process.env.AWS_S3_SIGNER_ENDPOINT,
-    });
+
+function init () {
+  if (!client) {
+    const options = {
+      credentials: {
+        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+      },
+      endpoint: process.env.AWS_S3_ENDPOINT,
+      region: process.env.AWS_S3_REGION,
+      forcePathStyle: true,
+    };
+    client = new S3Client(options);
+    if (process.env.AWS_S3_SIGNER_ENDPOINT) {
+      signerClient = new S3Client({
+        ...options,
+        endpoint: process.env.AWS_S3_SIGNER_ENDPOINT,
+      });
+    }
   }
 }
 
-function copyObject(CopySource, Key) {
+function copyObject (CopySource, Key) {
+  init();
   return client.send(
     new CopyObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       CopySource,
       Key,
-    }),
+    })
   );
 }
 
-function createBucket(Bucket) {
+function createBucket (Bucket) {
+  init();
   return client.send(
     new CreateBucketCommand({
       Bucket,
-    }),
+    })
   );
 }
 
-function deleteObject(Key) {
+function deleteObject (Key) {
+  init();
   return client.send(
     new DeleteObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
-    }),
+    })
   );
 }
 
-async function deleteObjects(Prefix) {
+async function deleteObjects (Prefix) {
+  init();
   const response = await client.send(
     new ListObjectsV2Command({
       Bucket: process.env.AWS_S3_BUCKET,
       Prefix,
-    }),
+    })
   );
   if (response.Contents) {
     return client.send(
@@ -80,18 +87,19 @@ async function deleteObjects(Prefix) {
         Delete: {
           Objects: response.Contents.map((obj) => ({ Key: obj.Key })),
         },
-      }),
+      })
     );
   }
   return Promise.resolve();
 }
 
-async function getObject(Key) {
+async function getObject (Key) {
+  init();
   const response = await client.send(
     new GetObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
-    }),
+    })
   );
   const filePath = path.resolve(__dirname, '../tmp/downloads', Key);
   const dirPath = filePath.substring(0, filePath.lastIndexOf('/'));
@@ -99,7 +107,8 @@ async function getObject(Key) {
   return fs.promises.writeFile(filePath, response.Body);
 }
 
-function getSignedAssetUrl(Key, expiresIn = 60) {
+function getSignedAssetUrl (Key, expiresIn = 60) {
+  init();
   if (process.env.AWS_CLOUDFRONT_DOMAIN) {
     const url = `https://${process.env.AWS_CLOUDFRONT_DOMAIN}/${Key}`;
     const keyPairId = process.env.AWS_CLOUDFRONT_KEYPAIR_ID;
@@ -113,28 +122,30 @@ function getSignedAssetUrl(Key, expiresIn = 60) {
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
     }),
-    { expiresIn },
+    { expiresIn }
   );
 }
 
-function getSignedUploadUrl(ContentType, Key) {
+function getSignedUploadUrl (ContentType, Key) {
+  init();
   return getSignedS3Url(
     signerClient ?? client,
     new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       ContentType,
       Key,
-    }),
+    })
   );
 }
 
-async function objectExists(Key) {
+async function objectExists (Key) {
+  init();
   try {
     const response = await client.send(
       new HeadObjectCommand({
         Bucket: process.env.AWS_S3_BUCKET,
         Key,
-      }),
+      })
     );
     return response !== null;
   } catch (err) {
@@ -142,13 +153,14 @@ async function objectExists(Key) {
   }
 }
 
-function putObject(Key, filePath) {
+function putObject (Key, filePath) {
+  init();
   return client.send(
     new PutObjectCommand({
       Bucket: process.env.AWS_S3_BUCKET,
       Key,
       Body: fs.createReadStream(filePath),
-    }),
+    })
   );
 }
 

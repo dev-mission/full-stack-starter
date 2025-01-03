@@ -1,183 +1,107 @@
+import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { Model, Op } from 'sequelize';
-import _ from 'lodash';
-import { v4 as uuid } from 'uuid';
-import mailer from '../emails/mailer.js';
+import crypto from 'crypto';
+import { z } from 'zod';
 
-export default function (sequelize, DataTypes) {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    // eslint-disable-next-line no-unused-vars
-    static associate(models) {
-      // define association here
-    }
+import Base from './base.js';
+import mailer from '#lib/mailer.js';
 
-    static isValidPassword(password) {
-      return password.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) != null;
-    }
+const UserAttributesSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, 'First name must be between 2 and 30 characters long')
+    .max(30, 'First name must be between 2 and 30 characters long'),
+  lastName: z
+    .string()
+    .min(2, 'Last name must be between 2 and 30 characters long')
+    .max(30, 'Last name must be between 2 and 30 characters long'),
+  email: z.string().email('Please enter a valid email address.'),
+});
 
-    authenticate(password) {
-      return bcrypt.compare(password, this.hashedPassword);
-    }
-
-    toJSON() {
-      return _.pick(this.get(), ['id', 'firstName', 'lastName', 'email', 'picture', 'pictureUrl', 'isAdmin']);
-    }
-
-    hashPassword(password, options) {
-      return bcrypt
-        .hash(password, 10)
-        .then((hashedPassword) => this.update({ hashedPassword, passwordResetTokenExpiresAt: new Date() }, options));
-    }
-
-    sendPasswordResetEmail() {
-      return this.update({
-        passwordResetToken: uuid(),
-        passwordResetTokenExpiresAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      }).then((user) =>
-        mailer.send({
-          template: 'password-reset',
-          message: {
-            to: this.fullNameAndEmail,
-          },
-          locals: {
-            url: `${process.env.BASE_URL}/passwords/reset/${user.passwordResetToken}`,
-          },
-        }),
-      );
-    }
-
-    sendWelcomeEmail() {
-      return mailer.send({
-        template: 'welcome',
-        message: {
-          to: this.fullNameAndEmail,
-        },
-      });
-    }
-  }
-  User.init(
-    {
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'First name cannot be blank',
-          },
-          notEmpty: {
-            msg: 'First name cannot be blank',
-          },
-        },
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Last name cannot be blank',
-          },
-          notEmpty: {
-            msg: 'Last name cannot be blank',
-          },
-        },
-      },
-      email: {
-        type: DataTypes.CITEXT,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Email cannot be blank',
-          },
-          notEmpty: {
-            msg: 'Email cannot be blank',
-          },
-          async isUnique(value) {
-            if (this.changed('email')) {
-              const user = await User.findOne({
-                where: {
-                  id: {
-                    [Op.ne]: this.id,
-                  },
-                  email: value,
-                },
-              });
-              if (user) {
-                throw new Error('Email already registered');
-              }
-            }
-          },
-        },
-      },
-      fullNameAndEmail: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.firstName} ${this.lastName} <${this.email}>`;
-        },
-      },
-      password: {
-        type: DataTypes.VIRTUAL,
-        validate: {
-          isStrong(value) {
-            if (this.hashedPassword && this.password === '') {
-              // not changing, skip validation
-              return;
-            }
-            if (value.match(/^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,30}$/) == null) {
-              throw new Error('Minimum eight characters, at least one letter and one number');
-            }
-          },
-        },
-      },
-      hashedPassword: {
-        type: DataTypes.STRING,
-      },
-      picture: {
-        type: DataTypes.STRING,
-      },
-      pictureUrl: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return this.assetUrl('picture');
-        },
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
-      deactivatedAt: {
-        type: DataTypes.DATE,
-      },
-      passwordResetToken: {
-        type: DataTypes.UUID,
-      },
-      passwordResetTokenExpiresAt: {
-        type: DataTypes.DATE,
-      },
-    },
-    {
-      sequelize,
-      modelName: 'User',
-    },
+const UserPasswordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters long')
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+    'Password must include uppercase, lowercase, number, and special characters'
   );
 
-  User.beforeSave(async (user) => {
-    if (user.changed('password') && user.password !== '') {
-      user.hashedPassword = await bcrypt.hash(user.password, 12);
-      user.password = null;
-      user.passwordResetToken = null;
-      user.passwordResetTokenExpiresAt = null;
-    }
-  });
+const UserRegisterSchema = UserAttributesSchema.extend({
+  password: UserPasswordSchema,
+  inviteId: z.string().uuid().optional(),
+});
 
-  User.afterSave(async (user, options) => {
-    user.handleAssetFile('picture', options);
-  });
+const UserResponseSchema = UserAttributesSchema.extend({
+  id: z.string().uuid(),
+  picture: z.string().nullable(),
+  pictureUrl: z.string().nullable(),
+  isAdmin: z.boolean(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  deactivatedAt: z.coerce.date().nullable(),
+});
 
-  return User;
+const UserUpdateSchema = UserAttributesSchema.extend({
+  password: UserPasswordSchema.or(z.literal('')),
+  picture: z.string().nullable(),
+  isAdmin: z.boolean(),
+  deactivatedAt: z.coerce.date().nullable(),
+}).partial();
+
+export class User extends Base {
+  static PasswordSchema = UserPasswordSchema;
+  static RegisterSchema = UserRegisterSchema;
+  static ResponseSchema = UserResponseSchema;
+  static UpdateSchema = UserUpdateSchema;
+
+  constructor (data) {
+    super(Prisma.UserScalarFieldEnum, data);
+  }
+
+  get pictureUrl () {
+    return this.getAssetUrl('picture');
+  }
+
+  get isActive () {
+    return !this.deactivatedAt;
+  }
+
+  get isPasswordResetTokenValid () {
+    return new Date() <= new Date(this.passwordResetExpiresAt);
+  }
+
+  get fullNameAndEmail () {
+    return `${this.firstName} ${this.lastName} <${this.email}>`
+      .trim()
+      .replace(/ {2,}/g, ' ');
+  }
+
+  generatePasswordResetToken () {
+    this.passwordResetToken = crypto.randomUUID();
+  }
+
+  async sendPasswordResetEmail () {
+    const { firstName } = this;
+    const url = `${process.env.BASE_URL}/password/${this.passwordResetToken}`;
+    return mailer.send({
+      message: {
+        to: this.fullNameAndEmail,
+      },
+      template: 'password-reset',
+      locals: {
+        firstName,
+        url,
+      },
+    });
+  }
+
+  async setPassword (password) {
+    this.hashedPassword = await bcrypt.hash(password, 10);
+  }
+
+  async comparePassword (password) {
+    return bcrypt.compare(password, this.hashedPassword);
+  }
 }
+
+export default User;

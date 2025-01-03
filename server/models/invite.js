@@ -1,103 +1,77 @@
-import { Model } from 'sequelize';
-import _ from 'lodash';
-import mailer from '../emails/mailer.js';
+import { Prisma } from '@prisma/client';
+import { z } from 'zod';
 
-export default function (sequelize, DataTypes) {
-  class Invite extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      Invite.belongsTo(models.User, { as: 'AcceptedByUser' });
-      Invite.belongsTo(models.User, { as: 'RevokedByUser' });
-      Invite.belongsTo(models.User, { as: 'CreatedByUser' });
-    }
+import Base from './base.js';
+import mailer from '#lib/mailer.js';
 
-    toJSON() {
-      const json = _.pick(this.get(), [
-        'id',
-        'firstName',
-        'lastName',
-        'email',
-        'message',
-        'createdAt',
-        'CreatedByUserId',
-        'acceptedAt',
-        'AcceptedByUserId',
-        'revokedAt',
-        'RevokedByUserId',
-        'updatedAt',
-      ]);
-      return json;
-    }
+const InviteAttributesSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, 'First name must be between 2 and 30 characters long')
+    .max(30, 'First name must be between 2 and 30 characters long'),
+  lastName: z
+    .string()
+    .min(2, 'Last name must be between 2 and 30 characters long')
+    .max(30, 'Last name must be between 2 and 30 characters long')
+    .optional(),
+  email: z.string().email('Please enter a valid email address.'),
+  message: z.string().optional(),
+});
 
-    sendInviteEmail() {
-      return mailer.send({
-        template: 'invite',
-        message: {
-          to: this.fullNameAndEmail,
-        },
-        locals: {
-          firstName: this.firstName,
-          url: `${process.env.BASE_URL}/invites/${this.id}`,
-          message: this.message,
-        },
-      });
-    }
+const InviteResponseSchema = InviteAttributesSchema.extend({
+  id: z.string().uuid(),
+  updatedAt: z.coerce.date(),
+  createdAt: z.coerce.date(),
+  createdById: z.string().uuid(),
+  acceptedAt: z.coerce.date().nullable(),
+  acceptedById: z.string().uuid().nullable(),
+  revokedAt: z.coerce.date().nullable(),
+  revokedById: z.string().uuid().nullable(),
+});
+
+class Invite extends Base {
+  static AttibutesSchema = InviteAttributesSchema;
+  static ResponseSchema = InviteResponseSchema;
+
+  constructor (data) {
+    super(Prisma.InviteScalarFieldEnum, data);
   }
 
-  Invite.init(
-    {
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'First name cannot be blank',
-          },
-          notEmpty: {
-            msg: 'First name cannot be blank',
-          },
-        },
+  get isValid () {
+    return !this.isAccepted && !this.isRevoked;
+  }
+
+  get isAccepted () {
+    return !!this.acceptedAt;
+  }
+
+  get isRevoked () {
+    return !!this.revokedAt;
+  }
+
+  get fullNameAndEmail () {
+    return `${this.firstName ?? ''} ${this.lastName ?? ''} <${this.email}>`
+      .trim()
+      .replace(/ {2,}/g, ' ');
+  }
+
+  async sendInviteEmail () {
+    const { firstName, message } = this;
+    const url = `${process.env.BASE_URL}/register/${this.id}`;
+    return mailer.send({
+      message: {
+        to: this.fullNameAndEmail,
       },
-      lastName: {
-        type: DataTypes.STRING,
+      template: 'invite',
+      locals: {
+        firstName,
+        message,
+        url,
       },
-      email: {
-        type: DataTypes.CITEXT,
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: 'Email cannot be blank',
-          },
-          notEmpty: {
-            msg: 'Email cannot be blank',
-          },
-        },
-      },
-      fullName: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.firstName} ${this.lastName}`.trim();
-        },
-      },
-      fullNameAndEmail: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.fullName} <${this.email}>`;
-        },
-      },
-      message: DataTypes.TEXT,
-      acceptedAt: DataTypes.DATE,
-      revokedAt: DataTypes.DATE,
-    },
-    {
-      sequelize,
-      modelName: 'Invite',
-    },
-  );
-  return Invite;
+    });
+  }
 }
+
+export { Invite };
+
+export default Invite;

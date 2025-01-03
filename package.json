@@ -1,48 +1,16 @@
 {
   "name": "full-stack-starter",
-  "version": "5.0.2",
-  "private": true,
+  "version": "6.0.0",
   "workspaces": [
     "client",
     "server"
   ],
   "scripts": {
-    "heroku-postbuild": "npm run build -w client",
-    "lint": "npm run lint -w client && npm run lint -w server",
-    "lint:changed": "npm run lint:changed -w client; npm run lint:changed -w server",
-    "postinstall": "patch-package",
-    "pp": "prettier --write --ignore-unknown .",
-    "pp:changed": "prettier --write --ignore-unknown $(git diff --name-only; git ls-files -o --exclude-standard)",
-    "test": "prettier --check . && npm run lint && CI=true npm test -w server"
+    "dev": "nf -j Procfile.dev start",
+    "lint": "npm run lint --workspaces",
+    "test": "npm test --workspaces"
   },
   "devDependencies": {
-    "patch-package": "^8.0.0",
-    "prettier": "^3.1.0"
-  },
-  "engines": {
-    "node": "20.11.1"
-  },
-  "prettier": {
-    "bracketSameLine": true,
-    "printWidth": 140,
-    "singleQuote": true
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      [
-        "transform-assets",
-        {
-          "extensions": [
-            "css",
-            "svg"
-          ],
-          "name": "static/media/[name].[hash:8].[ext]"
-        }
-      ]
-    ]
+    "foreman": "^3.0.1"
   }
 }
