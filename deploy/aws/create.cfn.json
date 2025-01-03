@@ -498,6 +498,11 @@
           },
           {
             "Namespace": "aws:autoscaling:launchconfiguration",
+            "OptionName": "RootVolumeType",
+            "Value": "gp3"
+          },
+          {
+            "Namespace": "aws:autoscaling:launchconfiguration",
             "OptionName": "SecurityGroups",
             "Value": {
               "Ref": "InstanceSecurityGroup"

@@ -6,7 +6,7 @@ import User from '#models/user.js';
 export default fp(async function (fastify) {
   // set up secure encrypted cookie-based sessions
   await fastify.register(import('@fastify/secure-session'), {
-    key: Buffer.from(process.env.SESSION_SECRET_KEY, 'hex'),
+    key: Buffer.from(process.env.SESSION_SECRET, 'hex'),
     cookie: {
       path: '/',
       httpOnly: true,
