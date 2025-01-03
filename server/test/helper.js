@@ -67,6 +67,10 @@ async function build (t) {
   for (const fixture of fixturesIterator(fixtures)) {
     await builder.build(fixture);
   }
+  // configure test database url
+  process.env.DATABASE_URL = `postgresql://${startedDbContainer.getUsername()}:${startedDbContainer.getPassword()}@${startedDbContainer.getHost()}:${startedDbContainer.getPort()}/${startedDbContainer.getDatabase()}`;
+  t.prisma = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
+
   // set up a new storage container
   let storageContainer = new GenericContainer(compose.services.storage.image)
     .withEntrypoint(['minio', 'server', '/data'])
@@ -75,16 +79,12 @@ async function build (t) {
     storageContainer = storageContainer.withNetworkMode('app');
   }
   const startedStorageContainer = await storageContainer.start();
-  process.env.AWS_S3_ACCESS_KEY_ID='minioadmin';
-  process.env.AWS_S3_SECRET_ACCESS_KEY='minioadmin';
-  process.env.AWS_S3_BUCKET='app';
-  process.env.AWS_S3_REGION='us-east-1';
+  process.env.AWS_S3_ACCESS_KEY_ID = 'minioadmin';
+  process.env.AWS_S3_SECRET_ACCESS_KEY = 'minioadmin';
+  process.env.AWS_S3_BUCKET = 'app';
+  process.env.AWS_S3_REGION = 'us-east-1';
   process.env.AWS_S3_ENDPOINT = `http://${startedStorageContainer.getHost()}:${startedStorageContainer.getMappedPort(9000)}`;
   await s3.createBucket(process.env.AWS_S3_BUCKET);
-
-  // configure test database url
-  process.env.DATABASE_URL = `postgresql://${startedDbContainer.getUsername()}:${startedDbContainer.getPassword()}@${startedDbContainer.getHost()}:${startedDbContainer.getPort()}/${startedDbContainer.getDatabase()}`;
-  t.prisma = new PrismaClient({ datasourceUrl: process.env.DATABASE_URL });
 
   // you can set all the options supported by the fastify CLI command
   const argv = [AppPath];

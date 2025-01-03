@@ -29,4 +29,4 @@ jobs:
       - name: Run ESLint
         run: npm run lint
       - name: Run Tests
-        run: npm test
+        run: cp server/example.env server/.env && npm test
