@@ -13,7 +13,7 @@ function PhotoInput({ className, children, id, name, onChange, value, valueUrl }
 
   function onUploaded(status) {
     if (onChange) {
-      onChange({ target: { name, value: status.signedId } });
+      onChange({ target: { name, value: status.filename } });
     }
   }
 

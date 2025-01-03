@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 
 import AdminUserInvite from './AdminUserInvite';
 import AdminUsersList from './AdminUsersList';

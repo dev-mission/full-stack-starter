@@ -1,0 +1,39 @@
+entity: invite
+connectedFields: ['createdBy', 'revokedBy', 'acceptedBy']
+items:
+  invite1:
+    id: 6ed61e21-1062-4b10-a967-53b395f5c34c
+    firstName: Invited
+    lastName: User 1
+    email: invited.user.1@test.com
+    message: This is an invitation to Invited User 1.
+    createdAt: '2024-04-07T16:53:41-07:00'
+    createdBy: '@user1'
+  invite2:
+    id: 7d7c61a6-55ac-4bad-8c8c-5d3aaaa1c5de
+    firstName: Invited
+    lastName: User 2
+    email: invited.user.2@test.com
+    message: This is an invitation to Invited User 2.
+    createdAt: '2024-04-07T17:53:41-07:00'
+    createdBy: '@user1'
+  invite3:
+    id: e28fddba-8e9b-41c9-924a-c5f1f4a2f8f6
+    firstName: Invited
+    lastName: User 2
+    email: invited.user.2@test.com
+    message: This is a revoked invitation to Invited User 2.
+    createdAt: '2024-04-07T17:53:41-07:00'
+    createdBy: '@user1'
+    revokedAt: '2024-04-07T18:53:41-07:00'
+    revokedBy: '@user1'
+  invite4:
+    id: 157d4be5-fd7d-4d08-b74e-2d3584062c8a
+    firstName: Invited
+    lastName: User 3
+    email: invited.user.3@test.com
+    message: This is an accepted invitation to Invited User 3.
+    createdAt: '2024-04-07T17:53:41-07:00'
+    createdBy: '@user1'
+    acceptedAt: '2024-04-07T18:53:41-07:00'
+    acceptedBy: '@user4'

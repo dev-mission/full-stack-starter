@@ -1,0 +1,37 @@
+entity: user
+items:
+  user1:
+    id: 555740af-17e9-48a3-93b8-d5236dfd2c29
+    firstName: Admin
+    lastName: User
+    email: admin.user@test.com
+    hashedPassword: $2b$10$ICaCk3VVZUCtO9HySahquuQusQhEnRpXHdzxaceUUJPk0DTwN2e/W # test
+    isAdmin: true
+    createdAt: '2024-12-27T08:53:41-07:00'
+  user2:
+    id: dab5dff3-360d-4dbb-98dd-1990dfb5c4c5
+    firstName: Regular
+    lastName: User
+    email: regular.user@test.com    
+    hashedPassword: $2b$10$ICaCk3VVZUCtO9HySahquuQusQhEnRpXHdzxaceUUJPk0DTwN2e/W # test
+    isAdmin: false
+    createdAt: '2024-12-27T09:53:41-07:00'
+  user3:
+    id: 33409349-ebd1-4c04-af14-46959188b819
+    firstName: Deactivated
+    lastName: User
+    email: deactivated.user@test.com
+    hashedPassword: $2b$10$ICaCk3VVZUCtO9HySahquuQusQhEnRpXHdzxaceUUJPk0DTwN2e/W # test
+    isAdmin: false
+    createdAt: '2024-12-27T09:53:41-07:00'
+    deactivatedAt: '2024-12-27T09:53:41-07:00'
+  user4:
+    id: aa1fdcf6-a63c-454e-9775-2d6fd116fdb1
+    firstName: Another
+    lastName: User
+    email: another.user@test.com    
+    hashedPassword: $2b$10$ICaCk3VVZUCtO9HySahquuQusQhEnRpXHdzxaceUUJPk0DTwN2e/W # test
+    passwordResetToken: f071b4e6-5482-4a07-8e5a-15775d01759e
+    passwordResetExpiresAt: '2024-12-27T09:53:41-07:00'
+    isAdmin: false
+    createdAt: '2024-12-27T09:53:41-07:00'

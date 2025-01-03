@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router';
 import classNames from 'classnames';
+import { StatusCodes } from 'http-status-codes';
 
 import './Header.scss';
 import Api from './Api';
@@ -14,10 +15,10 @@ function Header() {
   useEffect(
     function () {
       Api.users.me().then((response) => {
-        if (response.status === 204) {
-          setUser(null);
-        } else {
+        if (response.status === StatusCodes.OK) {
           setUser(response.data);
+        } else {
+          setUser(null);
         }
       });
     },

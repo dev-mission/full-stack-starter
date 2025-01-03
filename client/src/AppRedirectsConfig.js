@@ -1,4 +1,4 @@
-import { matchPath } from 'react-router-dom';
+import { matchPath } from 'react-router';
 
 export const ADMIN_AUTH_PROTECTED_PATHS = ['/admin/*'];
 export const AUTH_PROTECTED_PATHS = ['/account/*'];

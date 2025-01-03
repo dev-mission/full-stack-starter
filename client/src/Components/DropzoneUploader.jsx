@@ -28,16 +28,16 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
         if (onUploading) {
           onUploading(status);
         }
-        const blob = {
+        const data = {
           filename: status.file.name,
-          content_type: status.file.type || 'application/octet-stream',
-          byte_size: status.file.size,
+          contentType: status.file.type || 'application/octet-stream',
+          byteSize: status.file.size,
         };
         Api.assets
-          .create({ blob })
+          .create(data)
           .then((response) => {
-            const { url, headers } = response.data.direct_upload;
-            status.signedId = response.data.signed_id;
+            const { filename, url, headers } = response.data;
+            status.filename = filename;
             return Api.assets.upload(url, headers, status.file);
           })
           .then(() => {
@@ -68,7 +68,7 @@ function DropzoneUploader({ className, children, disabled, id, maxFiles, multipl
         id: uuid(),
         file,
         status: 'pending', // uploading, uploaded, error
-        signedId: null,
+        filename: null,
       };
       statuses.push(status);
     }

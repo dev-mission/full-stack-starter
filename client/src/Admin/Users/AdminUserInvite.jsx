@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { StatusCodes } from 'http-status-codes';
 import classNames from 'classnames';
 

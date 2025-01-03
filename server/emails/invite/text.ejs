@@ -1,11 +1,9 @@
-<%- include('../layout/_header.text.ejs') %>
-
 Hi <%= firstName %>,
 
-<%= message %>
+<% if (message) { %><%= message %><% } %>
 
-Please click on the following link to create your account with <%= process.env.VITE_SITE_TITLE %>:
+Please click on the following link to create your account with <%= _layout.TITLE %>:
 
 <%= url %>
 
-<%- include('../layout/_footer.text.ejs') %>
+<%- include('../_footer.text.ejs') %>
