@@ -1,0 +1,40 @@
+name: CI
+on: 
+  push:
+    branches:
+      - "dev"
+      - "main"
+  pull_request:
+    types: [opened, reopened, synchronize]
+  
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    container: node:22.12.0-bookworm
+    services:
+      db:
+        image: postgres:17.2
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Set up npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run ESLint
+        run: npm run lint
+      - name: Run Tests
+        run: npm test
