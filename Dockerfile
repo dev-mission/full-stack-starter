@@ -7,11 +7,14 @@ ARG TARGETARCH
 ENV APP_HOME=/opt/node/app
 
 # Install postgres dependencies
-RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" >> /etc/apt/sources.list.d/pgdg.list && \
-    apt-get update -y && \
-    apt-get install -y postgresql-client-17 && \
-    apt-get clean
+RUN apt update -y && \
+    apt install -y curl ca-certificates && \
+    install -d /usr/share/postgresql-common/pgdg && \
+    curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc && \
+    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list' && \
+    apt update -y && \
+    apt install -y postgresql-client-17 && \
+    apt clean
 
 # Install docker dependencies
 RUN install -m 0755 -d /etc/apt/keyrings && \
@@ -21,12 +24,12 @@ RUN install -m 0755 -d /etc/apt/keyrings && \
         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
         $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
         tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update -y && \
-    apt-get install -y docker-ce-cli docker-buildx-plugin && \
-    apt-get clean
+    apt update -y && \
+    apt install -y docker-ce-cli docker-buildx-plugin && \
+    apt clean
 
 # Install AWS cli dependencies
-RUN apt-get install -y jq less zip && \
+RUN apt install -y jq less zip && \
     if [ "$TARGETARCH" = "amd64" ]; then \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
