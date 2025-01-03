@@ -50,9 +50,10 @@ RUN mkdir -p $APP_HOME
 ADD . $APP_HOME
 WORKDIR $APP_HOME
 
-# Install dependencies, build client app
+# Install dependencies, build client app, generate server prisma client
 RUN npm install && \
-    npm run build -w client
+    npm run build -w client && \
+    npm run prisma:generate -w server
 
 # Set up default command to run Node on port 3000
 EXPOSE 3000
