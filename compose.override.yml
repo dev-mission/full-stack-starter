@@ -30,3 +30,5 @@ services:
       - /opt/node/app/server/node_modules
       - /opt/node/app/client/node_modules
       - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.aws:/root/.aws
+      - ~/.ssh:/root/.ssh
