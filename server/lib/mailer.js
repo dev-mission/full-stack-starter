@@ -44,7 +44,7 @@ const transport = nodemailer.createTransport(options);
 
 const mailer = new Email({
   message: {
-    from: process.env.MAILER_FROM,
+    from: process.env.SMTP_FROM_EMAIL_ADDRESS,
   },
   send: true,
   transport,
@@ -57,6 +57,9 @@ const mailer = new Email({
 });
 
 async function send (options) {
+  if (process.env.SMTP_ENABLED !== 'true') {
+    return;
+  }
   options.locals ||= {};
   options.locals._layout = {
     BASE_URL: process.env.BASE_URL,

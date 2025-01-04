@@ -10,6 +10,7 @@
     "dev": "fastify start -w -l info -P app.js",
     "lint": "eslint --fix",
     "pretest": "eslint",
+    "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "start": "fastify start -l info app.js",
     "test": "node --test $(find test -name '*.test.js')"
