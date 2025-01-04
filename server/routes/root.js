@@ -1,4 +1,5 @@
 import accepts from 'accepts';
+import fastifyStatic from '@fastify/static';
 import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import path from 'path';
@@ -16,6 +17,12 @@ function readIndexFile () {
 const HTML = readIndexFile();
 
 export default async function (fastify, opts) {
+  fastify.register(fastifyStatic, {
+    root: path.resolve(__dirname, '../../client/dist/client/assets'),
+    prefix: '/assets/',
+    index: false,
+  });
+
   fastify.get('/*', async function (request, reply) {
     const accept = accepts(request.raw);
     if (accept.types(['html'])) {
@@ -31,6 +38,7 @@ export default async function (fastify, opts) {
         const app = render(request, reply, helmetContext, staticContext);
         if (app) {
           const { helmet } = helmetContext;
+          reply.header('Content-Type', 'text/html');
           reply.send(
             HTML.replace(/<title\b[^>]*>(.*?)<\/title>/i, helmet.title.toString())
               .replace('window.STATIC_CONTEXT = {}', `window.STATIC_CONTEXT=${JSON.stringify(staticContext.context)}`)
