@@ -46,7 +46,7 @@ const Api = {
       return instance.post('/api/auth/login', { email, password });
     },
     logout () {
-      return instance.get('/api/auth/logout');
+      return instance.delete('/api/auth/logout');
     },
     register (data) {
       return instance.post('/api/auth/register', data);
