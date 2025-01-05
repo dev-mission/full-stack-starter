@@ -12,6 +12,6 @@ export const defaultValue = {
   },
 };
 
-export function useStaticContext() {
+export function useStaticContext () {
   return useContext(staticContext);
 }

@@ -14,7 +14,7 @@ import PasswordsRoutes from './Passwords/PasswordsRoutes';
 import Register from './Register';
 import UsersRoutes from './Users/UsersRoutes';
 
-function App() {
+function App () {
   const staticContext = useStaticContext();
 
   return (
@@ -22,17 +22,17 @@ function App() {
       <Header />
       <Routes>
         <Route
-          path="*"
+          path='*'
           element={
             <AppRedirects>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/passwords/*" element={<PasswordsRoutes />} />
-                <Route path="/invites/*" element={<InvitesRoutes />} />
-                {staticContext?.env?.VITE_FEATURE_REGISTRATION === 'true' && <Route path="/register" element={<Register />} />}
-                <Route path="/account/*" element={<UsersRoutes />} />
-                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route path='/' element={<Home />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/passwords/*' element={<PasswordsRoutes />} />
+                <Route path='/invites/*' element={<InvitesRoutes />} />
+                {staticContext?.env?.VITE_FEATURE_REGISTRATION === 'true' && <Route path='/register' element={<Register />} />}
+                <Route path='/account/*' element={<UsersRoutes />} />
+                <Route path='/admin/*' element={<AdminRoutes />} />
               </Routes>
             </AppRedirects>
           }

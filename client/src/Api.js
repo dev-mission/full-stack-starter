@@ -13,17 +13,17 @@ instance.interceptors.response.use(
       window.location = '/login';
     }
     return Promise.reject(error);
-  },
+  }
 );
 
-function parseLinkHeader(response) {
+function parseLinkHeader (response) {
   const link = response.headers?.link;
   if (link) {
     const linkRe = /<([^>]+)>; rel="([^"]+)"/g;
     const urls = {};
     let m;
     while ((m = linkRe.exec(link)) !== null) {
-      let url = m[1];
+      const url = m[1];
       urls[m[2]] = url;
     }
     return urls;
@@ -34,66 +34,66 @@ function parseLinkHeader(response) {
 const Api = {
   parseLinkHeader,
   assets: {
-    create(data) {
+    create (data) {
       return instance.post('/api/assets', data);
     },
-    upload(url, headers, file) {
+    upload (url, headers, file) {
       return instance.put(url, file, { headers });
     },
   },
   auth: {
-    login(email, password) {
+    login (email, password) {
       return instance.post('/api/auth/login', { email, password });
     },
-    logout() {
+    logout () {
       return instance.get('/api/auth/logout');
     },
-    register(data) {
+    register (data) {
       return instance.post('/api/auth/register', data);
     },
   },
   invites: {
-    index() {
-      return instance.get(`/api/invites`);
+    index () {
+      return instance.get('/api/invites');
     },
-    create(data) {
+    create (data) {
       return instance.post('/api/invites', data);
     },
-    get(id) {
+    get (id) {
       return instance.get(`/api/invites/${id}`);
     },
-    accept(id, data) {
+    accept (id, data) {
       return instance.post(`/api/invites/${id}/accept`, data);
     },
-    resend(id) {
+    resend (id) {
       return instance.patch(`/api/invites/${id}/resend`);
     },
-    revoke(id) {
+    revoke (id) {
       return instance.delete(`/api/invites/${id}`);
     },
   },
   passwords: {
-    reset(email) {
+    reset (email) {
       return instance.post('/api/passwords', { email });
     },
-    get(token) {
+    get (token) {
       return instance.get(`/api/passwords/${token}`);
     },
-    update(token, password) {
+    update (token, password) {
       return instance.patch(`/api/passwords/${token}`, { password });
     },
   },
   users: {
-    index(page = 1) {
-      return instance.get(`/api/users`, { params: { page } });
+    index (page = 1) {
+      return instance.get('/api/users', { params: { page } });
     },
-    me() {
+    me () {
       return instance.get('/api/users/me');
     },
-    get(id) {
+    get (id) {
       return instance.get(`/api/users/${id}`);
     },
-    update(id, data) {
+    update (id, data) {
       return instance.patch(`/api/users/${id}`, data);
     },
   },

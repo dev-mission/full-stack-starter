@@ -4,11 +4,11 @@ import { useStaticContext } from './StaticContext';
 
 export const authContext = createContext();
 
-export function useAuthContext() {
+export function useAuthContext () {
   return useContext(authContext);
 }
 
-export function AuthContextValue() {
+export function AuthContextValue () {
   const staticContext = useStaticContext();
   const [user, setUser] = useState(staticContext.authContext?.user);
   return {

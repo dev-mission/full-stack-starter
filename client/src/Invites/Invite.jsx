@@ -10,7 +10,7 @@ import UnexpectedError from '../UnexpectedError';
 import ValidationError from '../ValidationError';
 import { useStaticContext } from '../StaticContext';
 
-function Invite() {
+function Invite () {
   const staticContext = useStaticContext();
   const { setUser: setAuthUser } = useAuthContext();
   const navigate = useNavigate();
@@ -37,20 +37,20 @@ function Invite() {
     }
   }, [inviteId, setAuthUser]);
 
-  function onChange(event) {
+  function onChange (event) {
     const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
     setUser(newUser);
   }
 
-  async function onSubmit(event) {
+  async function onSubmit (event) {
     event.preventDefault();
     setError(null);
     setLoading(true);
     try {
       const response = await Api.invites.accept(invite.id, user);
       setAuthUser(response.data);
-      navigate(`/account`, { state: { flash: 'Your account has been created!' } });
+      navigate('/account', { state: { flash: 'Your account has been created!' } });
     } catch (error) {
       if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY) {
         setError(new ValidationError(error.response.data));
@@ -67,12 +67,12 @@ function Invite() {
       <Helmet>
         <title>You&apos;re Invited - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
-      <main className="container">
-        <div className="row justify-content-center">
-          <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <div className="card">
-              <div className="card-body">
-                <h2 className="card-title">You&apos;re Invited</h2>
+      <main className='container'>
+        <div className='row justify-content-center'>
+          <div className='col col-sm-10 col-md-8 col-lg-6 col-xl-4'>
+            <div className='card'>
+              <div className='card-body'>
+                <h2 className='card-title'>You&apos;re Invited</h2>
                 {invite?.acceptedAt && <p>This invite has already been accepted.</p>}
                 {invite?.revokedAt && <p>This invite is no longer available.</p>}
                 {invite && invite.acceptedAt === null && invite.revokedAt === null && (

@@ -10,7 +10,7 @@ import UnexpectedError from './UnexpectedError';
 import ValidationError from './ValidationError';
 import { useStaticContext } from './StaticContext';
 
-function Register() {
+function Register () {
   const authContext = useAuthContext();
   const staticContext = useStaticContext();
   const navigate = useNavigate();
@@ -23,13 +23,13 @@ function Register() {
   });
   const [error, setError] = useState(null);
 
-  function onChange(event) {
+  function onChange (event) {
     const newUser = { ...user };
     newUser[event.target.name] = event.target.value;
     setUser(newUser);
   }
 
-  async function onSubmit(event) {
+  async function onSubmit (event) {
     event.preventDefault();
     setError(null);
     try {
@@ -50,15 +50,15 @@ function Register() {
       <Helmet>
         <title>Register - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
-      <main className="container">
-        <div className="row justify-content-center">
-          <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <div className="card">
-              <div className="card-body">
-                <h2 className="card-title">Register</h2>
+      <main className='container'>
+        <div className='row justify-content-center'>
+          <div className='col col-sm-10 col-md-8 col-lg-6 col-xl-4'>
+            <div className='card'>
+              <div className='card-body'>
+                <h2 className='card-title'>Register</h2>
                 <RegistrationForm onChange={onChange} onSubmit={onSubmit} error={error} user={user} />
-                <div className="mb-3 text-center">
-                  <Link to="/login">Already have an account?</Link>
+                <div className='mb-3 text-center'>
+                  <Link to='/login'>Already have an account?</Link>
                 </div>
               </div>
             </div>

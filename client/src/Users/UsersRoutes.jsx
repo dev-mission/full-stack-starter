@@ -2,10 +2,10 @@ import { Route, Routes } from 'react-router';
 
 import UserForm from './UserForm';
 
-function UsersRoutes() {
+function UsersRoutes () {
   return (
     <Routes>
-      <Route path="" element={<UserForm />} />
+      <Route path='' element={<UserForm />} />
     </Routes>
   );
 }

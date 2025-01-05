@@ -2,11 +2,11 @@ import { Navigate, Routes, Route } from 'react-router';
 
 import AdminUsersRoutes from './Users/AdminUsersRoutes';
 
-function AdminRoutes() {
+function AdminRoutes () {
   return (
     <Routes>
-      <Route path="users/*" element={<AdminUsersRoutes />} />
-      <Route path="" element={<Navigate to="users" />} />
+      <Route path='users/*' element={<AdminUsersRoutes />} />
+      <Route path='' element={<Navigate to='users' />} />
     </Routes>
   );
 }
