@@ -1,14 +1,15 @@
-# Full-Stack Starter
+# Full Stack Starter
 
 This repository contains a "starter" project for web application development in JavaScript. This includes the following components, from front-end to back-end:
 
-- React 18.2.0
-- React Router 6.20.0
-- Bootstrap 5.3.2
-- Node.js 20.11.0
-- Express 4.18.2
-- Sequelize 6.35.1
-- Postgres 15.5
+- React 18.3.1
+- React Router 7.1.1
+- Bootstrap 5.3.3
+- Vite 6.0.7
+- Fastify 5.2.0
+- Prisma 6.1.0
+- Node.js 22.12.0
+- Postgres 17.2
 
 ## One-time Setup
 
@@ -42,10 +43,10 @@ This repository contains a "starter" project for web application development in 
 
    ```
    full-stack-starter-server-1       | 5:31:23 PM client.1 |    VITE v4.3.9  ready in 327 ms
-   full-stack-starter-server-1       | 5:31:23 PM client.1 |    ➜  Local:   http://localhost:3000/
+   full-stack-starter-server-1       | 5:31:23 PM client.1 |    ➜  Local:   http://localhost:5000/
    ```
 
-5. Now you should be able to open the web app in your browser at: http://localhost:3000/
+5. Now you should be able to open the web app in your browser at: http://localhost:5000/
 
 6. Open a new tab or window of your shell, change into your repo directory as needed, and execute this command:
 
@@ -89,6 +90,49 @@ This repository contains a "starter" project for web application development in 
 
 8. That's it! After all this setup is complete, the only command you need to run to get
    started again is the `docker compose up` command.
+
+## Development Tools
+
+This project includes components with helpful developer tools, such as the following:
+
+1. Mailcatcher
+
+   The Docker Compose configuration includes the Mailcatcher development mail server. Email sent from the
+   server will be captured by this mail server and can be viewed on the web at:
+
+   http://localhost:1080
+
+   NO live emails will be sent over the Internet.
+
+2. Prisma Studio
+
+   The Prisma library includes a web interface for browsing the contents of the development database at:
+
+   http://localhost:5555
+
+3. Scalar API Documentation Renderer
+
+   The Scalar library automatically generates web-based API documentation for the server based on the
+   Swagger/OpenAPI schema definitions included with each route, viewable at:
+
+   http://localhost:5000/api/reference
+
+4. Minio
+
+   The Docker Compose configuration includes the Minio object storage server as a local development
+   simulation of AWS S3. You can browse the contents of the storage server at:
+
+   http://localhost:9001
+
+   Username and password are: minioadmin/minioadmin
+
+## Testing
+
+This repo includes a Github Actions workflow for running server tests. To test locally, log in
+to a running server container as describe above (`docker compose exec server bash -l`) and then run
+`npm test`. The server tests use the Testcontainers library to automatically launch test databases and
+storage servers for testing- if tests terminate unexpectedly, you may have dangling/orphan containers
+running. Use `docker ps` to list and check running containers.
 
 ## Heroku Deployment Setup
 
@@ -290,8 +334,8 @@ This repository contains a "starter" project for web application development in 
 
 ## License
 
-Full-Stack Starter  
-Copyright (C) 2023 <Dev/Mission>
+Full Stack Starter  
+Copyright (C) 2025 Dev/Mission
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
