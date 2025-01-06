@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.post('/login',
     {
       schema: {
+        description: 'Creates an authenticated session with email and password.',
         body: z.object({
           email: z.string().email(),
           password: z.string(),

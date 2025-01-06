@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.post('/',
     {
       schema: {
+        description: 'Requests a password reset email.',
         body: z.object({
           email: z.string().email(),
         }),

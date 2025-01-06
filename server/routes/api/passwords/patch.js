@@ -8,6 +8,7 @@ export default async function (fastify, opts) {
     '/:token',
     {
       schema: {
+        description: 'Sets a new password for the User associated with the token.',
         params: z.object({
           token: z.string(),
         }),

@@ -9,6 +9,7 @@ export default async function (fastify, opts) {
   fastify.patch('/:id',
     {
       schema: {
+        description: 'Updates a User object by id.',
         params: z.object({
           id: z.string().uuid()
         }),

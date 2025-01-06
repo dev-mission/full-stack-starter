@@ -8,6 +8,7 @@ export default async function (fastify, opts) {
     '/:id',
     {
       schema: {
+        descriptions: 'Returns a User object by id.',
         params: z.object({
           id: z.string().uuid()
         }),

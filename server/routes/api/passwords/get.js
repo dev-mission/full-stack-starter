@@ -8,6 +8,7 @@ export default async function (fastify, opts) {
     '/:token',
     {
       schema: {
+        description: 'Returns a status code whether the specified password reset token is valid or not.',
         params: z.object({
           token: z.string(),
         }),
