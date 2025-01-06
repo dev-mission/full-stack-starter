@@ -99,6 +99,7 @@ async function build (t) {
     await t.prisma.$disconnect();
     await app.prisma.$disconnect();
     await prisma.$executeRawUnsafe(`DROP DATABASE IF EXISTS ${startedDbContainer.getDatabase()} WITH (FORCE)`);
+    await sleep(100);
     await prisma.$executeRawUnsafe(`CREATE DATABASE ${startedDbContainer.getDatabase()} `);
     await app.prisma.$connect();
     await t.prisma.$connect();
@@ -138,6 +139,12 @@ async function authenticate (app, email, password) {
       ?.split(';')
       .map((t) => t.trim())[0],
   };
+}
+
+function sleep (ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 async function upload (fixtures) {

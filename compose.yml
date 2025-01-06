@@ -44,3 +44,4 @@ networks:
   app:
     name: app
     driver: bridge
+    external: true
