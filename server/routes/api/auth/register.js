@@ -9,6 +9,7 @@ export default async function (fastify, opts) {
   fastify.post('/register',
     {
       schema: {
+        description: 'Creates a new User. If registration is disabled, then a valid Invite id is required.',
         body: User.RegisterSchema,
         response: {
           [StatusCodes.CREATED]: User.ResponseSchema,

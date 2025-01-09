@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link, useLocation, useSearchParams } from 'react-router';
+import { StatusCodes } from 'http-status-codes';
 
 import Api from './Api';
 import { useAuthContext } from './AuthContext';
 import { useStaticContext } from './StaticContext';
 
-function Login() {
+function Login () {
   const staticContext = useStaticContext();
   const authContext = useAuthContext();
   const location = useLocation();
@@ -26,7 +27,7 @@ function Login() {
 
   const [showInvalidError, setShowInvalidError] = useState(false);
 
-  async function onSubmit(event) {
+  async function onSubmit (event) {
     event.preventDefault();
     setShowInvalidError(false);
     try {
@@ -34,7 +35,7 @@ function Login() {
       authContext.setUser(response.data);
       navigate(from, { replace: true });
     } catch (error) {
-      if (error.response?.status === 422) {
+      if (error.response?.status === StatusCodes.UNPROCESSABLE_ENTITY || error.response?.status === StatusCodes.NOT_FOUND) {
         setShowInvalidError(true);
       } else {
         console.log(error);
@@ -47,52 +48,52 @@ function Login() {
       <Helmet>
         <title>Log in - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
-      <main className="container">
-        <div className="row justify-content-center">
-          <div className="col col-sm-10 col-md-8 col-lg-6 col-xl-4">
-            <div className="card">
-              <div className="card-body">
-                <h2 className="card-title">Log in</h2>
-                {location.state?.flash && <div className="alert alert-success">{location.state?.flash}</div>}
-                {showInvalidError && <div className="alert alert-danger">Invalid email and/or password.</div>}
+      <main className='container'>
+        <div className='row justify-content-center'>
+          <div className='col col-sm-10 col-md-8 col-lg-6 col-xl-4'>
+            <div className='card'>
+              <div className='card-body'>
+                <h2 className='card-title'>Log in</h2>
+                {location.state?.flash && <div className='alert alert-success'>{location.state?.flash}</div>}
+                {showInvalidError && <div className='alert alert-danger'>Invalid email and/or password.</div>}
                 <form onSubmit={onSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="email">
+                  <div className='mb-3'>
+                    <label className='form-label' htmlFor='email'>
                       Email
                     </label>
                     <input
-                      type="text"
-                      className="form-control"
-                      id="email"
-                      name="email"
+                      type='text'
+                      className='form-control'
+                      id='email'
+                      name='email'
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="password">
+                  <div className='mb-3'>
+                    <label className='form-label' htmlFor='password'>
                       Password
                     </label>
                     <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="password"
+                      type='password'
+                      className='form-control'
+                      id='password'
+                      name='password'
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
-                  <div className="mb-3 d-grid">
-                    <button className="btn btn-primary" type="submit">
+                  <div className='mb-3 d-grid'>
+                    <button className='btn btn-primary' type='submit'>
                       Submit
                     </button>
                   </div>
-                  <div className="mb-3 text-center">
-                    <Link to="/passwords/forgot">Forgot your password?</Link>
+                  <div className='mb-3 text-center'>
+                    <Link to='/passwords/forgot'>Forgot your password?</Link>
                     {staticContext?.env?.VITE_FEATURE_REGISTRATION === 'true' && (
                       <>
                         <br />
-                        <Link to="/register">Need an account?</Link>
+                        <Link to='/register'>Need an account?</Link>
                       </>
                     )}
                   </div>

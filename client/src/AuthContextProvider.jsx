@@ -1,7 +1,7 @@
 import { authContext, AuthContextValue } from './AuthContext';
 import PropTypes from 'prop-types';
 
-function AuthContextProvider({ children }) {
+function AuthContextProvider ({ children }) {
   const value = AuthContextValue();
   return <authContext.Provider value={value}>{children}</authContext.Provider>;
 }

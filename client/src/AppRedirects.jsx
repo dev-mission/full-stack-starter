@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router';
 import { useAuthContext } from './AuthContext';
 import { handleRedirects } from './AppRedirectsConfig';
 
-function AppRedirects({ children }) {
+function AppRedirects ({ children }) {
   const location = useLocation();
   const authContext = useAuthContext();
   const result = handleRedirects(authContext, location, location.pathname, (to, state) => {
@@ -11,6 +11,6 @@ function AppRedirects({ children }) {
     }
     return <Navigate to={to} />;
   });
-  return result ? result : children;
+  return result || children;
 }
 export default AppRedirects;

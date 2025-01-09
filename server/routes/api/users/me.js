@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.get('/me',
     {
       schema: {
+        description: 'Returns the currently logged in User object, if any.',
         response: {
           [StatusCodes.OK]: User.ResponseSchema,
           [StatusCodes.NO_CONTENT]: z.null(),

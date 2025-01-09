@@ -7,7 +7,7 @@ import Api from '../../Api';
 import { useStaticContext } from '../../StaticContext';
 import Pagination from '../../Components/Pagination';
 
-function AdminUsersList() {
+function AdminUsersList () {
   const staticContext = useStaticContext();
   const [users, setUsers] = useState([]);
   const { search } = useLocation();
@@ -33,9 +33,9 @@ function AdminUsersList() {
     Api.invites.index().then((response) => setInvites(response.data));
   }, [page]);
 
-  async function revoke(invite) {
-    let name = `${invite.firstName} ${invite.lastName}`.trim();
-    let nameAndEmail = `${name} <${invite.email}>`.trim();
+  async function revoke (invite) {
+    const name = `${invite.firstName} ${invite.lastName}`.trim();
+    const nameAndEmail = `${name} <${invite.email}>`.trim();
     if (window.confirm(`Are you sure you wish to revoke the invite to ${nameAndEmail}?`)) {
       const response = await Api.invites.revoke(invite.id);
       if (response.status === 200) {
@@ -44,9 +44,9 @@ function AdminUsersList() {
     }
   }
 
-  async function resend(invite) {
-    let name = `${invite.firstName} ${invite.lastName}`.trim();
-    let nameAndEmail = `${name} <${invite.email}>`.trim();
+  async function resend (invite) {
+    const name = `${invite.firstName} ${invite.lastName}`.trim();
+    const nameAndEmail = `${name} <${invite.email}>`.trim();
     if (window.confirm(`Are you sure you wish to resend the invite to ${nameAndEmail}?`)) {
       const response = await Api.invites.resend(invite.id);
       if (response.status === 200) {
@@ -66,25 +66,25 @@ function AdminUsersList() {
       <Helmet>
         <title>Manage Users - {staticContext?.env?.VITE_SITE_TITLE ?? ''}</title>
       </Helmet>
-      <main className="users container">
+      <main className='users container'>
         <h1>Manage Users</h1>
-        <div className="mb-5">
-          <Link to="invite" className="btn btn-outline-primary">
+        <div className='mb-5'>
+          <Link to='invite' className='btn btn-outline-primary'>
             Invite a new User
           </Link>
         </div>
         {invites.length > 0 && (
           <>
             <h2>Invites</h2>
-            <div className="table-responsive mb-5">
-              <table className="table table-hover">
+            <div className='table-responsive mb-5'>
+              <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th className="w-20">First name</th>
-                    <th className="w-20">Last name</th>
-                    <th className="w-20">Email</th>
-                    <th className="w-20">Invited on</th>
-                    <th className="w-20">Actions</th>
+                    <th className='w-20'>First name</th>
+                    <th className='w-20'>Last name</th>
+                    <th className='w-20'>Email</th>
+                    <th className='w-20'>Invited on</th>
+                    <th className='w-20'>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -97,11 +97,11 @@ function AdminUsersList() {
                       </td>
                       <td>{DateTime.fromISO(invite.updatedAt).toLocaleString()}</td>
                       <td>
-                        <button className="btn btn-link p-0" onClick={() => resend(invite)}>
+                        <button className='btn btn-link p-0' onClick={() => resend(invite)}>
                           Resend&nbsp;Invite
                         </button>
                         &nbsp;|&nbsp;
-                        <button className="btn btn-link p-0" onClick={() => revoke(invite)}>
+                        <button className='btn btn-link p-0' onClick={() => revoke(invite)}>
                           Revoke&nbsp;Invite
                         </button>
                       </td>
@@ -113,15 +113,15 @@ function AdminUsersList() {
           </>
         )}
         <h2>Users</h2>
-        <div className="table-responsive">
-          <table className="table table-hover">
+        <div className='table-responsive'>
+          <table className='table table-hover'>
             <thead>
               <tr>
-                <th className="w-20">First name</th>
-                <th className="w-20">Last name</th>
-                <th className="w-20">Email</th>
-                <th className="w-5">Admin?</th>
-                <th className="w-15">Actions</th>
+                <th className='w-20'>First name</th>
+                <th className='w-20'>Last name</th>
+                <th className='w-20'>Email</th>
+                <th className='w-5'>Admin?</th>
+                <th className='w-15'>Actions</th>
               </tr>
             </thead>
             <tbody>

@@ -7,7 +7,7 @@ import StaticContextProvider from './StaticContextProvider';
 import { handleRedirects } from './AppRedirectsConfig';
 import App from './App';
 
-export function render(request, reply, helmetContext, staticContext) {
+export function render (request, reply, helmetContext, staticContext) {
   const { url: location } = request;
   const path = request.urlData('path');
   const isRedirected = handleRedirects(request, location, path, (to, state) => {
@@ -32,6 +32,6 @@ export function render(request, reply, helmetContext, staticContext) {
           <App />
         </StaticRouter>
       </HelmetProvider>
-    </StaticContextProvider>,
+    </StaticContextProvider>
   );
 }

@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.delete('/:id',
     {
       schema: {
+        description: 'Revokes an Invite by id',
         params: z.object({
           id: z.string().uuid()
         }),

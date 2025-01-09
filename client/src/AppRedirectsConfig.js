@@ -7,15 +7,15 @@ export const REDIRECTS = [
   ['/passwords', '/passwords/forgot'],
 ];
 
-export function handleRedirects(authContext, location, pathname, callback) {
+export function handleRedirects (authContext, location, pathname, handler) {
   let match;
   for (const pattern of ADMIN_AUTH_PROTECTED_PATHS) {
     match = matchPath(pattern, pathname);
     if (match) {
       if (!authContext.user) {
-        return callback('/login', { from: location });
+        return handler('/login', { from: location });
       } else if (!authContext.user.isAdmin) {
-        return callback('/');
+        return handler('/');
       }
       break;
     }
@@ -25,7 +25,7 @@ export function handleRedirects(authContext, location, pathname, callback) {
       match = matchPath(pattern, pathname);
       if (match) {
         if (!authContext.user) {
-          return callback('/login', { from: location });
+          return handler('/login', { from: location });
         }
         break;
       }
@@ -41,7 +41,7 @@ export function handleRedirects(authContext, location, pathname, callback) {
         }
       }
       if (dest !== src) {
-        return callback(dest);
+        return handler(dest);
       }
       break;
     }

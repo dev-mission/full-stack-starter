@@ -4,12 +4,12 @@ import AdminUserInvite from './AdminUserInvite';
 import AdminUsersList from './AdminUsersList';
 import UserForm from '../../Users/UserForm';
 
-function AdminUsersRoutes() {
+function AdminUsersRoutes () {
   return (
     <Routes>
-      <Route path="invite" element={<AdminUserInvite />} />
-      <Route path=":userId" element={<UserForm />} />
-      <Route path="" element={<AdminUsersList />} />
+      <Route path='invite' element={<AdminUserInvite />} />
+      <Route path=':userId' element={<UserForm />} />
+      <Route path='' element={<AdminUsersList />} />
     </Routes>
   );
 }

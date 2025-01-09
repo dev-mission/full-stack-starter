@@ -1,5 +1,5 @@
 class UnexpectedError extends Error {
-  constructor() {
+  constructor () {
     super('An unexpected error has occurred. Please try again.');
   }
 }

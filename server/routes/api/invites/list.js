@@ -6,6 +6,7 @@ import Invite from '#models/invite.js';
 export default async function (fastify, opts) {
   fastify.get('/', {
     schema: {
+      description: 'Returns a paginated list of Invites.',
       querystring: z.object({
         page: z.number().optional(),
         perPage: z.number().optional(),

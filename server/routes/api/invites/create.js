@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.post('/',
     {
       schema: {
+        description: 'Creates a new Invite and sends it via email.',
         body: Invite.AttibutesSchema,
         response: {
           [StatusCodes.CREATED]: Invite.ResponseSchema,

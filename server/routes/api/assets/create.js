@@ -9,6 +9,7 @@ export default async function (fastify, opts) {
   fastify.post('/',
     {
       schema: {
+        description: 'Returns a signed URL for asset upload to storage.',
         body: z.object({
           contentType: z.string(),
         }),

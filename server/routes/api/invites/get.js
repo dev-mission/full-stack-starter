@@ -8,6 +8,7 @@ export default async function (fastify, opts) {
     '/:id',
     {
       schema: {
+        description: 'Returns an Invite by id if valid',
         params: z.object({
           id: z.string().uuid()
         }),

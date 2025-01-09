@@ -7,6 +7,7 @@ export default async function (fastify, opts) {
   fastify.patch('/:id/resend',
     {
       schema: {
+        description: 'Resends an Invite by email.',
         params: z.object({
           id: z.string().uuid()
         }),
